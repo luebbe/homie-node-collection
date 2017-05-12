@@ -21,4 +21,4 @@ install:
     - unzip /tmp/homiedevelop.zip -d /tmp
 
 script:
-    - platformio ci --lib="/tmp/homie-esp8266-develop" --board=esp12e
+    - platformio ci --lib="/tmp/homie-esp8266-develop" --project-conf=platformio.ini
