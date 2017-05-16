@@ -34,7 +34,7 @@ void RelayNode::setLed(bool on) {
 }
 
 void RelayNode::setRelay(bool on) {
-  digitalWrite(relayPinSetting.get(), on ? HIGH : LOW);
+  digitalWrite(relayPinSetting.get(), on ? HIGH : LOW); // HIGH = close relay
   setLed(on);
 
   setProperty("on").send(on ? "true" : "false");
