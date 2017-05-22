@@ -11,8 +11,11 @@
 
 #include <HomieNode.hpp>
 
+#define DEFAULTPIN -1
+
 class RelayNode : public HomieNode {
 private:
+  int _relayPin;
   int _ledPin;
 
   void setLed(bool on);
@@ -22,7 +25,7 @@ protected:
   virtual bool handleInput(const String& property, const HomieRange& range, const String& value) override;
 
 public:
-  RelayNode(const char *name, const int ledPin = -1);
+  RelayNode(const char *name, const int relayPin = DEFAULTPIN, const int ledPin = DEFAULTPIN);
   void setRelay(bool on);
 };
 

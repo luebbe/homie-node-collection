@@ -9,43 +9,38 @@
 #include "RelayNode.hpp"
 #include <Homie.hpp>
 
-#define RELAYPIN  0
 
-HomieSetting<long>
-    relayPinSetting("relayPin", "The pin to which the relay is connected");
-
-RelayNode::RelayNode(const char *name, const int ledPin)
+RelayNode::RelayNode(const char *name, const int relayPin, const int ledPin)
     : HomieNode(name, "RelayNode") {
 
+  _relayPin = relayPin;
   _ledPin = ledPin;
-
-  relayPinSetting.setDefaultValue(RELAYPIN);
-
-  if (_ledPin > -1) {
-    pinMode(_ledPin, OUTPUT);
-    setLed(false);
-  }
 }
 
 void RelayNode::setLed(bool on) {
-  if (_ledPin > -1) {
+  if (_ledPin > DEFAULTPIN) {
     digitalWrite(_ledPin, on ? LOW : HIGH); // LOW = LED on
   }
 }
 
 void RelayNode::setRelay(bool on) {
-  digitalWrite(relayPinSetting.get(), on ? HIGH : LOW); // HIGH = close relay
-  setLed(on);
-
-  setProperty("on").send(on ? "true" : "false");
-  Homie.getLogger() << "Relay is " << (on ? "on" : "off") << endl;
+  if (_relayPin > DEFAULTPIN) {
+    digitalWrite(_relayPin, on ? HIGH : LOW); // HIGH = close relay
+    setProperty("on").send(on ? "true" : "false");
+    Homie.getLogger() << "Relay is " << (on ? "on" : "off") << endl;
+  }
+  else {
+    Homie.getLogger() << "No Relay Pin!" << endl;
+  }
 }
 
 bool RelayNode::handleInput(const String& property, const HomieRange& range, const String& value) {
   Homie.getLogger() << "Message: " << value << endl;
   if (value != "true" && value != "false") return false;
 
-  setRelay(value == "true");
+  bool on = value == "true";
+  setRelay(on);
+  setLed(on);
 
   return true;
 }
@@ -53,15 +48,16 @@ bool RelayNode::handleInput(const String& property, const HomieRange& range, con
 void RelayNode::setup() {
   advertise("on").settable();
 
-  Homie.getLogger() << "Relay pin = " << relayPinSetting.get() << endl
-                    << "Was provided = " << relayPinSetting.wasProvided() << endl
-                    << "Led pin = " << _ledPin << endl;
+  Homie.getLogger() << "Relay Pin: " << _relayPin << endl
+                    << "Led Pin  : " << _ledPin << endl;
 
-  pinMode(relayPinSetting.get(), OUTPUT);
-  Homie.getLogger() << "Set OUTPUT" << endl;
-  digitalWrite(relayPinSetting.get(), LOW);
-  Homie.getLogger() << "Set off" << endl;
+  if (_ledPin > DEFAULTPIN) {
+    pinMode(_ledPin, OUTPUT);
+    setLed(false);
+  }
+
+  if (_relayPin > DEFAULTPIN) {
+    pinMode(_relayPin, OUTPUT);
+    digitalWrite(_relayPin, LOW);
+  }
 }
-//
-// void RelayNode::loop() {
-// }
