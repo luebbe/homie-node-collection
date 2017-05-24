@@ -17,9 +17,9 @@
 
 #include <HomieNode.hpp>
 
-const int  MEASUREMENT_INTERVAL = 300;
 
 class BME280Node : public HomieNode {
+  static const int  MEASUREMENT_INTERVAL = 300;
 private:
   bool _sensorFound = false;
   unsigned long _measurementInterval;

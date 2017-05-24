@@ -15,9 +15,9 @@
 #include <HomieNode.hpp>
 
 #define DEFAULTPIN -1
-const int  MEASUREMENT_INTERVAL = 300;
 
 class DHT22Node : public HomieNode {
+  static const int  MEASUREMENT_INTERVAL = 300;
 private:
   int _sensorPin;
   unsigned long _measurementInterval;
