@@ -27,6 +27,7 @@ protected:
 public:
   RelayNode(const char *name, const int relayPin = DEFAULTPIN, const int ledPin = DEFAULTPIN);
   void setRelay(bool on);
+  void toggleRelay();
 };
 
 #endif

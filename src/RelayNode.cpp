@@ -9,12 +9,21 @@
 #include "RelayNode.hpp"
 #include <Homie.hpp>
 
-
 RelayNode::RelayNode(const char *name, const int relayPin, const int ledPin)
     : HomieNode(name, "RelayNode") {
-
   _relayPin = relayPin;
   _ledPin = ledPin;
+}
+
+bool RelayNode::handleInput(const String& property, const HomieRange& range, const String& value) {
+  Homie.getLogger() << "Message: " << value << endl;
+  if (value != "true" && value != "false") return false;
+
+  bool on = value == "true";
+  setRelay(on);
+  setLed(on);
+
+  return true;
 }
 
 void RelayNode::setLed(bool on) {
@@ -34,15 +43,13 @@ void RelayNode::setRelay(bool on) {
   }
 }
 
-bool RelayNode::handleInput(const String& property, const HomieRange& range, const String& value) {
-  Homie.getLogger() << "Message: " << value << endl;
-  if (value != "true" && value != "false") return false;
-
-  bool on = value == "true";
-  setRelay(on);
-  setLed(on);
-
-  return true;
+void RelayNode::toggleRelay() {
+  if (_relayPin > DEFAULTPIN) {
+    setRelay(digitalRead(_relayPin) == LOW);
+  }
+  else {
+    Homie.getLogger() << "No Relay Pin!" << endl;
+  }
 }
 
 void RelayNode::setup() {
