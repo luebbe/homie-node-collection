@@ -4,6 +4,7 @@
  *
  * Version: 1.0
  * Author: Lübbe Onken (http://github.com/luebbe)
+ * Author: Markus Haack (http://github.com/mhaack)
  */
 
 #ifndef SRC_BME280NODE_H_
@@ -20,6 +21,7 @@ const int  MEASUREMENT_INTERVAL = 300;
 
 class BME280Node : public HomieNode {
 private:
+  bool _sensorFound = false;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
 

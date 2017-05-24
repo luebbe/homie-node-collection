@@ -16,21 +16,23 @@ BME280Node::BME280Node(const char *name, const int measurementInterval)
 }
 
 void BME280Node::loop() {
-  if (millis() - _lastMeasurement >= _measurementInterval * 1000UL ||
-      _lastMeasurement == 0) {
-    temperature = bme.readTemperature();
-    humidity = bme.readHumidity();
-    pressure = bme.readPressure() / 100.0F;
+  if (_sensorFound) {
+    if (millis() - _lastMeasurement >= _measurementInterval * 1000UL ||
+        _lastMeasurement == 0) {
+      temperature = bme.readTemperature();
+      humidity = bme.readHumidity();
+      pressure = bme.readPressure() / 100.0F;
 
-    Homie.getLogger() << "Temperature: " << temperature << " °C" << endl;
-    Homie.getLogger() << "Humidity: " << temperature << " %" << endl;
-    Homie.getLogger() << "Pressure: " << pressure << " hPa" << endl;
+      Homie.getLogger() << "Temperature: " << temperature << " °C" << endl;
+      Homie.getLogger() << "Humidity: " << temperature << " %" << endl;
+      Homie.getLogger() << "Pressure: " << pressure << " hPa" << endl;
 
-    setProperty("temperature").send(String(temperature));
-    setProperty("humidity").send(String(humidity));
-    setProperty("pressure").send(String(pressure));
+      setProperty("temperature").send(String(temperature));
+      setProperty("humidity").send(String(humidity));
+      setProperty("pressure").send(String(pressure));
 
-    _lastMeasurement = millis();
+      _lastMeasurement = millis();
+    }
   }
 }
 
@@ -39,12 +41,14 @@ void BME280Node::setup() {
   advertise("humidity");
   advertise("pressure");
 
-  if (!bme.begin()) {
+  if (bme.begin()) {
+    _sensorFound = true;
+    Homie.getLogger() << "BME280 sensor reading interval = "
+                      << _measurementInterval << endl;
+  }
+  else {
+    _sensorFound = false;
     Homie.getLogger() << "Could not find a valid BME280 sensor, check wiring!"
                       << endl;
-    while (1)
-      ;
   }
-  Homie.getLogger() << "BME280 sensor reading interval = "
-                    << _measurementInterval << endl;
 }
