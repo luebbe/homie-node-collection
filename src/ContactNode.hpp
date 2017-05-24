@@ -17,7 +17,7 @@ class ContactNode : public HomieNode {
   int _contactPin;
   int _lastInputState = LOW;   // Input pin state.
   int _lastSentState = LOW;    // Input pin state.
-  int _stateChangeHandled = 0;
+  bool _stateChangeHandled = 0;
   unsigned long _stateChangedTime = 0;
   bool DebouncePin(void);
 protected:

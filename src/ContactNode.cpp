@@ -19,7 +19,7 @@ bool ContactNode::DebouncePin( void ) {
   byte inputState = digitalRead(_contactPin);
   if ( inputState != _lastInputState ) {
     _stateChangedTime = millis();
-    _stateChangeHandled = 0;
+    _stateChangeHandled = false;
     _lastInputState = inputState;
 #ifdef DEBUG
     Homie.getLogger() << "State Changed to " << inputState << endl;
@@ -27,11 +27,11 @@ bool ContactNode::DebouncePin( void ) {
   }
   else {
     unsigned long dt = millis() - _stateChangedTime;
-    if ( dt >= 200 && _stateChangeHandled == 0 ) {
+    if (dt >= 200 && !_stateChangeHandled) {
 #ifdef DEBUG
       Homie.getLogger() << "State Stable for " << dt << "ms" << endl;
 #endif
-      _stateChangeHandled = 1;
+      _stateChangeHandled = true;
       return true;
     }
   }
