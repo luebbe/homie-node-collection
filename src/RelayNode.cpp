@@ -19,9 +19,7 @@ bool RelayNode::handleInput(const String& property, const HomieRange& range, con
   Homie.getLogger() << "Message: " << value << endl;
   if (value != "true" && value != "false") return false;
 
-  bool on = value == "true";
-  setRelay(on);
-  setLed(on);
+  setRelay(value == "true");
 
   return true;
 }
@@ -41,6 +39,7 @@ void RelayNode::setRelay(bool on) {
   else {
     Homie.getLogger() << "No Relay Pin!" << endl;
   }
+  setLed(on);
 }
 
 void RelayNode::toggleRelay() {
