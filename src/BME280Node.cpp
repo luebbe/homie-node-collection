@@ -24,7 +24,7 @@ void BME280Node::loop() {
       pressure = bme.readPressure() / 100.0F;
 
       Homie.getLogger() << "Temperature: " << temperature << " °C" << endl;
-      Homie.getLogger() << "Humidity: " << temperature << " %" << endl;
+      Homie.getLogger() << "Humidity: " << humidity << " %" << endl;
       Homie.getLogger() << "Pressure: " << pressure << " hPa" << endl;
 
       setProperty("temperature").send(String(temperature));
@@ -43,8 +43,8 @@ void BME280Node::setup() {
 
   if (bme.begin()) {
     _sensorFound = true;
-    Homie.getLogger() << "BME280 sensor reading interval = "
-                      << _measurementInterval << endl;
+    Homie.getLogger() << "BME280 sensor found. Reading interval = "
+                      << _measurementInterval << " s" << endl;
   }
   else {
     _sensorFound = false;

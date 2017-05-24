@@ -43,7 +43,7 @@ void DHT22Node::setup() {
   advertise("temperature");
   advertise("humidity");
 
-  Homie.getLogger() << "Sensor pin: " << _sensorPin << endl;
+  Homie.getLogger() << "DHT sensor pin: " << _sensorPin << endl;
 
   if (_sensorPin > DEFAULTPIN) {
     dht = new DHT(_sensorPin, DHTTYPE);
