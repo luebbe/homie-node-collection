@@ -15,6 +15,10 @@ BME280Node::BME280Node(const char *name, const int measurementInterval)
   _measurementInterval = measurementInterval;
 }
 
+char *BME280Node::printCaption() {
+  Homie.getLogger() << cCaption <<  endl;
+}
+
 void BME280Node::loop() {
   if (_sensorFound) {
     if (millis() - _lastMeasurement >= _measurementInterval * 1000UL ||
@@ -23,9 +27,11 @@ void BME280Node::loop() {
       humidity = bme.readHumidity();
       pressure = bme.readPressure() / 100.0F;
 
-      Homie.getLogger() << "Temperature: " << temperature << " °C" << endl;
-      Homie.getLogger() << "Humidity: " << humidity << " %" << endl;
-      Homie.getLogger() << "Pressure: " << pressure << " hPa" << endl;
+      printCaption();
+
+      Homie.getLogger() << cIndent << "Temperature: " << temperature << " °C" << endl;
+      Homie.getLogger() << cIndent << "Humidity: " << humidity << " %" << endl;
+      Homie.getLogger() << cIndent << "Pressure: " << pressure << " hPa" << endl;
 
       setProperty("temperature").send(String(temperature));
       setProperty("humidity").send(String(humidity));
@@ -43,12 +49,11 @@ void BME280Node::setup() {
 
   if (bme.begin()) {
     _sensorFound = true;
-    Homie.getLogger() << "BME280 sensor found. Reading interval = "
-                      << _measurementInterval << " s" << endl;
+    Homie.getLogger() << cCaption << " found" << endl
+                      << cIndent << "Reading interval: " << _measurementInterval << " s" << endl;
   }
   else {
     _sensorFound = false;
-    Homie.getLogger() << "Could not find a valid BME280 sensor, check wiring!"
-                      << endl;
+    Homie.getLogger() << cCaption << " not found. Check wiring!" << endl;
   }
 }

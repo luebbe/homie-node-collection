@@ -19,13 +19,18 @@
 
 
 class BME280Node : public HomieNode {
-  static const int  MEASUREMENT_INTERVAL = 300;
 private:
+  static const int  MEASUREMENT_INTERVAL = 300;
+  const char *cCaption = "• BME280 sensor:";
+  const char *cIndent  = "  ◦ ";
+
   bool _sensorFound = false;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
 
   Adafruit_BME280 bme;
+
+  char *printCaption();
 
 public:
   BME280Node(const char *name,

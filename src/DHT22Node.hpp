@@ -17,13 +17,18 @@
 #define DEFAULTPIN -1
 
 class DHT22Node : public HomieNode {
-  static const int  MEASUREMENT_INTERVAL = 300;
 private:
+  static const int MEASUREMENT_INTERVAL = 300;
+  const char *cCaption = "• DHT22 sensor";
+  const char *cIndent  = "  ◦ ";
+
   int _sensorPin;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
 
   DHT* dht;
+
+  char *printCaption();
 
 public:
   DHT22Node(const char *name,

@@ -17,6 +17,10 @@ DHT22Node::DHT22Node(const char *name, const int sensorPin, const int measuremen
   _measurementInterval = measurementInterval;
 }
 
+char *DHT22Node::printCaption() {
+  Homie.getLogger() << cCaption << " pin[" << _sensorPin << "]:"  << endl;
+}
+
 void DHT22Node::loop() {
   if (_sensorPin > DEFAULTPIN) {
     if ((millis() - _lastMeasurement >= _measurementInterval * 1000UL) ||
@@ -24,12 +28,14 @@ void DHT22Node::loop() {
       temperature = dht->readTemperature();
       humidity = dht->readHumidity();
 
+      printCaption();
+
       if (isnan(temperature) || isnan(humidity)) {
-        Homie.getLogger() << "Error reading from DHT22 Sensor at pin " << _sensorPin << endl;
+        Homie.getLogger() << cIndent << "Error reading from Sensor" << endl;
       }
       else {
-        Homie.getLogger() << "Temperature: " << temperature << " °C" << endl;
-        Homie.getLogger() << "Humidity: " << humidity << " %" << endl;
+        Homie.getLogger() << cIndent << "Temperature: " << temperature << " °C" << endl;
+        Homie.getLogger() << cIndent << "Humidity: " << humidity << " %" << endl;
 
         setProperty("temperature").send(String(temperature));
         setProperty("humidity").send(String(humidity));
@@ -43,7 +49,8 @@ void DHT22Node::setup() {
   advertise("temperature");
   advertise("humidity");
 
-  Homie.getLogger() << "DHT sensor pin: " << _sensorPin << endl;
+  printCaption();
+  Homie.getLogger() << cIndent << "Reading interval: " << _measurementInterval << " s" << endl;
 
   if (_sensorPin > DEFAULTPIN) {
     dht = new DHT(_sensorPin, DHTTYPE);
