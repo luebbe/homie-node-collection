@@ -15,18 +15,18 @@
 
 class ContactNode : public HomieNode {
 public:
-   typedef std::function<void(bool)> TContactCallback;
+  typedef std::function<void(bool)> TContactCallback;
 
 private:
   TContactCallback _contactCallback;
   int _contactPin;
   int _lastInputState = LOW;   // Input pin state.
   int _lastSentState = LOW;    // Input pin state.
-  bool _stateChangeHandled = 0;
+  bool _stateChangeHandled = false;
   unsigned long _stateChangedTime = 0;
 
-  bool DebouncePin(void);
-  void handleStateChange();
+  bool debouncePin(void);
+  void handleStateChange(bool open);
 
 protected:
   virtual void loop() override;

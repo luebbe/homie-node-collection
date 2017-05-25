@@ -18,7 +18,7 @@ ContactNode::ContactNode(const char *name,
 }
 
 // Debounce input pin.
-bool ContactNode::DebouncePin( void ) {
+bool ContactNode::debouncePin(void) {
   byte inputState = digitalRead(_contactPin);
   if ( inputState != _lastInputState ) {
     _stateChangedTime = millis();
@@ -41,8 +41,7 @@ bool ContactNode::DebouncePin( void ) {
   return false;
 }
 
-void ContactNode::handleStateChange() {
-  bool open = (_lastInputState == HIGH);
+void ContactNode::handleStateChange(bool open) {
   setProperty("open").send(open ? "true" : "false");
   if (_contactCallback) {
     _contactCallback(open);
@@ -56,8 +55,8 @@ void ContactNode::onChange(TContactCallback contactCallback) {
 
 void ContactNode::loop() {
   if (_contactPin > DEFAULTPIN) {
-    if ( DebouncePin() && (_lastSentState != _lastInputState)) {
-      handleStateChange();
+    if (debouncePin() && (_lastSentState != _lastInputState)) {
+      handleStateChange(_lastInputState == HIGH);
       _lastSentState = _lastInputState;
     }
   }
