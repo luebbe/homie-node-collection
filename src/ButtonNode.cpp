@@ -18,7 +18,9 @@ ButtonNode::ButtonNode(const char *name,
 }
 
 void ButtonNode::handleButtonPress(unsigned long dt) {
+#ifdef DEBUG
   Homie.getLogger() << "Button pressed " << dt << " ms" << endl;
+#endif
   if (_buttonCallback) {
     _buttonCallback();
   }

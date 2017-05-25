@@ -14,18 +14,27 @@
 #define DEFAULTPIN -1
 
 class ContactNode : public HomieNode {
+public:
+   typedef std::function<void(bool)> TContactCallback;
+
+private:
+  TContactCallback _contactCallback;
   int _contactPin;
   int _lastInputState = LOW;   // Input pin state.
   int _lastSentState = LOW;    // Input pin state.
   bool _stateChangeHandled = 0;
   unsigned long _stateChangedTime = 0;
+
   bool DebouncePin(void);
+  void handleStateChange();
+
 protected:
   virtual void loop() override;
   virtual void setup() override;
 
 public:
-  ContactNode(const char *name, const int contactPin = DEFAULTPIN);
+  ContactNode(const char *name, const int contactPin = DEFAULTPIN, TContactCallback contactCallback = NULL);
+  void onChange(TContactCallback contactCallback);
 };
 
 #endif

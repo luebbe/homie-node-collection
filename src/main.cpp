@@ -20,8 +20,10 @@
 // Create one node of each kind
 BME280Node  bme280Node("bme280");
 DHT22Node   dht22Node("dht22", PIN_DHT);
-ContactNode contactNode("contact", PIN_CONTACT);
 RelayNode   relayNode("relay", PIN_RELAY, PIN_LED);
+
+// Initialize contact node without callback
+ContactNode contactNode("contact", PIN_CONTACT);
 
 // Initialize button node with callback to button press
 ButtonNode  buttonNode("button", PIN_BUTTON, []() {
@@ -35,10 +37,10 @@ void setup() {
   // Initializes I2C for BME280 sensor
   Wire.begin(PIN_SDA, PIN_SCL);
 
-  // alternative handler for button press
-  // buttonNode.onPress([]() {
-  //   relayNode.toggleRelay();
-  // });
+  // Set callback forcontact node here, just to show alternative
+  contactNode.onChange([](bool open) {
+    relayNode.setRelay(open);
+  });
 
   Homie_setFirmware(FW_NAME, FW_VERSION);
   Homie.setup();
@@ -46,4 +48,8 @@ void setup() {
 
 void loop() {
   Homie.loop();
+  #ifdef ENABLE_ARDUINO_OTA
+    void handleOTA();
+    handleOTA();
+  #endif
 }

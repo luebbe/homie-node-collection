@@ -16,10 +16,10 @@
 class ButtonNode : public HomieNode {
 public:
    typedef std::function<void(void)> TButtonCallback;
-private:
-  int _buttonPin;
-  TButtonCallback _buttonCallback;
 
+private:
+  TButtonCallback _buttonCallback;
+  int _buttonPin;
   byte _lastButtonState = HIGH;
   bool _buttonPressHandled = 0;
   unsigned long _buttonDownTime = 0;

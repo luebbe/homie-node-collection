@@ -9,9 +9,12 @@
 #include "ContactNode.hpp"
 #include <Homie.hpp>
 
-ContactNode::ContactNode(const char *name, const int contactPin)
+ContactNode::ContactNode(const char *name,
+  const int contactPin,
+  TContactCallback contactCallback)
     : HomieNode(name, "ContactNode") {
   _contactPin = contactPin;
+  _contactCallback = contactCallback;
 }
 
 // Debounce input pin.
@@ -38,13 +41,25 @@ bool ContactNode::DebouncePin( void ) {
   return false;
 }
 
+void ContactNode::handleStateChange() {
+  bool open = (_lastInputState == HIGH);
+  setProperty("open").send(open ? "true" : "false");
+  if (_contactCallback) {
+    _contactCallback(open);
+  }
+  Homie.getLogger() << "Contact is " << (open ? "open" : "closed") << endl;
+}
+
+void ContactNode::onChange(TContactCallback contactCallback) {
+  _contactCallback = contactCallback;
+}
+
 void ContactNode::loop() {
-  // Set LED based upon state of input pin.
-  if ( DebouncePin() && (_lastSentState != _lastInputState)) {
-    bool open = (_lastInputState == HIGH);
-    setProperty("open").send(open ? "true" : "false");
-    Homie.getLogger() << "Contact is " << (open ? "open" : "closed") << endl;
-    _lastSentState = _lastInputState;
+  if (_contactPin > DEFAULTPIN) {
+    if ( DebouncePin() && (_lastSentState != _lastInputState)) {
+      handleStateChange();
+      _lastSentState = _lastInputState;
+    }
   }
 }
 
