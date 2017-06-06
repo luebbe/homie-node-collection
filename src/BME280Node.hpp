@@ -2,7 +2,7 @@
  * BME280Node.h
  * Homie Node for BME280 sensors using Adafruit BME280 library.
  *
- * Version: 1.0
+ * Version: 1.1
  * Author: Lübbe Onken (http://github.com/luebbe)
  * Author: Markus Haack (http://github.com/mhaack)
  */
@@ -21,8 +21,15 @@
 class BME280Node : public HomieNode {
 private:
   static const int  MEASUREMENT_INTERVAL = 300;
-  const char *cCaption = "• BME280 sensor:";
-  const char *cIndent  = "  ◦ ";
+  const std::string cUnit     = "unit";
+  const std::string cTemperature = "temperature";
+  const std::string cHumidity = "humidity";
+  const std::string cPressure = "pressure";
+  const std::string cTemperatureUnit = cTemperature + "/" + cUnit;
+  const std::string cHumidityUnit = cHumidity + "/" + cUnit;
+  const std::string cPressureUnit = cPressure + "/" + cUnit;
+  const std::string cCaption  = "• BME280 sensor:";
+  const std::string cIndent   = "  ◦ ";
 
   bool _sensorFound = false;
   unsigned long _measurementInterval;
@@ -40,6 +47,8 @@ public:
   float getTemperature() const { return temperature; }
   float getPressure() const { return pressure; }
 
+  void setupHandler();
+  
 protected:
   virtual void setup() override;
   virtual void loop() override;
