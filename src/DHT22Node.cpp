@@ -45,9 +45,16 @@ void DHT22Node::loop() {
   }
 }
 
+void DHT22Node::setupHandler() {
+  setProperty(cTemperatureUnit).send("°C");
+  setProperty(cHumidityUnit).send("%");
+};
+
 void DHT22Node::setup() {
-  advertise("temperature");
-  advertise("humidity");
+  advertise(cTemperature);
+  advertise(cTemperatureUnit);
+  advertise(cHumidity);
+  advertise(cHumidityUnit);
 
   printCaption();
   Homie.getLogger() << cIndent << "Reading interval: " << _measurementInterval << " s" << endl;

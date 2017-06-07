@@ -16,7 +16,7 @@ BME280Node::BME280Node(const char *name, const int measurementInterval)
 }
 
 char *BME280Node::printCaption() {
-  Homie.getLogger() << cCaption.c_str() <<  endl;
+  Homie.getLogger() << cCaption <<  endl;
 }
 
 void BME280Node::loop() {
@@ -29,9 +29,9 @@ void BME280Node::loop() {
 
       printCaption();
 
-      Homie.getLogger() << cIndent.c_str() << "Temperature: " << temperature << " °C" << endl;
-      Homie.getLogger() << cIndent.c_str() << "Humidity: " << humidity << " %" << endl;
-      Homie.getLogger() << cIndent.c_str() << "Pressure: " << pressure << " hPa" << endl;
+      Homie.getLogger() << cIndent << "Temperature: " << temperature << " °C" << endl;
+      Homie.getLogger() << cIndent << "Humidity: " << humidity << " %" << endl;
+      Homie.getLogger() << cIndent << "Pressure: " << pressure << " hPa" << endl;
 
       setProperty("temperature").send(String(temperature));
       setProperty("humidity").send(String(humidity));
@@ -43,26 +43,26 @@ void BME280Node::loop() {
 }
 
 void BME280Node::setupHandler() {
-  setProperty(cTemperatureUnit.c_str()).send("°C");
-  setProperty(cHumidityUnit.c_str()).send("%");
-  setProperty(cPressureUnit.c_str()).send("hPa");
+  setProperty(cTemperatureUnit).send("°C");
+  setProperty(cHumidityUnit).send("%");
+  setProperty(cPressureUnit).send("hPa");
 };
 
 void BME280Node::setup() {
-  advertise(cTemperature.c_str());
-  advertise(cTemperatureUnit.c_str());
-  advertise(cHumidity.c_str());
-  advertise(cHumidityUnit.c_str());
-  advertise(cPressure.c_str());
-  advertise(cPressureUnit.c_str());
-  if (bme.begin()) {
+  advertise(cTemperature);
+  advertise(cTemperatureUnit);
+  advertise(cHumidity);
+  advertise(cHumidityUnit);
+  advertise(cPressure);
+  advertise(cPressureUnit);
 
+  if (bme.begin()) {
     _sensorFound = true;
-    Homie.getLogger() << cCaption.c_str() << " found" << endl
-                      << cIndent.c_str() << "Reading interval: " << _measurementInterval << " s" << endl;
+    Homie.getLogger() << cCaption << " found" << endl
+                      << cIndent << "Reading interval: " << _measurementInterval << " s" << endl;
   }
   else {
     _sensorFound = false;
-    Homie.getLogger() << cCaption.c_str() << " not found. Check wiring!" << endl;
+    Homie.getLogger() << cCaption << " not found. Check wiring!" << endl;
   }
 }

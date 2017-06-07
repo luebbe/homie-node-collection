@@ -30,6 +30,12 @@ ButtonNode  buttonNode("button", PIN_BUTTON, []() {
   relayNode.toggleRelay();
 });
 
+void setupHandler() {
+  // Advertise units
+  bme280Node.setupHandler();
+  dht22Node.setupHandler();
+};
+
 void setup() {
   Serial.begin(SERIAL_SPEED);
   Serial << endl << endl;
@@ -37,12 +43,13 @@ void setup() {
   // Initializes I2C for BME280 sensor
   Wire.begin(PIN_SDA, PIN_SCL);
 
-  // Set callback forcontact node here, just to show alternative
+  // Set callback for contact node here, just to show alternative
   contactNode.onChange([](bool open) {
     relayNode.setRelay(open);
   });
 
   Homie_setFirmware(FW_NAME, FW_VERSION);
+  Homie.setSetupHandler(setupHandler);
   Homie.setup();
 }
 

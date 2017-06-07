@@ -13,6 +13,7 @@
 #include <DHT_U.h>
 
 #include <HomieNode.hpp>
+#include "constants.h"
 
 #define DEFAULTPIN -1
 
@@ -37,6 +38,8 @@ public:
 
   float getHumidity() const { return humidity; }
   float getTemperature() const { return temperature; }
+
+  void setupHandler();
 
 protected:
   virtual void setup() override;
