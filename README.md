@@ -18,7 +18,23 @@ A relay that can be set on (true|false) via MQTT message. An optional LED GPIO p
 
 ## BME280Node
 A node for a Bosch BME280 I2C temperature/humidity/pressure sensor. Reports the three values back via MQTT.
+Advertises the values as:
+* \<homie-device\>/\<sensor-name\>/temperature
+* \<homie-device\>/\<sensor-name\>/humidity
+* \<homie-device\>/\<sensor-name\>/pressure
+
+The units are advertised as subtopics:
+* \<homie-device\>/\<sensor-name\>/temperature/unit
+* \<homie-device\>/\<sensor-name\>/humidity/unit
+* \<homie-device\>/\<sensor-name\>/pressure/unit
 
 ## DHT22Node
 A node for a DHT22 temperature/humidity sensor. Reports the two values back via MQTT.
+Advertises the values as:
+* \<homie-device\>/\<sensor-name\>/temperature
+* \<homie-device\>/\<sensor-name\>/humidity
+
+The units are advertised as subtopics:
+* \<homie-device\>/\<sensor-name\>/temperature/unit
+* \<homie-device\>/\<sensor-name\>/humidity/unit
 
