@@ -49,7 +49,7 @@ void setup() {
   });
 
   Homie_setFirmware(FW_NAME, FW_VERSION);
-  Homie.setSetupHandler(setupHandler);
+  Homie.setSetupFunction(setupHandler);
   Homie.setup();
 }
 
