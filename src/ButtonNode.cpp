@@ -19,7 +19,8 @@ ButtonNode::ButtonNode(const char *name,
 
 void ButtonNode::handleButtonPress(unsigned long dt) {
 #ifdef DEBUG
-  Homie.getLogger() << "Button pressed " << dt << " ms" << endl;
+  printCaption();
+  Homie.getLogger() << cIndent <<  "pressed: " << dt << " ms" << endl;
 #endif
   if (_buttonCallback) {
     _buttonCallback();
@@ -28,6 +29,10 @@ void ButtonNode::handleButtonPress(unsigned long dt) {
 
 void ButtonNode::onPress(TButtonCallback buttonCallback) {
   _buttonCallback = buttonCallback;
+}
+
+void ButtonNode::printCaption() {
+  Homie.getLogger() << cCaption <<  endl;
 }
 
 void ButtonNode::loop() {
@@ -56,7 +61,8 @@ void ButtonNode::loop() {
 }
 
 void ButtonNode::setup() {
-  Homie.getLogger() << "Button Pin: " << _buttonPin << endl;
+  printCaption();
+  Homie.getLogger() << cIndent <<  "Pin: " << _buttonPin << endl;
 
   if (_buttonPin > DEFAULTPIN) {
     pinMode(_buttonPin, INPUT_PULLUP);

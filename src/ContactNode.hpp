@@ -18,6 +18,9 @@ public:
   typedef std::function<void(bool)> TContactCallback;
 
 private:
+  const char *cCaption  = "• Contact:";
+  const char *cIndent   = "  ◦ ";
+
   TContactCallback _contactCallback;
   int _contactPin;
   int _lastInputState = LOW;   // Input pin state.
@@ -27,6 +30,7 @@ private:
 
   bool debouncePin(void);
   void handleStateChange(bool open);
+  void printCaption();
 
 protected:
   virtual void loop() override;

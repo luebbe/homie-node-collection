@@ -46,11 +46,17 @@ void ContactNode::handleStateChange(bool open) {
   if (_contactCallback) {
     _contactCallback(open);
   }
-  Homie.getLogger() << "Contact is " << (open ? "open" : "closed") << endl;
+
+  printCaption();
+  Homie.getLogger() << cIndent <<  "is " << (open ? "open" : "closed") << endl;
 }
 
 void ContactNode::onChange(TContactCallback contactCallback) {
   _contactCallback = contactCallback;
+}
+
+void ContactNode::printCaption() {
+  Homie.getLogger() << cCaption <<  endl;
 }
 
 void ContactNode::loop() {
@@ -65,7 +71,8 @@ void ContactNode::loop() {
 void ContactNode::setup() {
   advertise("open");
 
-  Homie.getLogger() << "Contact pin: " << _contactPin << endl;
+  printCaption();
+  Homie.getLogger() << cIndent <<  "Pin: " << _contactPin << endl;
 
   if (_contactPin > DEFAULTPIN) {
     pinMode(_contactPin, INPUT_PULLUP);

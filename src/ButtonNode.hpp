@@ -18,6 +18,9 @@ public:
    typedef std::function<void(void)> TButtonCallback;
 
 private:
+  const char *cCaption  = "• Button:";
+  const char *cIndent   = "  ◦ ";
+
   TButtonCallback _buttonCallback;
   int _buttonPin;
   byte _lastButtonState = HIGH;
@@ -25,6 +28,7 @@ private:
   unsigned long _buttonDownTime = 0;
 
   void handleButtonPress(unsigned long dt);
+  void printCaption();
 
 protected:
   virtual void loop() override;
