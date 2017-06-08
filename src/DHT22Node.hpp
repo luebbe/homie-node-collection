@@ -29,7 +29,7 @@ private:
 
   DHT* dht;
 
-  char *printCaption();
+  void printCaption();
 
 public:
   DHT22Node(const char *name,

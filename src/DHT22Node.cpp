@@ -17,7 +17,7 @@ DHT22Node::DHT22Node(const char *name, const int sensorPin, const int measuremen
   _measurementInterval = measurementInterval;
 }
 
-char *DHT22Node::printCaption() {
+void DHT22Node::printCaption() {
   Homie.getLogger() << cCaption << " pin[" << _sensorPin << "]:"  << endl;
 }
 

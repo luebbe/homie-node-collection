@@ -15,7 +15,7 @@ BME280Node::BME280Node(const char *name, const int measurementInterval)
   _measurementInterval = measurementInterval;
 }
 
-char *BME280Node::printCaption() {
+void BME280Node::printCaption() {
   Homie.getLogger() << cCaption <<  endl;
 }
 

@@ -24,6 +24,10 @@ bool RelayNode::handleInput(const String& property, const HomieRange& range, con
   return true;
 }
 
+void RelayNode::printCaption() {
+  Homie.getLogger() << cCaption <<  endl;
+}
+
 void RelayNode::setLed(bool on) {
   if (_ledPin > DEFAULTPIN) {
     digitalWrite(_ledPin, on ? LOW : HIGH); // LOW = LED on
@@ -31,13 +35,16 @@ void RelayNode::setLed(bool on) {
 }
 
 void RelayNode::setRelay(bool on) {
+
+  printCaption();
+
   if (_relayPin > DEFAULTPIN) {
     digitalWrite(_relayPin, on ? HIGH : LOW); // HIGH = close relay
     setProperty("on").send(on ? "true" : "false");
-    Homie.getLogger() << "Relay is " << (on ? "on" : "off") << endl;
+    Homie.getLogger() << cIndent <<  "Relay is " << (on ? "on" : "off") << endl;
   }
   else {
-    Homie.getLogger() << "No Relay Pin!" << endl;
+    Homie.getLogger() << cIndent << "No Relay Pin!" << endl;
   }
   setLed(on);
 }
@@ -47,15 +54,18 @@ void RelayNode::toggleRelay() {
     setRelay(digitalRead(_relayPin) == LOW);
   }
   else {
-    Homie.getLogger() << "No Relay Pin!" << endl;
+    printCaption();
+    Homie.getLogger() << cIndent << "No Relay Pin!" << endl;
   }
 }
 
 void RelayNode::setup() {
   advertise("on").settable();
 
-  Homie.getLogger() << "Relay Pin: " << _relayPin << endl
-                    << "Led Pin  : " << _ledPin << endl;
+  printCaption();
+
+  Homie.getLogger() << cIndent << "Relay Pin: " << _relayPin << endl
+                    << cIndent << "Led Pin  : " << _ledPin << endl;
 
   if (_ledPin > DEFAULTPIN) {
     pinMode(_ledPin, OUTPUT);

@@ -15,9 +15,13 @@
 
 class RelayNode : public HomieNode {
 private:
+  const char *cCaption  = "• Relay:";
+  const char *cIndent   = "  ◦ ";
+
   int _relayPin;
   int _ledPin;
 
+  void printCaption();
   void setLed(bool on);
 
 protected:

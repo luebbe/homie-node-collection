@@ -30,7 +30,7 @@ private:
 
   Adafruit_BME280 bme;
 
-  char *printCaption();
+  void printCaption();
 
 public:
   BME280Node(const char *name,
