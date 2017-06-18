@@ -2,11 +2,7 @@
 #define FW_VERSION "1.0.0"
 
 #include <Homie.h>
-#include "DHT22Node.hpp"
-#include "BME280Node.hpp"
-#include "ContactNode.hpp"
-#include "RelayNode.hpp"
-#include "ButtonNode.hpp"
+#include "homie-node-collection.h"
 
 // Insert your pin number(s) here
 #define PIN_CONTACT 5
@@ -43,6 +39,8 @@ void setup() {
   // Initializes I2C for BME280 sensor
   Wire.begin(PIN_SDA, PIN_SCL);
 
+  otaSetup();
+
   // Set callback for contact node here, just to show alternative
   contactNode.onChange([](bool open) {
     relayNode.setRelay(open);
@@ -55,8 +53,5 @@ void setup() {
 
 void loop() {
   Homie.loop();
-  #ifdef ENABLE_ARDUINO_OTA
-    void handleOTA();
-    handleOTA();
-  #endif
+  otaLoop();
 }

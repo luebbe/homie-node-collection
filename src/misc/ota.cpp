@@ -26,11 +26,17 @@ void otaSetup(uint16_t port, const char *password) {
     unsigned int curprogress = (progress / (total / 100));
     if (lastprogress != curprogress) {
       lastprogress = curprogress;
-      if ((curprogress > 0) && (curprogress % 10 == 0)) {
-        Homie.getLogger() << curprogress << "%";
-      }
-      else {
+      if (curprogress > 0) {
         Homie.getLogger() << ".";
+        if (curprogress % 25 == 0) {
+          const char * sp;
+          if(curprogress < 100) {
+            sp = " ";
+          } else {
+            sp = "";
+          };
+          Homie.getLogger() << " [" << sp << curprogress << "% ]" << endl;
+        }
       }
     }
   });
