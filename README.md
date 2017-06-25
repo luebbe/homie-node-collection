@@ -5,7 +5,7 @@
 
 Collection of nodes and examples for Homie. The nodes are designed as independend classes, so they can work standalone. For instance you can easily wire up a firmware for a Sonoff Relay by combining a ButtonNode with a RelayNode.
 
-The software is based on [Homie (v2.0)](https://github.com/marvinroger/homie-esp8266)
+The software is based on [Homie (v2.0)](https://github.com/marvinroger/homie-esp8266) and is developed using [PlatformIO](https://github.com/platformio)
 
 ## ButtonNode
 A pushbutton that just detects a single button press. An optional callback can be triggered by the button press event. The button press is *not* reported back via MQTT. ToDo: detect multiple button presses and report them back.
