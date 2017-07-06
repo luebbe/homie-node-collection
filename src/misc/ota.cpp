@@ -1,14 +1,23 @@
+/*
+ * OtaLogger.cpp
+ * Wraps ArduinoOTA into a class and shows the OTA
+ * status on serial or an OLED display.
+ *
+ * Version: 1.0
+ * Author: Lübbe Onken (http://github.com/luebbe)
+ */
+
 #include "ota.hpp"
 
 // -----------------------------------------------------------------------------
-// OTA
+// OTA info via Homie logger
 // -----------------------------------------------------------------------------
 
-OtaWrapper::OtaWrapper() {
+OtaLogger::OtaLogger() {
 
 };
 
-String OtaWrapper::getErrorMessage(ota_error_t error) {
+String OtaLogger::getErrorMessage(ota_error_t error) {
   if (error == OTA_AUTH_ERROR) return "Auth Failed";
   else if (error == OTA_BEGIN_ERROR) return "Begin Failed";
   else if (error == OTA_CONNECT_ERROR) return "Connect Failed";
@@ -16,7 +25,8 @@ String OtaWrapper::getErrorMessage(ota_error_t error) {
   else if (error == OTA_END_ERROR) return "End Failed";
 };
 
-void OtaWrapper::setup(uint16_t port, const char *password) {
+void OtaLogger::setup(uint16_t port, const char *password) {
+  Homie.getLogger() << "[OTA] Setup";
   ArduinoOTA.setPort(port);
   ArduinoOTA.setHostname(WiFi.hostname().c_str());    // Hostname defaults to esp8266-[ChipID]
 
@@ -41,22 +51,22 @@ void OtaWrapper::setup(uint16_t port, const char *password) {
   });
 
   ArduinoOTA.begin();
-  Homie.getLogger() << "[OTA] setup finished\n\n" << endl;
+  Homie.getLogger() << " done" << endl;
 };
 
-void OtaWrapper::loop() {
+void OtaLogger::loop() {
   ArduinoOTA.handle();
 };
 
-void OtaWrapper::onStart() {
+void OtaLogger::onStart() {
   Homie.getLogger() << "[OTA] Start" << endl ;
 };
 
-void OtaWrapper::onEnd() {
+void OtaLogger::onEnd() {
   Homie.getLogger() << endl << "[OTA] End" << endl ;
 };
 
-void OtaWrapper::onProgress(unsigned int progress, unsigned int total) {
+void OtaLogger::onProgress(unsigned int progress, unsigned int total) {
   static int lastprogress = -1;
   unsigned int curprogress = (progress / (total / 100));
   if (lastprogress != curprogress) {
@@ -70,95 +80,53 @@ void OtaWrapper::onProgress(unsigned int progress, unsigned int total) {
         } else {
           sp = "";
         };
-        Homie.getLogger() << " [" << sp << curprogress << "% xx]" << endl;
+        Homie.getLogger() << " [" << sp << curprogress << "%]" << endl;
       }
     }
   }
 };
 
-void OtaWrapper::onError(ota_error_t error) {
+void OtaLogger::onError(ota_error_t error) {
   Homie.getLogger() << "[OTA] Error " << getErrorMessage(error) << " : " << endl;
 };
 
-OtaDisplayWrapper::OtaDisplayWrapper(OLEDDisplay *display)
-  : OtaWrapper() {
+// -----------------------------------------------------------------------------
+// OTA info via OLED Display
+// -----------------------------------------------------------------------------
+
+OtaDisplay::OtaDisplay(OLEDDisplay *display)
+  : OtaLogger() {
   _display = display;
 };
 
-void OtaDisplayWrapper::setup(uint16_t port, const char *password) {
-  Homie.getLogger() << "Setup Display";
+void OtaDisplay::setup(uint16_t port, const char *password) {
+  OtaLogger::setup(port, password);
+
+  Homie.getLogger() << "[OTA] Setup Display";
 
   _display->init();
   _display->clear();
   _display->display();
-
   _display->flipScreenVertically();
-  OtaWrapper::setup(port, password);
+
   Homie.getLogger() << " done" << endl;
 }
 
-void OtaDisplayWrapper::onProgress(unsigned int progress, unsigned int total) {
+void OtaDisplay::onEnd() {
+  OtaLogger::onEnd();
+  _display->clear();
+  _display->setTextAlignment(TEXT_ALIGN_CENTER);
+  _display->setFont(ArialMT_Plain_10);
+  _display->drawString(64, 10, "Rebooting...");
+  _display->display();
+};
+
+void OtaDisplay::onProgress(unsigned int progress, unsigned int total) {
+  OtaLogger::onProgress(progress, total);
   _display->clear();
   _display->setTextAlignment(TEXT_ALIGN_CENTER);
   _display->setFont(ArialMT_Plain_10);
   _display->drawString(64, 10, "OTA Update");
-  _display->drawProgressBar(2, 28, 124, 10, progress / (total / 100));
+  _display->drawProgressBar(2, 28, 124, 8, progress / (total / 100));
   _display->display();
-  OtaWrapper::onProgress(progress, total);
 };
-
-// ----------
-void otaSetup(uint16_t port, const char *password) {
-  unsigned int lastprogress = -1;
-
-  ArduinoOTA.setPort(port);
-  ArduinoOTA.setHostname(WiFi.hostname().c_str());    // Hostname defaults to esp8266-[ChipID]
-
-  if (password != "") {
-    ArduinoOTA.setPassword(password);
-  }
-
-  ArduinoOTA.onStart([]() {
-    Homie.getLogger() << "[OTA] Start" << endl ;
-  });
-
-  ArduinoOTA.onEnd([]() {
-    Homie.getLogger() << endl << "[OTA] End" << endl ;
-  });
-
-  ArduinoOTA.onProgress([lastprogress](unsigned int progress, unsigned int total) mutable {
-    unsigned int curprogress = (progress / (total / 100));
-    if (lastprogress != curprogress) {
-      lastprogress = curprogress;
-      if (curprogress > 0) {
-        Homie.getLogger() << ".";
-        if (curprogress % 25 == 0) {
-          const char * sp;
-          if(curprogress < 100) {
-            sp = " ";
-          } else {
-            sp = "";
-          };
-          Homie.getLogger() << " [" << sp << curprogress << "% ]" << endl;
-        }
-      }
-    }
-  });
-
-  ArduinoOTA.onError([](ota_error_t error) {
-    Homie.getLogger() << "[OTA] Error " << error << " : " << endl;
-    //DEBUG_MSG("\n[OTA] Error[%u]: ", error);
-    if (error == OTA_AUTH_ERROR) Homie.getLogger() << "Auth Failed" << endl;
-    else if (error == OTA_BEGIN_ERROR)Homie.getLogger() << "Begin Failed" << endl;
-    else if (error == OTA_CONNECT_ERROR) Homie.getLogger() << "Connect Failed" << endl;
-    else if (error == OTA_RECEIVE_ERROR) Homie.getLogger() << "Receive Failed" << endl;
-    else if (error == OTA_END_ERROR) Homie.getLogger() << "End Failed" << endl;
-  });
-
-  ArduinoOTA.begin();
-  Homie.getLogger() << "[OTA] setup finished\n\n" << endl;
-}
-
-void otaLoop() {
-    ArduinoOTA.handle();
-}
