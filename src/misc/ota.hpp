@@ -23,16 +23,15 @@ private:
 protected:
   String getErrorMessage(ota_error_t error);
 
+  virtual void onStart();
+  virtual void onEnd();
+  virtual void onProgress(unsigned int progress, unsigned int total);
+  virtual void onError(ota_error_t error);
 public:
   OtaLogger();
 
   virtual void setup(uint16_t port = 8266, const char *password = "");
   virtual void loop();
-
-  virtual void onStart();
-  virtual void onEnd();
-  virtual void onProgress(unsigned int progress, unsigned int total);
-  virtual void onError(ota_error_t error);
 };
 
 // -----------------------------------------------------------------------------
@@ -43,13 +42,12 @@ class OtaDisplay : public OtaLogger {
 private:
   OLEDDisplay *_display;
 protected:
+  void onEnd();
+  void onProgress(unsigned int progress, unsigned int total) override;
 public:
   OtaDisplay(OLEDDisplay *display);
 
   void setup(uint16_t port = 8266, const char *password = "") override;
-
-  void onEnd();
-  void onProgress(unsigned int progress, unsigned int total) override;
 };
 
 #endif /* end of include guard: SRC_OTA_H */
