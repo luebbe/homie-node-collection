@@ -1,7 +1,6 @@
 # Homie Node Collection
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://travis-ci.org/luebbe/homie-node-collection.svg?branch=master)](https://travis-ci.org/luebbe/homie-node-collection)
 
 Collection of nodes and examples for Homie. The nodes are designed as independent classes, so they can work standalone. For instance you can easily wire up a firmware for a Sonoff Relay by combining a ButtonNode with a RelayNode.
 
