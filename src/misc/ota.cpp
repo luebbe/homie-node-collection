@@ -100,6 +100,8 @@ OtaDisplay::OtaDisplay(OLEDDisplay *display)
 };
 
 void OtaDisplay::setup(uint16_t port, const char *password) {
+  // Don't do anything with the display here (setup, init, ...)
+  // It'll crash Homie
   Homie.getLogger() << "• OTA - Display" << endl;
   OtaLogger::setup(port, password);
 }
