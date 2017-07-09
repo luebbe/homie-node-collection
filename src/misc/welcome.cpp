@@ -7,6 +7,7 @@
 void welcome() {
 
     delay(1000);
+    Serial.println();
     Serial.printf("Device: %s\r\n", (char *) WiFi.hostname().c_str());
     Serial.printf("ChipID: %06X\r\n", ESP.getChipId());
     Serial.printf("Last reset reason: %s\r\n", (char *) ESP.getResetReason().c_str());
@@ -23,5 +24,4 @@ void welcome() {
     }
     Serial.println();
     Serial.println();
-
 }

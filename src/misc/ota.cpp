@@ -26,7 +26,7 @@ String OtaLogger::getErrorMessage(ota_error_t error) {
 };
 
 void OtaLogger::setup(uint16_t port, const char *password) {
-  Homie.getLogger() << "[OTA] Setup";
+  Homie.getLogger() << "• OTA - Setup";
   ArduinoOTA.setPort(port);
   ArduinoOTA.setHostname(WiFi.hostname().c_str());    // Hostname defaults to esp8266-[ChipID]
 
@@ -59,11 +59,11 @@ void OtaLogger::loop() {
 };
 
 void OtaLogger::onStart() {
-  Homie.getLogger() << "[OTA] Start" << endl ;
+  Homie.getLogger() << "• OTA - Start" << endl ;
 };
 
 void OtaLogger::onEnd() {
-  Homie.getLogger() << endl << "[OTA] End" << endl ;
+  Homie.getLogger() << endl << "• OTA - End" << endl ;
 };
 
 void OtaLogger::onProgress(unsigned int progress, unsigned int total) {
@@ -87,7 +87,7 @@ void OtaLogger::onProgress(unsigned int progress, unsigned int total) {
 };
 
 void OtaLogger::onError(ota_error_t error) {
-  Homie.getLogger() << "[OTA] Error " << getErrorMessage(error) << " : " << endl;
+  Homie.getLogger() << "• OTA - Error " << getErrorMessage(error) << " : " << endl;
 };
 
 // -----------------------------------------------------------------------------
@@ -100,16 +100,8 @@ OtaDisplay::OtaDisplay(OLEDDisplay *display)
 };
 
 void OtaDisplay::setup(uint16_t port, const char *password) {
+  Homie.getLogger() << "• OTA - Display" << endl;
   OtaLogger::setup(port, password);
-
-  Homie.getLogger() << "[OTA] Setup Display";
-
-  _display->init();
-  _display->clear();
-  _display->display();
-  _display->flipScreenVertically();
-
-  Homie.getLogger() << " done" << endl;
 }
 
 void OtaDisplay::onEnd() {
