@@ -13,6 +13,11 @@
 #define PIN_SCL    13
 #define PIN_BUTTON 14
 
+#define SERIAL_SPEED 115200
+
+// Setup OTA logging via Homie logger
+OtaLogger ota;
+
 // Create one node of each kind
 BME280Node  bme280Node("bme280");
 DHT22Node   dht22Node("dht22", PIN_DHT);
@@ -32,14 +37,20 @@ void setupHandler() {
   dht22Node.setupHandler();
 };
 
+void loopHandler() {
+  // We want to OTA handler to run only in the loop when WiFi is connected
+  ota.loop();
+}
+
 void setup() {
   Serial.begin(SERIAL_SPEED);
   Serial << endl << endl;
 
+  welcome();
+  ota.setup();
+
   // Initializes I2C for BME280 sensor
   Wire.begin(PIN_SDA, PIN_SCL);
-
-  otaSetup();
 
   // Set callback for contact node here, just to show alternative
   contactNode.onChange([](bool open) {
@@ -48,10 +59,11 @@ void setup() {
 
   Homie_setFirmware(FW_NAME, FW_VERSION);
   Homie.setSetupFunction(setupHandler);
+  Homie.setLoopFunction(loopHandler);
+
   Homie.setup();
 }
 
 void loop() {
   Homie.loop();
-  otaLoop();
 }
