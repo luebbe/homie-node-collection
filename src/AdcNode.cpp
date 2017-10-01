@@ -30,7 +30,7 @@ void AdcNode::loop() {
     printCaption();
 
     if (isnan(_voltage)) {
-      Homie.getLogger() << cIndent << "Error reading from Sensor" << endl;
+      Homie.getLogger() << cIndent << "Error reading from Adc" << endl;
     }
     else {
       Homie.getLogger() << cIndent << "Voltage: " << _voltage << " V" << endl;

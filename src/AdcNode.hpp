@@ -15,7 +15,7 @@
 class AdcNode : public HomieNode {
 private:
   static const int MEASUREMENT_INTERVAL = 300;
-  const char *cCaption = "• ADC measurement";
+  const char *cCaption = "• ADC measurement:";
   const char *cIndent  = "  ◦ ";
 
   unsigned long _measurementInterval;
