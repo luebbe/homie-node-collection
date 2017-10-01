@@ -5,13 +5,13 @@
 #include "homie-node-collection.h"
 
 // Insert your pin number(s) here
-#define PIN_CONTACT 5
-#define PIN_RELAY   4
-#define PIN_LED     2
-#define PIN_DHT     0
-#define PIN_SDA    12
-#define PIN_SCL    13
-#define PIN_BUTTON 14
+#define PIN_LED      2
+#define PIN_DHT      0
+#define PIN_SDA      4
+#define PIN_SCL      5
+#define PIN_CONTACT 12
+#define PIN_RELAY   13
+#define PIN_BUTTON  14
 
 #define SERIAL_SPEED 115200
 
@@ -22,6 +22,7 @@ OtaLogger ota;
 BME280Node  bme280Node("bme280");
 DHT22Node   dht22Node("dht22", PIN_DHT);
 RelayNode   relayNode("relay", PIN_RELAY, PIN_LED);
+AdcNode     adcNode("adc");
 
 // Initialize contact node without callback
 ContactNode contactNode("contact", PIN_CONTACT);
@@ -35,6 +36,7 @@ void setupHandler() {
   // Advertise units
   bme280Node.setupHandler();
   dht22Node.setupHandler();
+  adcNode.setupHandler();
 };
 
 void loopHandler() {

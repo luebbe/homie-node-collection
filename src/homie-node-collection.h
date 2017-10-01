@@ -8,4 +8,5 @@
 #include "ContactNode.hpp"
 #include "DHT22Node.hpp"
 #include "RelayNode.hpp"
+#include "AdcNode.hpp"
 
