@@ -94,9 +94,13 @@ void OtaLogger::onError(ota_error_t error) {
 // OTA info via OLED Display
 // -----------------------------------------------------------------------------
 
-OtaDisplay::OtaDisplay(OLEDDisplay *display)
+OtaDisplay::OtaDisplay(OLEDDisplay *display, int height)
   : OtaLogger() {
   _display = display;
+  if (height > 32)
+    _barTop = 28;
+  else
+    _barTop = height - 8;
 };
 
 void OtaDisplay::setup(uint16_t port, const char *password) {
@@ -111,7 +115,7 @@ void OtaDisplay::onEnd() {
   _display->clear();
   _display->setTextAlignment(TEXT_ALIGN_CENTER);
   _display->setFont(ArialMT_Plain_10);
-  _display->drawString(64, 10, "Rebooting...");
+  _display->drawString(64, _barTop - 16, "Rebooting...");
   _display->display();
 };
 
@@ -120,7 +124,7 @@ void OtaDisplay::onProgress(unsigned int progress, unsigned int total) {
   _display->clear();
   _display->setTextAlignment(TEXT_ALIGN_CENTER);
   _display->setFont(ArialMT_Plain_10);
-  _display->drawString(64, 10, "OTA Update");
-  _display->drawProgressBar(2, 28, 124, 8, progress / (total / 100));
+  _display->drawString(64, _barTop - 16, "OTA Update");
+  _display->drawProgressBar(2, _barTop, 124, 8, progress / (total / 100));
   _display->display();
 };

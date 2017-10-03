@@ -41,11 +41,12 @@ public:
 class OtaDisplay : public OtaLogger {
 private:
   OLEDDisplay *_display;
+  int _barTop;
 protected:
   void onEnd();
   void onProgress(unsigned int progress, unsigned int total) override;
 public:
-  OtaDisplay(OLEDDisplay *display);
+  OtaDisplay(OLEDDisplay *display, int height = 64);
 
   void setup(uint16_t port = 8266, const char *password = "") override;
 };
