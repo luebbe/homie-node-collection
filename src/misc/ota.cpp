@@ -100,7 +100,7 @@ OtaDisplay::OtaDisplay(OLEDDisplay *display, int height)
   if (height > 32)
     _barTop = 28;
   else
-    _barTop = height - 8;
+    _barTop = height - 8 - 1;
 };
 
 void OtaDisplay::setup(uint16_t port, const char *password) {
