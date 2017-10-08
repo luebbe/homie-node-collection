@@ -6,8 +6,8 @@
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
-#ifndef SRC_ADCNODE_H_
-#define SRC_ADCNODE_H_
+#ifndef SRC_ADCNODE_H
+#define SRC_ADCNODE_H
 
 #include <HomieNode.hpp>
 #include "constants.h"
