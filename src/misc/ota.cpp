@@ -153,9 +153,10 @@ void OtaDisplayU8G2::onStart() {
   const char* message = "OTA Update...";
   
   _display->clearBuffer();
-
   _display->setDrawColor(1);
+  _display->setFontPosTop();
   _display->setFont(u8g2_font_fub11_tr);
+  
   uint8_t _strWidth = _display->getStrWidth(message);
   _display->drawStr((_width - _strWidth) / 2, _height / 2, message);
 
@@ -168,9 +169,10 @@ void OtaDisplayU8G2::onEnd() {
   const char* message = "Rebooting...";
 
   _display->clearBuffer();
-
   _display->setDrawColor(1);
+  _display->setFontPosTop();
   _display->setFont(u8g2_font_fub11_tr);
+
   uint8_t _strWidth = _display->getStrWidth(message);
   _display->drawStr((_width - _strWidth) / 2, _height / 2, message);
 
