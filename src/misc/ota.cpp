@@ -3,7 +3,7 @@
  * Wraps ArduinoOTA into a class and shows the OTA
  * status on serial or an OLED display.
  *
- * Version: 1.0
+ * Version: 1.1
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
@@ -90,41 +90,103 @@ void OtaLogger::onError(ota_error_t error) {
   Homie.getLogger() << "• OTA - Error " << getErrorMessage(error) << " : " << endl;
 };
 
+// #ifdef USE_SSD1306
 // -----------------------------------------------------------------------------
-// OTA info via OLED Display
+// OTA info via SSD1306 128x64 OLED Display using the esp8266-oled-ssd1306 library
 // -----------------------------------------------------------------------------
 
-OtaDisplay::OtaDisplay(OLEDDisplay *display, int height)
+OtaDisplaySSD1306::OtaDisplaySSD1306(OLEDDisplay *display)
   : OtaLogger() {
   _display = display;
-  if (height > 32)
-    _barTop = 28;
-  else
-    _barTop = height - 8 - 1;
 };
 
-void OtaDisplay::setup(uint16_t port, const char *password) {
+void OtaDisplaySSD1306::setup(uint16_t port, const char *password) {
   // Don't do anything with the display here (setup, init, ...)
   // It'll crash Homie
-  Homie.getLogger() << "• OTA - Display" << endl;
+  Homie.getLogger() << "• OTA - OtaDisplaySSD1306" << endl;
   OtaLogger::setup(port, password);
 }
 
-void OtaDisplay::onEnd() {
+void OtaDisplaySSD1306::onEnd() {
   OtaLogger::onEnd();
   _display->clear();
   _display->setTextAlignment(TEXT_ALIGN_CENTER);
   _display->setFont(ArialMT_Plain_10);
-  _display->drawString(64, _barTop - 16, "Rebooting...");
+  _display->drawString(64, 10, "Rebooting...");
   _display->display();
 };
 
-void OtaDisplay::onProgress(unsigned int progress, unsigned int total) {
+void OtaDisplaySSD1306::onProgress(unsigned int progress, unsigned int total) {
   OtaLogger::onProgress(progress, total);
   _display->clear();
   _display->setTextAlignment(TEXT_ALIGN_CENTER);
   _display->setFont(ArialMT_Plain_10);
-  _display->drawString(64, _barTop - 16, "OTA Update");
-  _display->drawProgressBar(2, _barTop, 124, 8, progress / (total / 100));
+  _display->drawString(64, 10, "OTA Update");
+  _display->drawProgressBar(2, 28, 124, 8, progress / (total / 100));
   _display->display();
 };
+// #endif
+
+// #ifdef USE_U8G2
+// -----------------------------------------------------------------------------
+// OTA info via OLED Display using the u8g2 library
+// -----------------------------------------------------------------------------
+
+OtaDisplayU8G2::OtaDisplayU8G2(U8G2 *display)
+  : OtaLogger() {
+  _display = display;
+  _height = display->getHeight();
+  _width = display->getWidth();
+  _progress = 0;
+};
+
+void OtaDisplayU8G2::setup(uint16_t port, const char *password) {
+  // Don't do anything with the display here (setup, init, ...)
+  // It'll crash Homie
+  Homie.getLogger() << "• OTA - OtaDisplayU8G2" << endl;
+  OtaLogger::setup(port, password);
+}
+
+void OtaDisplayU8G2::onStart() {
+  OtaLogger::onStart();
+
+  const char* message = "OTA Update...";
+  
+  _display->clearBuffer();
+
+  _display->setDrawColor(1);
+  _display->setFont(u8g2_font_fub11_tr);
+  uint8_t _strWidth = _display->getStrWidth(message);
+  _display->drawStr((_width - _strWidth) / 2, _height / 2, message);
+
+  _display->sendBuffer();
+}
+
+void OtaDisplayU8G2::onEnd() {
+  OtaLogger::onEnd();
+
+  const char* message = "Rebooting...";
+
+  _display->clearBuffer();
+
+  _display->setDrawColor(1);
+  _display->setFont(u8g2_font_fub11_tr);
+  uint8_t _strWidth = _display->getStrWidth(message);
+  _display->drawStr((_width - _strWidth) / 2, _height / 2, message);
+
+  _display->sendBuffer();
+};
+
+void OtaDisplayU8G2::onProgress(unsigned int progress, unsigned int total) {
+  OtaLogger::onProgress(progress, total);
+ 
+  uint8_t curProgress = (progress * _width) / total;
+
+  if (curProgress > _progress) 
+  {
+    _progress = curProgress;
+    _display->drawBox(0, _height - 8, _progress, 6);
+    _display->sendBuffer();
+  }
+};
+// #endif
