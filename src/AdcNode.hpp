@@ -23,6 +23,7 @@ private:
   float _voltage = NAN;
   
   void printCaption();
+  void readVoltage();
 
 public:
   AdcNode(const char *name, const int measurementInterval = MEASUREMENT_INTERVAL);
