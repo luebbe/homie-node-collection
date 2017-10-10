@@ -20,12 +20,17 @@ void AdcNode::printCaption() {
   Homie.getLogger() << cCaption  << endl;
 }
 
+void AdcNode::readVoltage()
+{
+  uint16_t v_raw = ESP.getVcc();
+  _voltage = ((float)v_raw/1024.0f);
+}
+
 void AdcNode::loop() {
   if ((millis() - _lastMeasurement >= _measurementInterval * 1000UL) ||
       (_lastMeasurement == 0)) {
 
-    uint16_t v_raw = ESP.getVcc();
-    _voltage = ((float)v_raw/1024.0f);
+    readVoltage();
     
     printCaption();
 
@@ -48,6 +53,8 @@ void AdcNode::setupHandler() {
 void AdcNode::setup() {
   advertise(cVoltage);
   advertise(cVoltageUnit);
+
+  readVoltage();
 
   printCaption();
   Homie.getLogger() << cIndent << "Reading interval: " << _measurementInterval << " s" << endl;
