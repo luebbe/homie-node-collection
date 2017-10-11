@@ -65,7 +65,10 @@ private:
   U8G2 *_display;
   uint8_t _height;
   uint8_t _width;
+  uint8_t _baseLine;
   uint8_t _progress;
+
+  void drawMessage(const char * message);
 protected:
   void onStart();
   void onEnd();

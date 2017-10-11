@@ -137,6 +137,14 @@ OtaDisplayU8G2::OtaDisplayU8G2(U8G2 *display)
   _display = display;
   _height = display->getHeight();
   _width = display->getWidth();
+  if (_height > 32) {
+    _baseLine = _height / 2;
+  }
+  else
+  {
+    _baseLine = 32;
+  }
+  _baseLine -= 8; // subtract space for bar
   _progress = 0;
 };
 
@@ -147,36 +155,27 @@ void OtaDisplayU8G2::setup(uint16_t port, const char *password) {
   OtaLogger::setup(port, password);
 }
 
-void OtaDisplayU8G2::onStart() {
-  OtaLogger::onStart();
-
-  const char* message = "OTA Update...";
-  
+void OtaDisplayU8G2::drawMessage(const char * message)
+{
   _display->clearBuffer();
   _display->setDrawColor(1);
-  _display->setFontPosTop();
+  _display->setFontPosBottom();
   _display->setFont(u8g2_font_fub11_tr);
   
   uint8_t _strWidth = _display->getStrWidth(message);
-  _display->drawStr((_width - _strWidth) / 2, _height / 2, message);
+  _display->drawStr((_width - _strWidth) / 2, _baseLine - 2 , message);
 
   _display->sendBuffer();
 }
 
+void OtaDisplayU8G2::onStart() {
+  OtaLogger::onStart();
+  drawMessage("OTA Update...");
+}
+
 void OtaDisplayU8G2::onEnd() {
   OtaLogger::onEnd();
-
-  const char* message = "Rebooting...";
-
-  _display->clearBuffer();
-  _display->setDrawColor(1);
-  _display->setFontPosTop();
-  _display->setFont(u8g2_font_fub11_tr);
-
-  uint8_t _strWidth = _display->getStrWidth(message);
-  _display->drawStr((_width - _strWidth) / 2, _height / 2, message);
-
-  _display->sendBuffer();
+  drawMessage("Rebooting...");
 };
 
 void OtaDisplayU8G2::onProgress(unsigned int progress, unsigned int total) {
