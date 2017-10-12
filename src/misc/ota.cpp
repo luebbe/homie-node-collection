@@ -132,9 +132,11 @@ void OtaDisplaySSD1306::onProgress(unsigned int progress, unsigned int total) {
 // OTA info via OLED Display using the u8g2 library
 // -----------------------------------------------------------------------------
 
-OtaDisplayU8G2::OtaDisplayU8G2(U8G2 *display)
+OtaDisplayU8G2::OtaDisplayU8G2(U8G2 *display, TOtaCallback otaCallback)
   : OtaLogger() {
   _display = display;
+  _otaCallback = otaCallback;
+  
   _height = display->getHeight();
   _width = display->getWidth();
   if (_height > 32) {
@@ -170,6 +172,9 @@ void OtaDisplayU8G2::drawMessage(const char * message)
 
 void OtaDisplayU8G2::onStart() {
   OtaLogger::onStart();
+  if (_otaCallback) {
+    _otaCallback();
+  }
   drawMessage("OTA Update...");
 }
 

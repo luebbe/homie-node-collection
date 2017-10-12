@@ -61,8 +61,11 @@ public:
 // -----------------------------------------------------------------------------
 // #ifdef USE_U8G2
 class OtaDisplayU8G2 : public OtaLogger {
+public:
+  typedef std::function<void(void)> TOtaCallback;
 private:
   U8G2 *_display;
+  TOtaCallback _otaCallback;
   uint8_t _height;
   uint8_t _width;
   uint8_t _baseLine;
@@ -74,7 +77,7 @@ protected:
   void onEnd();
   void onProgress(unsigned int progress, unsigned int total) override;
 public:
-  OtaDisplayU8G2(U8G2 *display);
+  OtaDisplayU8G2(U8G2 *display, TOtaCallback otaCallback = NULL);
 
   void setup(uint16_t port = 8266, const char *password = "") override;
 };
