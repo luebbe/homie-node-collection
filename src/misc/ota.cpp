@@ -3,7 +3,7 @@
  * Wraps ArduinoOTA into a class and shows the OTA
  * status on serial or an OLED display.
  *
- * Version: 1.1
+ * Version: 1.2
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
@@ -13,24 +13,32 @@
 // OTA info via Homie logger
 // -----------------------------------------------------------------------------
 
-OtaLogger::OtaLogger() {
+OtaLogger::OtaLogger(){
 
 };
 
-String OtaLogger::getErrorMessage(ota_error_t error) {
-  if (error == OTA_AUTH_ERROR) return "Auth Failed";
-  else if (error == OTA_BEGIN_ERROR) return "Begin Failed";
-  else if (error == OTA_CONNECT_ERROR) return "Connect Failed";
-  else if (error == OTA_RECEIVE_ERROR) return "Receive Failed";
-  else if (error == OTA_END_ERROR) return "End Failed";
+String OtaLogger::getErrorMessage(ota_error_t error)
+{
+  if (error == OTA_AUTH_ERROR)
+    return "Auth Failed";
+  else if (error == OTA_BEGIN_ERROR)
+    return "Begin Failed";
+  else if (error == OTA_CONNECT_ERROR)
+    return "Connect Failed";
+  else if (error == OTA_RECEIVE_ERROR)
+    return "Receive Failed";
+  else if (error == OTA_END_ERROR)
+    return "End Failed";
 };
 
-void OtaLogger::setup(uint16_t port, const char *password) {
+void OtaLogger::setup(uint16_t port, const char *password)
+{
   Homie.getLogger() << "• OTA - Setup";
   ArduinoOTA.setPort(port);
-  ArduinoOTA.setHostname(WiFi.hostname().c_str());    // Hostname defaults to esp8266-[ChipID]
+  ArduinoOTA.setHostname(WiFi.hostname().c_str()); // Hostname defaults to esp8266-[ChipID]
 
-  if (password != "") {
+  if (password != "")
+  {
     ArduinoOTA.setPassword(password);
   }
 
@@ -54,30 +62,41 @@ void OtaLogger::setup(uint16_t port, const char *password) {
   Homie.getLogger() << " done" << endl;
 };
 
-void OtaLogger::loop() {
+void OtaLogger::loop()
+{
   ArduinoOTA.handle();
 };
 
-void OtaLogger::onStart() {
-  Homie.getLogger() << "• OTA - Start" << endl ;
+void OtaLogger::onStart()
+{
+  Homie.getLogger() << "• OTA - Start" << endl;
 };
 
-void OtaLogger::onEnd() {
-  Homie.getLogger() << endl << "• OTA - End" << endl ;
+void OtaLogger::onEnd()
+{
+  Homie.getLogger() << endl
+                    << "• OTA - End" << endl;
 };
 
-void OtaLogger::onProgress(unsigned int progress, unsigned int total) {
+void OtaLogger::onProgress(unsigned int progress, unsigned int total)
+{
   static int lastprogress = -1;
   unsigned int curprogress = (progress / (total / 100));
-  if (lastprogress != curprogress) {
+  if (lastprogress != curprogress)
+  {
     lastprogress = curprogress;
-    if (curprogress > 0) {
+    if (curprogress > 0)
+    {
       Homie.getLogger() << ".";
-      if (curprogress % 25 == 0) {
-        const char * sp;
-        if(curprogress < 100) {
+      if (curprogress % 25 == 0)
+      {
+        const char *sp;
+        if (curprogress < 100)
+        {
           sp = " ";
-        } else {
+        }
+        else
+        {
           sp = "";
         };
         Homie.getLogger() << " [" << sp << curprogress << "%]" << endl;
@@ -86,7 +105,8 @@ void OtaLogger::onProgress(unsigned int progress, unsigned int total) {
   }
 };
 
-void OtaLogger::onError(ota_error_t error) {
+void OtaLogger::onError(ota_error_t error)
+{
   Homie.getLogger() << "• OTA - Error " << getErrorMessage(error) << " : " << endl;
 };
 
@@ -96,18 +116,21 @@ void OtaLogger::onError(ota_error_t error) {
 // -----------------------------------------------------------------------------
 
 OtaDisplaySSD1306::OtaDisplaySSD1306(OLEDDisplay *display)
-  : OtaLogger() {
+    : OtaLogger()
+{
   _display = display;
 };
 
-void OtaDisplaySSD1306::setup(uint16_t port, const char *password) {
+void OtaDisplaySSD1306::setup(uint16_t port, const char *password)
+{
   // Don't do anything with the display here (setup, init, ...)
   // It'll crash Homie
   Homie.getLogger() << "• OTA - OtaDisplaySSD1306" << endl;
   OtaLogger::setup(port, password);
 }
 
-void OtaDisplaySSD1306::onEnd() {
+void OtaDisplaySSD1306::onEnd()
+{
   OtaLogger::onEnd();
   _display->clear();
   _display->setTextAlignment(TEXT_ALIGN_CENTER);
@@ -116,7 +139,8 @@ void OtaDisplaySSD1306::onEnd() {
   _display->display();
 };
 
-void OtaDisplaySSD1306::onProgress(unsigned int progress, unsigned int total) {
+void OtaDisplaySSD1306::onProgress(unsigned int progress, unsigned int total)
+{
   OtaLogger::onProgress(progress, total);
   _display->clear();
   _display->setTextAlignment(TEXT_ALIGN_CENTER);
@@ -132,14 +156,13 @@ void OtaDisplaySSD1306::onProgress(unsigned int progress, unsigned int total) {
 // OTA info via OLED Display using the u8g2 library
 // -----------------------------------------------------------------------------
 
-OtaDisplayU8G2::OtaDisplayU8G2(U8G2 *display, TOtaCallback otaCallback)
-  : OtaLogger() {
-  _display = display;
-  _otaCallback = otaCallback;
-  
-  _height = display->getHeight();
-  _width = display->getWidth();
-  if (_height > 32) {
+OtaDisplayU8G2::OtaDisplayU8G2(U8G2 &display, TOtaCallback otaCallback)
+    : OtaLogger(), _display(display), _otaCallback(otaCallback)
+{
+  _height = _display.getHeight();
+  _width = _display.getWidth();
+  if (_height > 32)
+  {
     _baseLine = _height / 2;
   }
   else
@@ -150,49 +173,60 @@ OtaDisplayU8G2::OtaDisplayU8G2(U8G2 *display, TOtaCallback otaCallback)
   _progress = 0;
 };
 
-void OtaDisplayU8G2::setup(uint16_t port, const char *password) {
+void OtaDisplayU8G2::setup(uint16_t port, const char *password)
+{
   // Don't do anything with the display here (setup, init, ...)
   // It'll crash Homie
   Homie.getLogger() << "• OTA - OtaDisplayU8G2" << endl;
   OtaLogger::setup(port, password);
 }
 
-void OtaDisplayU8G2::drawMessage(const char * message)
+void OtaDisplayU8G2::drawMessage(const char *message)
 {
-  _display->clearBuffer();
-  _display->setDrawColor(1);
-  _display->setFontPosBottom();
-  _display->setFont(u8g2_font_fub11_tr);
-  
-  uint8_t _strWidth = _display->getStrWidth(message);
-  _display->drawStr((_width - _strWidth) / 2, _baseLine - 2 , message);
+  _display.clearBuffer();
+  _display.setDrawColor(1);
+  _display.setFontPosBottom();
+  _display.setFont(cMediumFont);
 
-  _display->sendBuffer();
+  uint8_t _strWidth = _display.getStrWidth(message);
+  _display.drawUTF8((_width - _strWidth) / 2, _baseLine - 2, message);
+
+  _display.sendBuffer();
 }
 
-void OtaDisplayU8G2::onStart() {
+void OtaDisplayU8G2::onStart()
+{
   OtaLogger::onStart();
-  if (_otaCallback) {
+  if (_otaCallback)
+  {
     _otaCallback();
   }
   drawMessage("OTA Update...");
 }
 
-void OtaDisplayU8G2::onEnd() {
+void OtaDisplayU8G2::onEnd()
+{
   OtaLogger::onEnd();
   drawMessage("Rebooting...");
 };
 
-void OtaDisplayU8G2::onProgress(unsigned int progress, unsigned int total) {
+void OtaDisplayU8G2::onError(ota_error_t error)
+{
+  OtaLogger::onError(error);
+  drawMessage(OtaLogger::getErrorMessage(error).c_str());
+};
+
+void OtaDisplayU8G2::onProgress(unsigned int progress, unsigned int total)
+{
   OtaLogger::onProgress(progress, total);
- 
+
   uint8_t curProgress = (progress * _width) / total;
 
-  if (curProgress > _progress) 
+  if (curProgress > _progress)
   {
     _progress = curProgress;
-    _display->drawBox(0, _height - 8, _progress, 6);
-    _display->sendBuffer();
+    _display.drawBox(0, _height - 8, _progress, 6);
+    _display.sendBuffer();
   }
 };
 // #endif
