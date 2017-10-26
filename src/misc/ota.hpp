@@ -29,36 +29,54 @@ typedef std::function<void(void)> TOtaCallback;
 class OtaLogger
 {
 private:
+  TOtaCallback _otaCallback;
+
 protected:
   String getErrorMessage(ota_error_t error);
 
   virtual void onStart();
   virtual void onEnd();
-  virtual void onProgress(unsigned int progress, unsigned int total);
   virtual void onError(ota_error_t error);
+  virtual void onProgress(unsigned int progress, unsigned int total);
 
 public:
-  OtaLogger();
+  OtaLogger(TOtaCallback otaCallback = NULL);
 
   virtual void setup(uint16_t port = 8266, const char *password = "");
   virtual void loop();
 };
 
 // -----------------------------------------------------------------------------
+// Base class for the two loggers using a OLED display
+// -----------------------------------------------------------------------------
+
+class OtaDisplay : public OtaLogger
+{
+protected:
+  virtual void drawMessage(const char *message);
+  void onStart() override;
+  void onEnd() override;
+  void onError(ota_error_t error) override;
+
+public:
+  OtaDisplay(TOtaCallback otaCallback = NULL);
+};
+
+// -----------------------------------------------------------------------------
 // OTA info via SSD1306 128x64 OLED Display using the esp8266-oled-ssd1306 library
 // -----------------------------------------------------------------------------
 // #ifdef USE_SSD1306
-class OtaDisplaySSD1306 : public OtaLogger
+class OtaDisplaySSD1306 : public OtaDisplay
 {
 private:
-  OLEDDisplay *_display;
+  OLEDDisplay &_display;
 
 protected:
-  void onEnd();
+  void drawMessage(const char *message) override;
   void onProgress(unsigned int progress, unsigned int total) override;
 
 public:
-  OtaDisplaySSD1306(OLEDDisplay *display);
+  OtaDisplaySSD1306(OLEDDisplay &display, TOtaCallback otaCallback = NULL);
 
   void setup(uint16_t port = 8266, const char *password = "") override;
 };
@@ -68,24 +86,19 @@ public:
 // OTA info via OLED Display using the u8g2 library
 // -----------------------------------------------------------------------------
 // #ifdef USE_U8G2
-class OtaDisplayU8G2 : public OtaLogger
+class OtaDisplayU8G2 : public OtaDisplay
 {
 private:
   U8G2 &_display;
-  TOtaCallback _otaCallback;
   uint8_t _height;
   uint8_t _width;
   uint8_t _baseLine;
   uint8_t _progress;
 
-  void drawMessage(const char *message);
-
 protected:
-  void onStart();
-  void onEnd();
+  void drawMessage(const char *message) override;
   void onProgress(unsigned int progress, unsigned int total) override;
-  void onError(ota_error_t error) override;
-  
+
 public:
   OtaDisplayU8G2(U8G2 &display, TOtaCallback otaCallback = NULL);
 

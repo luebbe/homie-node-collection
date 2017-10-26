@@ -13,9 +13,8 @@
 // OTA info via Homie logger
 // -----------------------------------------------------------------------------
 
-OtaLogger::OtaLogger(){
-
-};
+OtaLogger::OtaLogger(TOtaCallback otaCallback)
+    : _otaCallback(otaCallback){};
 
 String OtaLogger::getErrorMessage(ota_error_t error)
 {
@@ -70,12 +69,21 @@ void OtaLogger::loop()
 void OtaLogger::onStart()
 {
   Homie.getLogger() << "• OTA - Start" << endl;
+  if (_otaCallback)
+  {
+    _otaCallback();
+  }
 };
 
 void OtaLogger::onEnd()
 {
   Homie.getLogger() << endl
                     << "• OTA - End" << endl;
+};
+
+void OtaLogger::onError(ota_error_t error)
+{
+  Homie.getLogger() << "• OTA - Error " << getErrorMessage(error) << " : " << endl;
 };
 
 void OtaLogger::onProgress(unsigned int progress, unsigned int total)
@@ -105,21 +113,42 @@ void OtaLogger::onProgress(unsigned int progress, unsigned int total)
   }
 };
 
-void OtaLogger::onError(ota_error_t error)
+// -----------------------------------------------------------------------------
+// Base class for the two loggers using a OLED display
+// -----------------------------------------------------------------------------
+
+OtaDisplay::OtaDisplay(TOtaCallback otaCallback)
+    : OtaLogger(otaCallback){};
+
+void OtaDisplay::drawMessage(const char *message)
 {
-  Homie.getLogger() << "• OTA - Error " << getErrorMessage(error) << " : " << endl;
-};
+}
+
+void OtaDisplay::onStart()
+{
+  OtaLogger::onStart();
+  drawMessage("OTA Update...");
+}
+
+void OtaDisplay::onEnd()
+{
+  OtaLogger::onEnd();
+  drawMessage("Rebooting...");
+}
+
+void OtaDisplay::onError(ota_error_t error)
+{
+  OtaLogger::onError(error);
+  drawMessage(OtaLogger::getErrorMessage(error).c_str());
+}
 
 // #ifdef USE_SSD1306
 // -----------------------------------------------------------------------------
 // OTA info via SSD1306 128x64 OLED Display using the esp8266-oled-ssd1306 library
 // -----------------------------------------------------------------------------
 
-OtaDisplaySSD1306::OtaDisplaySSD1306(OLEDDisplay *display)
-    : OtaLogger()
-{
-  _display = display;
-};
+OtaDisplaySSD1306::OtaDisplaySSD1306(OLEDDisplay &display, TOtaCallback otaCallback)
+    : OtaDisplay(otaCallback), _display(display){};
 
 void OtaDisplaySSD1306::setup(uint16_t port, const char *password)
 {
@@ -129,25 +158,24 @@ void OtaDisplaySSD1306::setup(uint16_t port, const char *password)
   OtaLogger::setup(port, password);
 }
 
-void OtaDisplaySSD1306::onEnd()
+void OtaDisplaySSD1306::drawMessage(const char *message)
 {
-  OtaLogger::onEnd();
-  _display->clear();
-  _display->setTextAlignment(TEXT_ALIGN_CENTER);
-  _display->setFont(ArialMT_Plain_10);
-  _display->drawString(64, 10, "Rebooting...");
-  _display->display();
-};
+  _display.clear();
+  _display.setTextAlignment(TEXT_ALIGN_CENTER);
+  _display.setFont(ArialMT_Plain_10);
+  _display.drawString(64, 10, message);
+  _display.display();
+}
 
 void OtaDisplaySSD1306::onProgress(unsigned int progress, unsigned int total)
 {
   OtaLogger::onProgress(progress, total);
-  _display->clear();
-  _display->setTextAlignment(TEXT_ALIGN_CENTER);
-  _display->setFont(ArialMT_Plain_10);
-  _display->drawString(64, 10, "OTA Update");
-  _display->drawProgressBar(2, 28, 124, 8, progress / (total / 100));
-  _display->display();
+  _display.clear();
+  _display.setTextAlignment(TEXT_ALIGN_CENTER);
+  _display.setFont(ArialMT_Plain_10);
+  _display.drawString(64, 10, "OTA Update");
+  _display.drawProgressBar(2, 28, 124, 8, progress / (total / 100));
+  _display.display();
 };
 // #endif
 
@@ -157,7 +185,7 @@ void OtaDisplaySSD1306::onProgress(unsigned int progress, unsigned int total)
 // -----------------------------------------------------------------------------
 
 OtaDisplayU8G2::OtaDisplayU8G2(U8G2 &display, TOtaCallback otaCallback)
-    : OtaLogger(), _display(display), _otaCallback(otaCallback)
+    : OtaDisplay(otaCallback), _display(display)
 {
   _height = _display.getHeight();
   _width = _display.getWidth();
@@ -193,28 +221,6 @@ void OtaDisplayU8G2::drawMessage(const char *message)
 
   _display.sendBuffer();
 }
-
-void OtaDisplayU8G2::onStart()
-{
-  OtaLogger::onStart();
-  if (_otaCallback)
-  {
-    _otaCallback();
-  }
-  drawMessage("OTA Update...");
-}
-
-void OtaDisplayU8G2::onEnd()
-{
-  OtaLogger::onEnd();
-  drawMessage("Rebooting...");
-};
-
-void OtaDisplayU8G2::onError(ota_error_t error)
-{
-  OtaLogger::onError(error);
-  drawMessage(OtaLogger::getErrorMessage(error).c_str());
-};
 
 void OtaDisplayU8G2::onProgress(unsigned int progress, unsigned int total)
 {
