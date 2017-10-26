@@ -170,10 +170,6 @@ void OtaDisplaySSD1306::drawMessage(const char *message)
 void OtaDisplaySSD1306::onProgress(unsigned int progress, unsigned int total)
 {
   OtaLogger::onProgress(progress, total);
-  _display.clear();
-  _display.setTextAlignment(TEXT_ALIGN_CENTER);
-  _display.setFont(ArialMT_Plain_10);
-  _display.drawString(64, 10, "OTA Update");
   _display.drawProgressBar(2, 28, 124, 8, progress / (total / 100));
   _display.display();
 };
