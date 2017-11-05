@@ -162,15 +162,15 @@ void OtaDisplaySSD1306::drawMessage(const char *message)
 {
   _display.clear();
   _display.setTextAlignment(TEXT_ALIGN_CENTER);
-  _display.setFont(ArialMT_Plain_10);
-  _display.drawString(64, 10, message);
+  _display.setFont(ArialMT_Plain_16);
+  _display.drawString(64, DISPLAY_HEIGHT / 3 - 8, message);
   _display.display();
 }
 
 void OtaDisplaySSD1306::onProgress(unsigned int progress, unsigned int total)
 {
   OtaLogger::onProgress(progress, total);
-  _display.drawProgressBar(2, 28, 124, 8, progress / (total / 100));
+  _display.drawProgressBar(2, DISPLAY_HEIGHT * 2 / 3 - 8, 124, 8, progress / (total / 100));
   _display.display();
 };
 // #endif
