@@ -8,7 +8,6 @@
  */
 
 #include "BME280Node.hpp"
-#include <Homie.hpp>
 
 BME280Node::BME280Node(const char *name, const int measurementInterval)
     : HomieNode(name, "BME280Sensor"), _lastMeasurement(0) {

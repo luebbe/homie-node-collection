@@ -7,7 +7,6 @@
  */
 
 #include "RelayNode.hpp"
-#include <Homie.hpp>
 
 RelayNode::RelayNode(const char *name, const int relayPin, const int ledPin)
     : HomieNode(name, "RelayNode") {

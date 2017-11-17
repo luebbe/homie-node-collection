@@ -6,14 +6,13 @@
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
-#ifndef SRC_DHT22NODE_H_
-#define SRC_DHT22NODE_H_
+#pragma once
 
 #include <Adafruit_Sensor.h>
 #include <DHT_U.h>
 
-#include <HomieNode.hpp>
-#include "constants.h"
+#include <Homie.hpp>
+#include "constants.hpp"
 
 #define DEFAULTPIN -1
 
@@ -49,5 +48,3 @@ private:
   float temperature = NAN;
   float humidity = NAN;
 };
-
-#endif

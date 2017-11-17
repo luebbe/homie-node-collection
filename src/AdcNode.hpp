@@ -6,11 +6,10 @@
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
-#ifndef SRC_ADCNODE_H
-#define SRC_ADCNODE_H
+#pragma once 
 
-#include <HomieNode.hpp>
-#include "constants.h"
+#include <Homie.hpp>
+#include "constants.hpp"
 
 class AdcNode : public HomieNode {
 private:
@@ -36,5 +35,3 @@ protected:
   virtual void setup() override;
   virtual void loop() override;
 };
-
-#endif

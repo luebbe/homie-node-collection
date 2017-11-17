@@ -7,16 +7,15 @@
  * Author: Markus Haack (http://github.com/mhaack)
  */
 
-#ifndef SRC_BME280NODE_H_
-#define SRC_BME280NODE_H_
+#pragma once
 
 #include <Adafruit_BME280.h>
 #include <Adafruit_Sensor.h>
 #include <SPI.h>
 #include <Wire.h>
 
-#include <HomieNode.hpp>
-#include "constants.h"
+#include <Homie.hpp>
+#include "constants.hpp"
 
 class BME280Node : public HomieNode {
 private:
@@ -51,5 +50,3 @@ private:
   float humidity = NAN;
   float pressure = NAN;
 };
-
-#endif

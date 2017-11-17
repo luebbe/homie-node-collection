@@ -7,7 +7,6 @@
  */
 
 #include "DHT22Node.hpp"
-#include <Homie.hpp>
 
 #define DHTTYPE DHT22
 

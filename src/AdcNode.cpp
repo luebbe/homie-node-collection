@@ -7,7 +7,6 @@
  */
 
 #include "AdcNode.hpp"
-#include <Homie.hpp>
 
 ADC_MODE(ADC_VCC);
 

@@ -6,10 +6,9 @@
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
-#ifndef SRC_CONTACTNODE_H_
-#define SRC_CONTACTNODE_H_
+#pragma once
 
-#include <HomieNode.hpp>
+#include <Homie.hpp>
 
 #define DEFAULTPIN -1
 
@@ -40,5 +39,3 @@ public:
   ContactNode(const char *name, const int contactPin = DEFAULTPIN, TContactCallback contactCallback = NULL);
   void onChange(TContactCallback contactCallback);
 };
-
-#endif

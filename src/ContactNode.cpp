@@ -7,7 +7,6 @@
  */
 
 #include "ContactNode.hpp"
-#include <Homie.hpp>
 
 ContactNode::ContactNode(const char *name,
   const int contactPin,

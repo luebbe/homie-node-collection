@@ -6,10 +6,9 @@
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
-#ifndef SRC_RELAYNODE_H_
-#define SRC_RELAYNODE_H_
+#pragma once
 
-#include <HomieNode.hpp>
+#include <Homie.hpp>
 
 #define DEFAULTPIN -1
 
@@ -33,5 +32,3 @@ public:
   void setRelay(bool on);
   void toggleRelay();
 };
-
-#endif

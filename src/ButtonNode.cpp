@@ -7,7 +7,6 @@
  */
 
 #include "ButtonNode.hpp"
-#include <Homie.hpp>
 
 ButtonNode::ButtonNode(const char *name,
   const int buttonPin,

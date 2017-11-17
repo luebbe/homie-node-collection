@@ -6,10 +6,9 @@
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
-#ifndef SRC_BUTTONNODE_H_
-#define SRC_BUTTONNODE_H_
+#pragma once
 
-#include <HomieNode.hpp>
+#include <Homie.hpp>
 
 #define DEFAULTPIN -1
 
@@ -38,5 +37,3 @@ public:
   ButtonNode(const char *name, const int buttonPin = DEFAULTPIN, TButtonCallback buttonCallback = NULL);
   void onPress(TButtonCallback buttonCallback);
 };
-
-#endif
