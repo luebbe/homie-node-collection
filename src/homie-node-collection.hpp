@@ -1,8 +1,5 @@
 #pragma once
 
-// #include "misc/welcome.hpp"
-// #include "misc/ota.hpp"
-
 #include "AdcNode.hpp"
 #include "Bme280Node.hpp"
 #include "ButtonNode.hpp"

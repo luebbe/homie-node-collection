@@ -8,7 +8,7 @@ cache:
         - "~/.platformio"
 
 env:
-    - PLATFORMIO_CI_SRC=src
+    - PLATFORMIO_CI_SRC=src/demo-all-nodes.cpp PLATFORMIO_BUILD_FLAGS="-D DISPLAY_SSD1306"
 
 install:
     - pip install -U platformio
@@ -17,6 +17,10 @@ install:
     - platformio lib -g install https://github.com/marvinroger/homie-esp8266.git#v2.0.0-beta.1
     - platformio lib -g install https://github.com/bblanchon/ArduinoJson.git#v5.10.1
     - platformio lib -g install https://github.com/luebbe/homie-ota.git
+    - platformio lib -g install ESP8266_SSD1306
+    - platformio lib -g install Adafruit Unified Sensor
+    - platformio lib -g install Adafruit BME280 Library
+    - platformio lib -g install DHT sensor library
 
 script:
     - platformio ci --lib="." --project-conf=platformio.ini
