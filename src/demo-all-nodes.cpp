@@ -2,11 +2,12 @@
 #define FW_VERSION "1.0.0"
 
 #include <Homie.h>
+#include "ota.hpp"
+#include "welcome.hpp"
+
 #include "homie-node-collection.hpp"
 
 // Insert your pin number(s) here
-const int I2C_DISPLAY_ADDRESS = 0x3c;
-
 const int PIN_LED = 2;
 const int PIN_DHT = 0;
 const int PIN_SDA = 5; // Serial data
@@ -15,14 +16,13 @@ const int PIN_CONTACT = 12;
 const int PIN_RELAY = 13;
 const int PIN_BUTTON = 14;
 
-// Setup OTA logging via Homie logger
-// OtaDisplayU8G2 ota;
-
 // Setup OTA logging via OLED dislpay and Homie logger
-#include <SSD1306.h>
+#include <SSD1306Wire.h>
+const int I2C_DISPLAY_ADDRESS = 0x3c;
 
 SSD1306Wire display(I2C_DISPLAY_ADDRESS, PIN_SDA, PIN_SCL);
 OtaDisplaySSD1306 ota(display, NULL);
+WelcomeSSD1306 welcome(display, FW_NAME, FW_VERSION);
 
 // Create one node of each kind
 BME280Node bme280Node("bme280");
@@ -58,12 +58,11 @@ void setup()
   Serial << endl
          << endl;
 
-  welcome();
-  display.init();
-  ota.setup();
-
   // Initializes I2C for BME280 sensor
   Wire.begin(PIN_SDA, PIN_SCL);
+
+  welcome.show();
+  ota.setup();
 
   // Set callback for contact node here, just to show alternative
   contactNode.onChange([](bool open) {
