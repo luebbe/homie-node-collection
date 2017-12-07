@@ -1,6 +1,8 @@
 # Homie Node Collection
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Travis](https://img.shields.io/travis/luebbe/homie-node-collection.svg?branch=master&style=flat)](https://travis-ci.org/luebbe/homie-ota)
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat)](https://opensource.org/licenses/MIT)
+[![GitHub release](https://img.shields.io/github/release/luebbe/homie-node-collection.svg?style=flat)](https://github.com/luebbe/homie-ota/releases)
 
 Collection of nodes and examples for Homie. The nodes are designed as independent classes, so they can work standalone. For instance you can easily wire up a firmware for a Sonoff Relay by combining a ButtonNode with a RelayNode.
 
@@ -13,7 +15,7 @@ A pushbutton that just detects a single button press. An optional callback can b
 A contact that reports its open state (true|false) via MQTT. An optional callback can be triggered by the state change event.
 
 ## RelayNode
-A relay that can be set on (true|false) via MQTT message. An optional LED GPIO pin can be passed in the constructor. This pin will be set high/low synchronous to the relay.
+A relay that can be set on (true|false) via MQTT message. An optional GPIO pin (e.g. to light up a LED) can be passed in the constructor. This pin will be set high/low synchronous to the relay.
 
 ## BME280Node
 A node for a Bosch BME280 I2C temperature/humidity/pressure sensor. Reports the three values back via MQTT.
