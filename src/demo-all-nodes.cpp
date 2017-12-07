@@ -21,13 +21,19 @@ const int PIN_CONTACT = 12;
 const int PIN_RELAY = 13;
 const int PIN_BUTTON = 14;
 
-// Setup OTA logging via OLED dislpay and Homie logger
+#if defined(DISPLAY_SSD1306)
+// Setup OTA logging via OLED display and Homie logger
 #include <SSD1306Wire.h>
 const int I2C_DISPLAY_ADDRESS = 0x3c;
 
 SSD1306Wire display(I2C_DISPLAY_ADDRESS, PIN_SDA, PIN_SCL);
 OtaDisplaySSD1306 ota(display, NULL);
 WelcomeSSD1306 welcome(display, FW_NAME, FW_VERSION);
+#else
+// Setup everything via Homie logger
+OtaLogger ota;
+Welcome welcome(FW_NAME, FW_VERSION);
+#endif
 
 // Create one node of each kind
 BME280Node bme280Node("bme280");
