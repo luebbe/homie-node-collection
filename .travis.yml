@@ -8,10 +8,10 @@ cache:
         - "~/.platformio"
 
 env:
-    - PLATFORMIO_CI_SRC=src/demo-all-nodes.cpp
+    - PLATFORMIO_CI_SRC=src
 
 install:
     - pip install -U platformio
 
 script:
-    - platformio ci --lib="src" --project-conf=platformio.ini
+    - platformio ci --lib="." --project-conf=platformio.ini
