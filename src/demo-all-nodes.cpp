@@ -5,7 +5,12 @@
 #include "ota.hpp"
 #include "welcome.hpp"
 
-#include "homie-node-collection.hpp"
+#include "AdcNode.hpp"
+#include "Bme280Node.hpp"
+#include "ButtonNode.hpp"
+#include "ContactNode.hpp"
+#include "DHT22Node.hpp"
+#include "RelayNode.hpp"
 
 // Insert your pin number(s) here
 const int PIN_LED = 2;
