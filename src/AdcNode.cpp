@@ -39,7 +39,7 @@ void AdcNode::loop() {
     else {
       Homie.getLogger() << cIndent << "Voltage: " << _voltage << " V" << endl;
 
-      setProperty("voltage").send(String(_voltage));
+      setProperty(cVoltage).send(String(_voltage));
     }
     _lastMeasurement = millis();
   }
