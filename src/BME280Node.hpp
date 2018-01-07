@@ -17,11 +17,12 @@
 #include <Homie.hpp>
 #include "constants.hpp"
 
-class BME280Node : public HomieNode {
+class BME280Node : public HomieNode
+{
 private:
-  static const int  MEASUREMENT_INTERVAL = 300;
-  const char *cCaption  = "• BME280 sensor:";
-  const char *cIndent   = "  ◦ ";
+  static const int MEASUREMENT_INTERVAL = 300;
+  const char *cCaption = "• BME280 sensor:";
+  const char *cIndent = "  ◦ ";
 
   bool _sensorFound = false;
   unsigned long _measurementInterval;
@@ -33,7 +34,7 @@ private:
 
 public:
   BME280Node(const char *name,
-    const int measurementInterval = MEASUREMENT_INTERVAL);
+             const int measurementInterval = MEASUREMENT_INTERVAL);
 
   float getHumidity() const { return humidity; }
   float getTemperature() const { return temperature; }

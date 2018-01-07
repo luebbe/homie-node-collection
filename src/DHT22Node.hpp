@@ -16,24 +16,25 @@
 
 #define DEFAULTPIN -1
 
-class DHT22Node : public HomieNode {
+class DHT22Node : public HomieNode
+{
 private:
   static const int MEASUREMENT_INTERVAL = 300;
   const char *cCaption = "• DHT22 sensor";
-  const char *cIndent  = "  ◦ ";
+  const char *cIndent = "  ◦ ";
 
   int _sensorPin;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
 
-  DHT* dht;
+  DHT *dht;
 
   void printCaption();
 
 public:
   DHT22Node(const char *name,
-    const int sensorPin = DEFAULTPIN,
-    const int measurementInterval = MEASUREMENT_INTERVAL);
+            const int sensorPin = DEFAULTPIN,
+            const int measurementInterval = MEASUREMENT_INTERVAL);
 
   float getHumidity() const { return humidity; }
   float getTemperature() const { return temperature; }

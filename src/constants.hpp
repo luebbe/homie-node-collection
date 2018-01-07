@@ -1,3 +1,4 @@
+#define cStatus      "status"
 #define cUnit        "unit"
 #define cTemperature "temperature"
 #define cHumidity    "humidity"
