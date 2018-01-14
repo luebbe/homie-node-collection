@@ -9,11 +9,9 @@
 
 #include "BME280Node.hpp"
 
-BME280Node::BME280Node(const char *name, const int measurementInterval)
-    : HomieNode(name, "BME280Sensor"), _lastMeasurement(0)
-{
-  _measurementInterval = measurementInterval;
-}
+BME280Node::BME280Node(const char *name, const int i2cAddress, const int measurementInterval)
+    : HomieNode(name, "BME280Sensor"), _i2cAddress(i2cAddress), _lastMeasurement(0), _measurementInterval(measurementInterval)
+{}
 
 void BME280Node::printCaption()
 {
@@ -67,7 +65,7 @@ void BME280Node::setup()
   advertise(cPressure);
   advertise(cPressureUnit);
 
-  if (bme.begin())
+  if (bme.begin(_i2cAddress))
   {
     _sensorFound = true;
     Homie.getLogger() << cCaption << " found" << endl

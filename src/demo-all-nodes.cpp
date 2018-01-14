@@ -13,13 +13,15 @@
 #include "RelayNode.hpp"
 
 // Insert your pin number(s) here
-const int PIN_LED = 2;
-const int PIN_DHT = 0;
-const int PIN_SDA = 5; // Serial data
-const int PIN_SCL = 4; // Serial clock
-const int PIN_CONTACT = 12;
-const int PIN_RELAY = 13;
-const int PIN_BUTTON = 14;
+const int PIN_LED = 2;      // =D4 on Wemos
+const int PIN_DHT = 0;      // =D3 on Wemos
+const int PIN_SDA = 4;      // =D2 on Wemos
+const int PIN_SCL = 5;      // =D1 on Wemos
+const int PIN_CONTACT = 12; // =D6 on Wemos
+const int PIN_RELAY = 13;   // =D7 on Wemos
+const int PIN_BUTTON = 14;  // =D5 on Wemos
+
+const int I2C_BME280_ADDRESS = 0x76;
 
 #if defined(DISPLAY_SSD1306)
 // Setup OTA logging via OLED display and Homie logger
@@ -36,7 +38,7 @@ Welcome welcome(FW_NAME, FW_VERSION);
 #endif
 
 // Create one node of each kind
-BME280Node bme280Node("bme280");
+BME280Node bme280Node("bme280", I2C_BME280_ADDRESS);
 DHT22Node dht22Node("dht22", PIN_DHT);
 RelayNode relayNode("relay", PIN_RELAY, PIN_LED);
 AdcNode adcNode("adc");
@@ -69,9 +71,6 @@ void setup()
   Serial << endl
          << endl;
 
-  // Initializes I2C for BME280 sensor
-  Wire.begin(PIN_SDA, PIN_SCL);
-
   welcome.show();
   ota.setup();
 
@@ -80,7 +79,15 @@ void setup()
     relayNode.setRelay(open);
   });
 
+  // Initializes I2C for BME280 sensor and display
+  Homie.getLogger() << "• Wire begin SDA=" << PIN_SDA << " SCL=" << PIN_SCL << endl;
+  Wire.begin(PIN_SDA, PIN_SCL);
+
   Homie_setFirmware(FW_NAME, FW_VERSION);
+
+  Homie.disableLedFeedback();
+  Homie.disableResetTrigger();
+
   Homie.setSetupFunction(setupHandler);
   Homie.setLoopFunction(loopHandler);
 

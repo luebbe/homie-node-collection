@@ -25,6 +25,7 @@ private:
   const char *cIndent = "  ◦ ";
 
   bool _sensorFound = false;
+  unsigned int _i2cAddress; 
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
 
@@ -34,6 +35,7 @@ private:
 
 public:
   BME280Node(const char *name,
+             const int i2cAddress = 0x77,
              const int measurementInterval = MEASUREMENT_INTERVAL);
 
   float getHumidity() const { return humidity; }
