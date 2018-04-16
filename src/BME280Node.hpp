@@ -20,12 +20,14 @@
 class BME280Node : public HomieNode
 {
 private:
+  // suggested rate is 1/60Hz (1m)
+  static const int MIN_INTERVAL = 60; // in seconds
   static const int MEASUREMENT_INTERVAL = 300;
   const char *cCaption = "• BME280 sensor:";
   const char *cIndent = "  ◦ ";
 
   bool _sensorFound = false;
-  unsigned int _i2cAddress; 
+  unsigned int _i2cAddress;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
 
