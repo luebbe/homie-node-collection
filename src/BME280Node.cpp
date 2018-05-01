@@ -28,10 +28,10 @@ void BME280Node::loop()
     if (_sensorFound)
     {
       bme.takeForcedMeasurement(); // has no effect in normal mode
-      
+
       temperature = bme.readTemperature();
       humidity = bme.readHumidity();
-      pressure = bme.readPressure() / 100.0F;
+      pressure = bme.readPressure() / 100;
 
       printCaption();
 
@@ -40,9 +40,9 @@ void BME280Node::loop()
       Homie.getLogger() << cIndent << "Pressure: " << pressure << " hPa" << endl;
 
       setProperty(cStatus).send("ok");
-      setProperty(cTemperature).send(String(temperature));
-      setProperty(cHumidity).send(String(humidity));
-      setProperty(cPressure).send(String(pressure));
+      setProperty(cTemperature).send(String(temperature, '\1'));
+      setProperty(cHumidity).send(String(humidity, '\1'));
+      setProperty(cPressure).send(String(pressure, '\0'));
     }
     else
     {
@@ -74,7 +74,7 @@ void BME280Node::setup()
     _sensorFound = true;
     Homie.getLogger() << cCaption << " found" << endl
                       << cIndent << "Reading interval: " << _measurementInterval << " s" << endl;
-    // Parameters taken from the weather station monitoring example (advancedsettings.ino) in 
+    // Parameters taken from the weather station monitoring example (advancedsettings.ino) in
     // the Adafruit BME280 library
     bme.setSampling(Adafruit_BME280::MODE_FORCED,
                     Adafruit_BME280::SAMPLING_X1, // temperature
