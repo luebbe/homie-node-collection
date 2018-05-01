@@ -40,9 +40,9 @@ void BME280Node::loop()
       Homie.getLogger() << cIndent << "Pressure: " << pressure << " hPa" << endl;
 
       setProperty(cStatus).send("ok");
-      setProperty(cTemperature).send(String(temperature, '\1'));
-      setProperty(cHumidity).send(String(humidity, '\1'));
-      setProperty(cPressure).send(String(pressure, '\0'));
+      setProperty(cTemperature).send(String(temperature));
+      setProperty(cHumidity).send(String(humidity));
+      setProperty(cPressure).send(String(pressure));
     }
     else
     {

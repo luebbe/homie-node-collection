@@ -45,8 +45,8 @@ void DHT22Node::loop()
         Homie.getLogger() << cIndent << "Humidity: " << humidity << " %" << endl;
 
         setProperty(cStatus).send("ok");
-        setProperty(cTemperature).send(String(temperature, '\1'));
-        setProperty(cHumidity).send(String(humidity, '\1'));
+        setProperty(cTemperature).send(String(temperature));
+        setProperty(cHumidity).send(String(humidity));
       }
       _lastMeasurement = millis();
     }
