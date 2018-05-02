@@ -1,8 +1,8 @@
 # Homie Node Collection
 
-[![Travis](https://img.shields.io/travis/luebbe/homie-node-collection.svg?branch=master&style=flat)](https://travis-ci.org/luebbe/homie-ota)
+[![Travis](https://img.shields.io/travis/luebbe/homie-node-collection.svg?branch=master&style=flat)](https://travis-ci.org/luebbe/homie-node-collection)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat)](https://opensource.org/licenses/MIT)
-[![GitHub release](https://img.shields.io/github/release/luebbe/homie-node-collection.svg?style=flat)](https://github.com/luebbe/homie-ota/releases)
+[![GitHub release](https://img.shields.io/github/release/luebbe/homie-node-collection.svg?style=flat)](https://github.com/luebbe/homie-node-collection/releases)
 
 Collection of nodes and examples for Homie. The nodes are designed as independent classes, so they can work standalone. For instance you can easily wire up a firmware for a Sonoff Relay by combining a ButtonNode with a RelayNode.
 
@@ -19,6 +19,9 @@ A relay that can be set on (true|false) via MQTT message. An optional GPIO pin (
 
 ## BME280Node
 A node for a Bosch BME280 I2C temperature/humidity/pressure sensor. Reports the three values back via MQTT.
+Depending on whether the sensor could be read successfully advertises status as:
+* homie/\<device-id\>/\<sensor-name\>/status (ok|error)
+
 Advertises the values as:
 * homie/\<device-id\>/\<sensor-name\>/temperature
 * homie/\<device-id\>/\<sensor-name\>/humidity
@@ -31,6 +34,9 @@ The units are advertised as subtopics:
 
 ## DHT22Node
 A node for a DHT22 temperature/humidity sensor. Reports the two values back via MQTT.
+Depending on whether the sensor could be read successfully advertises status as:
+* homie/\<device-id\>/\<sensor-name\>/status (ok|error)
+
 Advertises the values as:
 * homie/\<device-id\>/\<sensor-name\>/temperature
 * homie/\<device-id\>/\<sensor-name\>/humidity
