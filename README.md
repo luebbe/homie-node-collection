@@ -1,6 +1,7 @@
 # Homie Node Collection
 
 [![Travis](https://img.shields.io/travis/luebbe/homie-node-collection.svg?branch=master&style=flat)](https://travis-ci.org/luebbe/homie-node-collection)
+[![Codacy](https://api.codacy.com/project/badge/Grade/e6d5e648b83b4667b399b81e2986dea6)](https://www.codacy.com/app/luebbe/homie-node-collection/dashboard)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat)](https://opensource.org/licenses/MIT)
 [![GitHub release](https://img.shields.io/github/release/luebbe/homie-node-collection.svg?style=flat)](https://github.com/luebbe/homie-node-collection/releases)
 
