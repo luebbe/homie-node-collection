@@ -11,10 +11,15 @@
 #define DHTTYPE DHT22
 
 DHT22Node::DHT22Node(const char *name, const int sensorPin, const int measurementInterval)
-    : HomieNode(name, "DHT22Sensor"), _lastMeasurement(0)
+    : HomieNode(name, "DHT22Sensor"),
+      _sensorPin(sensorPin),
+      _measurementInterval(measurementInterval),
+      _lastMeasurement(0)
 {
-  _sensorPin = sensorPin;
-  _measurementInterval = measurementInterval;
+  if (_sensorPin > DEFAULTPIN)
+  {
+    dht = new DHT(_sensorPin, DHTTYPE);
+  }
 }
 
 void DHT22Node::printCaption()
@@ -70,9 +75,8 @@ void DHT22Node::setup()
   printCaption();
   Homie.getLogger() << cIndent << "Reading interval: " << _measurementInterval << " s" << endl;
 
-  if (_sensorPin > DEFAULTPIN)
+  if (dht)
   {
-    dht = new DHT(_sensorPin, DHTTYPE);
     dht->begin();
   }
 }
