@@ -27,9 +27,16 @@ private:
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
 
+  float temperature = NAN;
+  float humidity = NAN;
+
   DHT *dht;
 
   void printCaption();
+
+protected:
+  virtual void setup() override;
+  virtual void loop() override;
 
 public:
   DHT22Node(const char *name,
@@ -40,12 +47,4 @@ public:
   float getTemperature() const { return temperature; }
 
   void onReadyToOperate();
-
-protected:
-  virtual void setup() override;
-  virtual void loop() override;
-
-private:
-  float temperature = NAN;
-  float humidity = NAN;
 };

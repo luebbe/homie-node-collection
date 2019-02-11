@@ -31,9 +31,17 @@ private:
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
 
+  float temperature = NAN;
+  float humidity = NAN;
+  float pressure = NAN;
+
   Adafruit_BME280 bme;
 
   void printCaption();
+
+protected:
+  virtual void setup() override;
+  virtual void loop() override;
 
 public:
   BME280Node(const char *name,
@@ -45,13 +53,4 @@ public:
   float getPressure() const { return pressure; }
 
   void onReadyToOperate();
-
-protected:
-  virtual void setup() override;
-  virtual void loop() override;
-
-private:
-  float temperature = NAN;
-  float humidity = NAN;
-  float pressure = NAN;
 };

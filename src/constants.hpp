@@ -1,10 +1,12 @@
-#define cStatus      "status"
-#define cUnit        "unit"
+#define cStatus "status"
+#define cUnit "unit"
 #define cTemperature "temperature"
-#define cHumidity    "humidity"
-#define cPressure    "pressure"
-#define cVoltage     "voltage"
 #define cTemperatureUnit cTemperature "/" cUnit
-#define cHumidityUnit    cHumidity "/" cUnit
-#define cPressureUnit    cPressure "/" cUnit
-#define cVoltageUnit     cVoltage  "/" cUnit
+#define cHumidity "humidity"
+#define cHumidityUnit cHumidity "/" cUnit
+#define cPressure "pressure"
+#define cPressureUnit cPressure "/" cUnit
+#define cVoltage "voltage"
+#define cVoltageUnit cVoltage "/" cUnit
+#define cBatteryLevel "batterypercent"
+#define cBatteryLevelUnit cBatteryLevel "/" cUnit

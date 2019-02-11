@@ -66,6 +66,9 @@ void setup()
   welcome.show();
   ota.setup();
 
+  // Set default configuration values before Homie.setup()
+  adcNode.beforeHomieSetup();
+
   // Set callback for contact node here, just to show alternative
   contactNode.onChange([](bool open) {
     relayNode.setRelay(open);
