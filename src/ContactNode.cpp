@@ -9,17 +9,20 @@
 #include "ContactNode.hpp"
 
 ContactNode::ContactNode(const char *name,
-  const int contactPin,
-  TContactCallback contactCallback)
-    : HomieNode(name, "ContactNode") {
+                         const int contactPin,
+                         TContactCallback contactCallback)
+    : HomieNode(name, "ContactNode")
+{
   _contactPin = contactPin;
   _contactCallback = contactCallback;
 }
 
 // Debounce input pin.
-bool ContactNode::debouncePin(void) {
+bool ContactNode::debouncePin(void)
+{
   byte inputState = digitalRead(_contactPin);
-  if ( inputState != _lastInputState ) {
+  if (inputState != _lastInputState)
+  {
     _stateChangedTime = millis();
     _stateChangeHandled = false;
     _lastInputState = inputState;
@@ -27,9 +30,11 @@ bool ContactNode::debouncePin(void) {
     Homie.getLogger() << "State Changed to " << inputState << endl;
 #endif
   }
-  else {
+  else
+  {
     unsigned long dt = millis() - _stateChangedTime;
-    if (dt >= 200 && !_stateChangeHandled) {
+    if (dt >= DEBOUNCE_TIME && !_stateChangeHandled)
+    {
 #ifdef DEBUG
       Homie.getLogger() << "State Stable for " << dt << "ms" << endl;
 #endif
@@ -40,40 +45,49 @@ bool ContactNode::debouncePin(void) {
   return false;
 }
 
-void ContactNode::handleStateChange(bool open) {
+void ContactNode::handleStateChange(bool open)
+{
   setProperty("open").send(open ? "true" : "false");
-  if (_contactCallback) {
+  if (_contactCallback)
+  {
     _contactCallback(open);
   }
 
   printCaption();
-  Homie.getLogger() << cIndent <<  "is " << (open ? "open" : "closed") << endl;
+  Homie.getLogger() << cIndent << "is " << (open ? "open" : "closed") << endl;
 }
 
-void ContactNode::onChange(TContactCallback contactCallback) {
+void ContactNode::onChange(TContactCallback contactCallback)
+{
   _contactCallback = contactCallback;
 }
 
-void ContactNode::printCaption() {
-  Homie.getLogger() << cCaption <<  endl;
+void ContactNode::printCaption()
+{
+  Homie.getLogger() << cCaption << endl;
 }
 
-void ContactNode::loop() {
-  if (_contactPin > DEFAULTPIN) {
-    if (debouncePin() && (_lastSentState != _lastInputState)) {
+void ContactNode::loop()
+{
+  if (_contactPin > DEFAULTPIN)
+  {
+    if (debouncePin() && (_lastSentState != _lastInputState))
+    {
       handleStateChange(_lastInputState == HIGH);
       _lastSentState = _lastInputState;
     }
   }
 }
 
-void ContactNode::setup() {
+void ContactNode::setup()
+{
   advertise("open");
 
   printCaption();
-  Homie.getLogger() << cIndent <<  "Pin: " << _contactPin << endl;
+  Homie.getLogger() << cIndent << "Pin: " << _contactPin << endl;
 
-  if (_contactPin > DEFAULTPIN) {
+  if (_contactPin > DEFAULTPIN)
+  {
     pinMode(_contactPin, INPUT_PULLUP);
   }
 }

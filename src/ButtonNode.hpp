@@ -12,13 +12,14 @@
 
 #define DEFAULTPIN -1
 
-class ButtonNode : public HomieNode {
+class ButtonNode : public HomieNode
+{
 public:
-   typedef std::function<void(void)> TButtonCallback;
+  typedef std::function<void(void)> TButtonCallback;
 
 private:
-  const char *cCaption  = "• Button:";
-  const char *cIndent   = "  ◦ ";
+  const char *cCaption = "• Button:";
+  const char *cIndent = "  ◦ ";
 
   TButtonCallback _buttonCallback;
   int _buttonPin;

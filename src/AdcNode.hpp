@@ -6,21 +6,22 @@
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
-#pragma once 
+#pragma once
 
 #include <Homie.hpp>
 #include "constants.hpp"
 
-class AdcNode : public HomieNode {
+class AdcNode : public HomieNode
+{
 private:
   static const int MEASUREMENT_INTERVAL = 300;
   const char *cCaption = "• ADC measurement:";
-  const char *cIndent  = "  ◦ ";
+  const char *cIndent = "  ◦ ";
 
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
   float _voltage = NAN;
-  
+
   void printCaption();
   void readVoltage();
 

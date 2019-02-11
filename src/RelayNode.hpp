@@ -12,10 +12,11 @@
 
 #define DEFAULTPIN -1
 
-class RelayNode : public HomieNode {
+class RelayNode : public HomieNode
+{
 private:
-  const char *cCaption  = "• Relay:";
-  const char *cIndent   = "  ◦ ";
+  const char *cCaption = "• Relay:";
+  const char *cIndent = "  ◦ ";
 
   int _relayPin;
   int _ledPin;
@@ -25,7 +26,7 @@ private:
 
 protected:
   virtual void setup() override;
-  virtual bool handleInput(const String& property, const HomieRange& range, const String& value) override;
+  virtual bool handleInput(const String &property, const HomieRange &range, const String &value) override;
 
 public:
   RelayNode(const char *name, const int relayPin = DEFAULTPIN, const int ledPin = DEFAULTPIN);

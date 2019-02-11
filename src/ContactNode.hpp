@@ -11,19 +11,21 @@
 #include <Homie.hpp>
 
 #define DEFAULTPIN -1
+#define DEBOUNCE_TIME 200
 
-class ContactNode : public HomieNode {
+class ContactNode : public HomieNode
+{
 public:
   typedef std::function<void(bool)> TContactCallback;
 
 private:
-  const char *cCaption  = "• Contact:";
-  const char *cIndent   = "  ◦ ";
+  const char *cCaption = "• Contact:";
+  const char *cIndent = "  ◦ ";
 
   TContactCallback _contactCallback;
   int _contactPin;
-  int _lastInputState = LOW;   // Input pin state.
-  int _lastSentState = LOW;    // Input pin state.
+  int _lastInputState = LOW; // Input pin state.
+  int _lastSentState = LOW;  // Input pin state.
   bool _stateChangeHandled = false;
   unsigned long _stateChangedTime = 0;
 
