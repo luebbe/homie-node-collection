@@ -29,7 +29,7 @@ public:
 
   float getVoltage() const { return _voltage; }
 
-  void setupHandler();
+  void onReadyToOperate();
 
 protected:
   virtual void setup() override;

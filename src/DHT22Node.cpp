@@ -58,7 +58,7 @@ void DHT22Node::loop()
   }
 }
 
-void DHT22Node::setupHandler()
+void DHT22Node::onReadyToOperate()
 {
   setProperty(cTemperatureUnit).send("°C");
   setProperty(cHumidityUnit).send("%");

@@ -45,7 +45,7 @@ void AdcNode::loop() {
   }
 }
 
-void AdcNode::setupHandler() {
+void AdcNode::onReadyToOperate() {
   setProperty(cVoltageUnit).send("V");
 };
 

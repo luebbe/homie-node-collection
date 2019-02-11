@@ -39,7 +39,7 @@ public:
   float getHumidity() const { return humidity; }
   float getTemperature() const { return temperature; }
 
-  void setupHandler();
+  void onReadyToOperate();
 
 protected:
   virtual void setup() override;

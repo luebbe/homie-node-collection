@@ -44,7 +44,7 @@ public:
   float getTemperature() const { return temperature; }
   float getPressure() const { return pressure; }
 
-  void setupHandler();
+  void onReadyToOperate();
 
 protected:
   virtual void setup() override;

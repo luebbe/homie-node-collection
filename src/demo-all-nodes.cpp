@@ -51,14 +51,6 @@ ButtonNode buttonNode("button", PIN_BUTTON, []() {
   relayNode.toggleRelay();
 });
 
-void setupHandler()
-{
-  // Advertise units
-  bme280Node.setupHandler();
-  dht22Node.setupHandler();
-  adcNode.setupHandler();
-};
-
 void loopHandler()
 {
   // We want to OTA handler to run only in the loop when WiFi is connected
@@ -88,7 +80,6 @@ void setup()
   Homie.disableLedFeedback();
   Homie.disableResetTrigger();
 
-  Homie.setSetupFunction(setupHandler);
   Homie.setLoopFunction(loopHandler);
 
   Homie.setup();

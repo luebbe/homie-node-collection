@@ -52,7 +52,7 @@ void BME280Node::loop()
   }
 }
 
-void BME280Node::setupHandler()
+void BME280Node::onReadyToOperate()
 {
   setProperty(cTemperatureUnit).send("°C");
   setProperty(cHumidityUnit).send("%");
