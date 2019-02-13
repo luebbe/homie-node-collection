@@ -48,14 +48,14 @@ void AdcNode::readVoltage()
 
 String AdcNode::getVoltageStr(void)
 {
-  const int cMaxLen = 8;
-  char charVal[cMaxLen];
   if (isnan(_voltage))
   {
     return "err";
   }
   else
   {
+    const int cMaxLen = 8;
+    char charVal[cMaxLen];
     dtostrf(_voltage, cMaxLen, 2, charVal);
     return (String)charVal;
   }
