@@ -33,6 +33,26 @@ Advertises the state as:
 
 - `homie/<device-id>/<node-name>/open` (true|false)
 
+## PulseNode
+
+In some way similar to the contact node only that it reacts on pulses on the selected input pin. It reports its state (true|false) via MQTT. An optional callback can be triggered by the state change event. Imagine an optocoupler pulsing with 50Hz when a switch is closed or a button is pressed.
+
+Advertises the state as:
+
+- `homie/<device-id>/<node-name>/active` (true|false)
+
+In order to use the PulseNode you need an interrupt procedure which is attached to the selected pin. e.G.:
+
+    void onOptoCouplerPulse()
+    {
+      pulseNode.pulseDetected();
+    }
+
+    void setup()
+    {
+      attachInterrupt(PIN_OPTOCOUPLER, onOptoCouplerPulse, FALLING);
+    }
+
 ## RelayNode
 
 A relay that can be set on (true|false) via MQTT message. An optional GPIO pin (e.g. to light up a LED) can be passed in the constructor. This pin will be set high/low synchronous to the relay.
