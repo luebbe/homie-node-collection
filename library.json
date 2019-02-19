@@ -18,5 +18,20 @@
   "frameworks": "arduino",
   "platforms": [
     "espressif8266"
+  ],
+  "dependencies": [
+    {
+      "name": "Homie",
+      "version": "https://github.com/marvinroger/homie-esp8266.git"
+    },
+    {
+      "name": "Adafruit Unified Sensor"
+    },
+    {
+      "name": "Adafruit BME280 Library"
+    },
+    {
+      "name": "DHT sensor library"
+    }
   ]
 }
