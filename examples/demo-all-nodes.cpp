@@ -2,8 +2,6 @@
 #define FW_VERSION "1.0.0"
 
 #include <Homie.h>
-#include "ota.hpp"
-#include "welcome.hpp"
 
 #include "AdcNode.hpp"
 #include "BME280Node.hpp"
@@ -23,20 +21,6 @@ const int PIN_BUTTON = 14;  // =D5 on Wemos
 
 const int I2C_BME280_ADDRESS = 0x76;
 
-#if defined(DISPLAY_SSD1306)
-// Setup OTA logging via OLED display and Homie logger
-#include <SSD1306Wire.h>
-const int I2C_DISPLAY_ADDRESS = 0x3c;
-
-SSD1306Wire display(I2C_DISPLAY_ADDRESS, PIN_SDA, PIN_SCL);
-OtaDisplaySSD1306 ota(display, NULL);
-WelcomeSSD1306 welcome(display, FW_NAME, FW_VERSION);
-#else
-// Setup everything via Homie logger
-OtaLogger ota;
-Welcome welcome(FW_NAME, FW_VERSION);
-#endif
-
 // Create one node of each kind
 BME280Node bme280Node("bme280", I2C_BME280_ADDRESS);
 DHT22Node dht22Node("dht22", PIN_DHT);
@@ -51,20 +35,11 @@ ButtonNode buttonNode("button", PIN_BUTTON, []() {
   relayNode.toggleRelay();
 });
 
-void loopHandler()
-{
-  // We want to OTA handler to run only in the loop when WiFi is connected
-  ota.loop();
-}
-
 void setup()
 {
   Serial.begin(SERIAL_SPEED);
   Serial << endl
          << endl;
-
-  welcome.show();
-  ota.setup();
 
   // Set default configuration values before Homie.setup()
   adcNode.beforeHomieSetup();
@@ -82,8 +57,6 @@ void setup()
 
   Homie.disableLedFeedback();
   Homie.disableResetTrigger();
-
-  Homie.setLoopFunction(loopHandler);
 
   Homie.setup();
 }
