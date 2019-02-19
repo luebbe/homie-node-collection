@@ -1,0 +1,22 @@
+{
+  "name": "Homie node collection",
+  "version": "1.0.1",
+  "keywords": "iot, home, automation, Arduino, esp8266, homie, sensor, relay, switch",
+  "description": "Collection of Node implementations for the Homie-ESP8266 library.",
+  "homepage": "https://github.com/bertmelis/VitoWiFi",
+  "license": "MIT",
+  "authors": {
+    "name": "Lübbe Onken",
+    "url": "https://github.com/luebbe",
+    "maintainer": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luebbe/homie-node-collection.git",
+    "branch": "master"
+  },
+  "frameworks": "arduino",
+  "platforms": [
+    "espressif8266"
+  ]
+}
