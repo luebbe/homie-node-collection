@@ -14,7 +14,7 @@
 #include <SPI.h>
 #include <Wire.h>
 
-#include <Homie.hpp>
+#include <HomieNode.hpp>
 #include "constants.hpp"
 
 class BME280Node : public HomieNode

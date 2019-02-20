@@ -8,6 +8,9 @@
  */
 
 #include "BME280Node.hpp"
+#include <Homie.h>
+
+HomieSetting<double> temperatureOffsetSetting("temperatureOffset", "The temperature offset in degrees");
 
 BME280Node::BME280Node(const char *name, const int i2cAddress, const int measurementInterval)
     : HomieNode(name, "BME280Sensor"), _i2cAddress(i2cAddress), _lastMeasurement(0)
@@ -36,6 +39,8 @@ void BME280Node::loop()
       printCaption();
 
       Homie.getLogger() << cIndent << "Temperature: " << temperature << " °C" << endl;
+      temperature += temperatureOffsetSetting.get();
+      Homie.getLogger() << cIndent << "Temperature (after offset): " << temperature << " °C" << endl;
       Homie.getLogger() << cIndent << "Humidity: " << humidity << " %" << endl;
       Homie.getLogger() << cIndent << "Pressure: " << pressure << " hPa" << endl;
 
@@ -81,6 +86,7 @@ void BME280Node::setup()
                     Adafruit_BME280::SAMPLING_X1, // pressure
                     Adafruit_BME280::SAMPLING_X1, // humidity
                     Adafruit_BME280::FILTER_OFF);
+
   }
   else
   {
