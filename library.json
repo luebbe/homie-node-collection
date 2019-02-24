@@ -32,6 +32,9 @@
     },
     {
       "name": "DHT sensor library"
+    },
+    {
+      "name": "DallasTemperature"
     }
   ]
 }
