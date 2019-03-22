@@ -22,7 +22,7 @@
   "dependencies": [
     {
       "name": "Homie",
-      "version": "https://github.com/marvinroger/homie-esp8266.git"
+      "version": "https://github.com/homieiot/homie-esp8266.git"
     },
     {
       "name": "Adafruit Unified Sensor"
