@@ -8,9 +8,24 @@
  */
 
 #include "BME280Node.hpp"
+#include <Homie.h>
 
-BME280Node::BME280Node(const char *name, const int i2cAddress, const int measurementInterval)
-    : HomieNode(name, "BME280Sensor"), _i2cAddress(i2cAddress), _lastMeasurement(0)
+HomieSetting<double> temperatureOffsetSetting("temperatureOffset", "The temperature offset in degrees");
+
+BME280Node::BME280Node(const char *name,
+  const int i2cAddress,
+  const int measurementInterval,
+  const Adafruit_BME280::sensor_sampling tempSampling,
+  const Adafruit_BME280::sensor_sampling pressSampling,
+  const Adafruit_BME280::sensor_sampling humSampling,
+  const Adafruit_BME280::sensor_filter filter
+) : HomieNode(name, "BME280Sensor"),
+  _i2cAddress(i2cAddress),
+  _lastMeasurement(0),
+  _tempSampling(tempSampling),
+  _pressSampling(pressSampling),
+  _humSampling(humSampling),
+  _filter(filter)
 {
   _measurementInterval = (measurementInterval > MIN_INTERVAL) ? measurementInterval : MIN_INTERVAL;
 }
@@ -36,6 +51,8 @@ void BME280Node::loop()
       printCaption();
 
       Homie.getLogger() << cIndent << "Temperature: " << temperature << " °C" << endl;
+      temperature += temperatureOffsetSetting.get();
+      Homie.getLogger() << cIndent << "Temperature (after offset): " << temperature << " °C" << endl;
       Homie.getLogger() << cIndent << "Humidity: " << humidity << " %" << endl;
       Homie.getLogger() << cIndent << "Pressure: " << pressure << " hPa" << endl;
 
@@ -76,11 +93,8 @@ void BME280Node::setup()
                       << cIndent << "Reading interval: " << _measurementInterval << " s" << endl;
     // Parameters taken from the weather station monitoring example (advancedsettings.ino) in
     // the Adafruit BME280 library
-    bme.setSampling(Adafruit_BME280::MODE_FORCED,
-                    Adafruit_BME280::SAMPLING_X1, // temperature
-                    Adafruit_BME280::SAMPLING_X1, // pressure
-                    Adafruit_BME280::SAMPLING_X1, // humidity
-                    Adafruit_BME280::FILTER_OFF);
+    bme.setSampling(Adafruit_BME280::MODE_FORCED, _tempSampling, _pressSampling, _humSampling, _filter);
+
   }
   else
   {

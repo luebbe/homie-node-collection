@@ -14,7 +14,7 @@
 #include <SPI.h>
 #include <Wire.h>
 
-#include <Homie.hpp>
+#include <HomieNode.hpp>
 #include "constants.hpp"
 
 class BME280Node : public HomieNode
@@ -31,6 +31,11 @@ private:
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
 
+  Adafruit_BME280::sensor_sampling _tempSampling;
+  Adafruit_BME280::sensor_sampling _pressSampling;
+  Adafruit_BME280::sensor_sampling _humSampling;
+  Adafruit_BME280::sensor_filter _filter;
+
   float temperature = NAN;
   float humidity = NAN;
   float pressure = NAN;
@@ -46,7 +51,11 @@ protected:
 public:
   BME280Node(const char *name,
              const int i2cAddress = 0x77,
-             const int measurementInterval = MEASUREMENT_INTERVAL);
+             const int measurementInterval = MEASUREMENT_INTERVAL,
+             Adafruit_BME280::sensor_sampling tempSampling = Adafruit_BME280::SAMPLING_X1,
+             Adafruit_BME280::sensor_sampling pressSampling = Adafruit_BME280::SAMPLING_X1,
+             Adafruit_BME280::sensor_sampling humSampling = Adafruit_BME280::SAMPLING_X1,
+             Adafruit_BME280::sensor_filter filter = Adafruit_BME280::FILTER_OFF);
 
   float getHumidity() const { return humidity; }
   float getTemperature() const { return temperature; }
