@@ -17,9 +17,12 @@ Homie Node using the internal ESP ADC to measure voltage.
 
 It has three settings:
 
-- _adcCorrect_: Correction factor for AD converter. [0.5 - 1.5], Default = 1
-- _battMax_: Measured voltage that corresponds to 100% battery level. Must be greater than _battMin_. [2.5V - 4.0V] Default = 3.3V. 
-- _battMin_: Measured voltage that corresponds to 0% battery level. Must be less than _battMax_. [2.5V - 4.0V] Default = 2.6V. 
+- _adcCorrect_: Correction factor for AD converter.  
+  [0.5 - 1.5], Default = 1
+- _battMax_: Measured voltage that corresponds to 100% battery level.  
+  Must be greater than _battMin_. Range: [2.5V - 4.0V] Default = 3.3V.
+- _battMin_: Measured voltage that corresponds to 0% battery level.  
+  Must be less than _battMax_. Range: [2.5V - 4.0V] Default = 2.6V.
 
 Advertises the values as:
 
@@ -37,11 +40,12 @@ A node for a Bosch BME280 I2C temperature/humidity/pressure sensor. Reports the 
 
 It has one setting:
 
-- _temperatureOffset_: "The temperature offset in degrees [-10.0 - 10.0]. Default = 0. 
+- _temperatureOffset_: The temperature offset in degrees .  
+  Range: [-10.0 - 10.0]. Default = 0.
 
-__Attention__: This offset is just added to the temperature read from the sensor. The relative humidity is not recalculated.
+**Attention**: This offset is just added to the temperature read from the sensor. The relative humidity is not recalculated.
 
-__Attention__: Please be aware that the Homie framework doesn't have per-node settings. If you have more than one instance of a BME280Node, all instances will use the same _temperatureOffset_
+**Attention**: Please be aware that the Homie framework doesn't know per-node settings. If you have more than one instance of a BME280Node, all instances will use the same _temperatureOffset_.
 
 Depending on whether the sensor could be read successfully advertises status as:
 
