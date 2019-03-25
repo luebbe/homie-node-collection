@@ -8,11 +8,13 @@
 #include "ButtonNode.hpp"
 #include "ContactNode.hpp"
 #include "DHT22Node.hpp"
+#include "DS18B20Node.hpp"
 #include "RelayNode.hpp"
 
 // Insert your pin number(s) here
 const int PIN_LED = 2;      // =D4 on Wemos
 const int PIN_DHT = 0;      // =D3 on Wemos
+const int PIN_DS18 = 16;    // =D0 on Wemos
 const int PIN_SDA = 4;      // =D2 on Wemos
 const int PIN_SCL = 5;      // =D1 on Wemos
 const int PIN_CONTACT = 12; // =D6 on Wemos
@@ -24,6 +26,7 @@ const int I2C_BME280_ADDRESS = 0x76;
 // Create one node of each kind
 BME280Node bme280Node("bme280", I2C_BME280_ADDRESS);
 DHT22Node dht22Node("dht22", PIN_DHT);
+DS18B20Node DS18B20Node("ds18b20", PIN_DS18);
 RelayNode relayNode("relay", PIN_RELAY, PIN_LED);
 AdcNode adcNode("adc");
 
