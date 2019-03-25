@@ -8,5 +8,5 @@
 #define cPressureUnit cPressure "/" cUnit
 #define cVoltage "voltage"
 #define cVoltageUnit cVoltage "/" cUnit
-#define cBatteryLevel "batterypercent"
+#define cBatteryLevel "batterylevel"
 #define cBatteryLevelUnit cBatteryLevel "/" cUnit

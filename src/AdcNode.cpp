@@ -15,9 +15,9 @@ ADC_MODE(ADC_VCC);
 // Measuring the voltage with a ditital multi meter yields a denominator <> 1024.0f.
 // Correction factor for NodeMCU = 1.0611. Pass this value in the settings.
 
-HomieSetting<double> adcVoltageCorrection("adc_correct", "Correction factor for AD converter.  [0.5 - 1.5] Default = 1");
-HomieSetting<double> adcBattMax("batt_max", "Measured voltage that corresponds to 100% battery level.  [2.5V - 4.0V] Default = 3.3V. Must be greater than batt_min");
-HomieSetting<double> adcBattMin("batt_min", "Measured voltage that corresponds to 0% battery level.  [2.5V - 4.0V] Default = 2.6V. Must be less than batt_max");
+HomieSetting<double> adcVoltageCorrection("adcCorrect", "Correction factor for AD converter.  [0.5 - 1.5] Default = 1");
+HomieSetting<double> adcBattMax("battMax", "Measured voltage that corresponds to 100% battery level.  [2.5V - 4.0V] Default = 3.3V. Must be greater than battMin");
+HomieSetting<double> adcBattMin("battMin", "Measured voltage that corresponds to 0% battery level.  [2.5V - 4.0V] Default = 2.6V. Must be less than battMax");
 
 AdcNode::AdcNode(const char *name, const int sendInterval)
     : HomieNode(name, "AD Converter")

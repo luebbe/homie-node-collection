@@ -61,5 +61,6 @@ public:
   float getTemperature() const { return temperature; }
   float getPressure() const { return pressure; }
 
+  void beforeHomieSetup();
   void onReadyToOperate();
 };

@@ -10,22 +10,21 @@
 #include "BME280Node.hpp"
 #include <Homie.h>
 
-HomieSetting<double> temperatureOffsetSetting("temperatureOffset", "The temperature offset in degrees");
+HomieSetting<double> temperatureOffsetSetting("temperatureOffset", "The temperature offset in degrees [-10.0 - 10.0] Default = 0");
 
 BME280Node::BME280Node(const char *name,
-  const int i2cAddress,
-  const int measurementInterval,
-  const Adafruit_BME280::sensor_sampling tempSampling,
-  const Adafruit_BME280::sensor_sampling pressSampling,
-  const Adafruit_BME280::sensor_sampling humSampling,
-  const Adafruit_BME280::sensor_filter filter
-) : HomieNode(name, "BME280Sensor"),
-  _i2cAddress(i2cAddress),
-  _lastMeasurement(0),
-  _tempSampling(tempSampling),
-  _pressSampling(pressSampling),
-  _humSampling(humSampling),
-  _filter(filter)
+                       const int i2cAddress,
+                       const int measurementInterval,
+                       const Adafruit_BME280::sensor_sampling tempSampling,
+                       const Adafruit_BME280::sensor_sampling pressSampling,
+                       const Adafruit_BME280::sensor_sampling humSampling,
+                       const Adafruit_BME280::sensor_filter filter) : HomieNode(name, "BME280Sensor"),
+                                                                      _i2cAddress(i2cAddress),
+                                                                      _lastMeasurement(0),
+                                                                      _tempSampling(tempSampling),
+                                                                      _pressSampling(pressSampling),
+                                                                      _humSampling(humSampling),
+                                                                      _filter(filter)
 {
   _measurementInterval = (measurementInterval > MIN_INTERVAL) ? measurementInterval : MIN_INTERVAL;
 }
@@ -69,6 +68,13 @@ void BME280Node::loop()
   }
 }
 
+void BME280Node::beforeHomieSetup()
+{
+  temperatureOffsetSetting.setDefaultValue(0.0f).setValidator([](float candidate) {
+    return (candidate >= -10.0f) && (candidate <= 10.0f);
+  });
+}
+
 void BME280Node::onReadyToOperate()
 {
   setProperty(cTemperatureUnit).send("°C");
@@ -94,7 +100,6 @@ void BME280Node::setup()
     // Parameters taken from the weather station monitoring example (advancedsettings.ino) in
     // the Adafruit BME280 library
     bme.setSampling(Adafruit_BME280::MODE_FORCED, _tempSampling, _pressSampling, _humSampling, _filter);
-
   }
   else
   {

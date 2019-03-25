@@ -43,6 +43,7 @@ void setup()
 
   // Set default configuration values before Homie.setup()
   adcNode.beforeHomieSetup();
+  bme280Node.beforeHomieSetup();
 
   // Set callback for contact node here, just to show alternative
   contactNode.onChange([](bool open) {
