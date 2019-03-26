@@ -19,10 +19,12 @@ It has three settings:
 
 - _adcCorrect_: Correction factor for AD converter.  
   [0.5 - 1.5], Default = 1
+
 - _battMax_: Measured voltage that corresponds to 100% battery level.  
-  Must be greater than _battMin_. Range: [2.5V - 4.0V] Default = 3.3V.
+  Must be greater than _battMin_. Range = \[2.5V .. 4.0V\]. Default = 3.3V.
+  
 - _battMin_: Measured voltage that corresponds to 0% battery level.  
-  Must be less than _battMax_. Range: [2.5V - 4.0V] Default = 2.6V.
+  Must be less than _battMax_. Range = \[2.5V .. 4.0V\]. Default = 2.6V.
 
 Advertises the values as:
 
@@ -41,7 +43,7 @@ A node for Bosch BME280 I2C temperature/humidity/pressure sensors. Reports the t
 It has one setting:
 
 - _temperatureOffset_: The temperature offset in degrees.  
-  Range: [-10.0 - 10.0]. Default = 0.
+  Range = \[-10.0°C .. 10.0°C\]. Default = 0°C.
 
 **Attention**: This offset is just added to the temperature read from the sensor. The relative humidity is not recalculated.
 
