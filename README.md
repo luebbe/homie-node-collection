@@ -22,7 +22,7 @@ It has three settings:
 
 - _battMax_: Measured voltage that corresponds to 100% battery level.  
   Must be greater than _battMin_. Range = \[2.5V .. 4.0V\]. Default = 3.3V.
-  
+
 - _battMin_: Measured voltage that corresponds to 0% battery level.  
   Must be less than _battMax_. Range = \[2.5V .. 4.0V\]. Default = 2.6V.
 
