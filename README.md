@@ -36,11 +36,11 @@ The units are advertised as subtopics:
 
 ### BME280Node
 
-A node for a Bosch BME280 I2C temperature/humidity/pressure sensor. Reports the three values back via MQTT.
+A node for Bosch BME280 I2C temperature/humidity/pressure sensors. Reports the three values back via MQTT.
 
 It has one setting:
 
-- _temperatureOffset_: The temperature offset in degrees .  
+- _temperatureOffset_: The temperature offset in degrees.  
   Range: [-10.0 - 10.0]. Default = 0.
 
 **Attention**: This offset is just added to the temperature read from the sensor. The relative humidity is not recalculated.
@@ -65,7 +65,7 @@ The units are advertised as subtopics:
 
 ### DHT22Node
 
-A node for a DHT22 temperature/humidity sensor. Reports the two values back via MQTT.
+A node for DHT22 temperature/humidity sensors. Reports the two values back via MQTT.
 Depending on whether the sensor could be read successfully advertises status as:
 
 - `homie/<device-id>/<node-name>/status` (ok|error)
@@ -79,6 +79,21 @@ The units are advertised as subtopics:
 
 - `homie/<device-id>/<node-name>/temperature/unit`
 - `homie/<device-id>/<node-name>/humidity/unit`
+
+### DS18B20Node
+
+A Homie Node for Dallas 18B20 one wire temperature sensors. Reports the temperature back via MQTT.
+Depending on whether the sensor could be read successfully advertises status as:
+
+- `homie/<device-id>/<node-name>/status` (ok|error)
+
+Advertises the value as:
+
+- `homie/<device-id>/<node-name>/temperature`
+
+The unit is advertised as subtopic:
+
+- `homie/<device-id>/<node-name>/temperature/unit`
 
 ## Actor Nodes
 
