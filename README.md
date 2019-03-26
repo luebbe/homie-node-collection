@@ -18,7 +18,7 @@ Homie Node using the internal ESP ADC to measure voltage.
 It has three settings:
 
 - _adcCorrect_: Correction factor for AD converter.  
-  [0.5 - 1.5], Default = 1
+  Range = \[0.5 - 1.5\], Default = 1.
 
 - _battMax_: Measured voltage that corresponds to 100% battery level.  
   Must be greater than _battMin_. Range = \[2.5V .. 4.0V\]. Default = 3.3V.
