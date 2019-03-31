@@ -8,6 +8,8 @@
 
 #include "DS18B20Node.hpp"
 
+HomieSetting<double> temperatureOffsetSetting("temperatureOffset", "The temperature offset in degrees [-10.0 - 10.0] Default = 0");
+
 DS18B20Node::DS18B20Node(const char *name, const int sensorPin, const int measurementInterval)
     : HomieNode(name, "DS18N20Sensor"), _sensorPin(sensorPin), _measurementInterval(measurementInterval), _lastMeasurement(0) {
   if (_sensorPin > DEFAULTPIN) {
@@ -37,6 +39,12 @@ void DS18B20Node::loop() {
       _lastMeasurement = millis();
     }
   }
+}
+
+void DS18B20Node::beforeHomieSetup() {
+  temperatureOffsetSetting.setDefaultValue(0.0f).setValidator([](float candidate) {
+    return (candidate >= -10.0f) && (candidate <= 10.0f);
+  });
 }
 
 void DS18B20Node::onReadyToOperate() {

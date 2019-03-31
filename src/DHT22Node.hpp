@@ -46,5 +46,6 @@ public:
   float getHumidity() const { return humidity; }
   float getTemperature() const { return temperature; }
 
+  void beforeHomieSetup();
   void onReadyToOperate();
 };

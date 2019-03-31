@@ -44,5 +44,6 @@ public:
 
   float getTemperature() const { return temperature; }
 
+  void beforeHomieSetup();
   void onReadyToOperate();
 };

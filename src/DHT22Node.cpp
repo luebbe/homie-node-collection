@@ -10,6 +10,9 @@
 
 #define DHTTYPE DHT22
 
+HomieSetting<double> temperatureOffsetSetting("temperatureOffset", "The temperature offset in degrees [-10.0 - 10.0] Default = 0");
+HomieSetting<double> humidityOffsetSetting("humidityOffset", "The humidity offset in percentage points [-20.0 - 20.0] Default = 0");
+
 DHT22Node::DHT22Node(const char *name, const int sensorPin, const int measurementInterval)
     : HomieNode(name, "DHT22Sensor"),
       _sensorPin(sensorPin),
@@ -56,6 +59,15 @@ void DHT22Node::loop()
       _lastMeasurement = millis();
     }
   }
+}
+
+void DHT22Node::beforeHomieSetup() {
+  temperatureOffsetSetting.setDefaultValue(0.0f).setValidator([](float candidate) {
+    return (candidate >= -10.0f) && (candidate <= 10.0f);
+  });
+  humidityOffsetSetting.setDefaultValue(0.0f).setValidator([](float candidate) {
+    return (candidate >= -20.0f) && (candidate <= 20.0f);
+  });
 }
 
 void DHT22Node::onReadyToOperate()

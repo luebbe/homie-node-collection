@@ -40,12 +40,18 @@ The units are advertised as subtopics:
 
 A node for Bosch BME280 I2C temperature/humidity/pressure sensors. Reports the three values back via MQTT.
 
-It has one setting:
+It has three settings:
 
-- _temperatureOffset_: The temperature offset in degrees.  
+- _temperatureOffset_: The temperature offset in degrees.
   Range = \[-10.0°C .. 10.0°C\]. Default = 0°C.
 
-**Attention**: This offset is just added to the temperature read from the sensor. The relative humidity is not recalculated.
+- _humidityOffset_: The humidity offset in percentage points.
+  Range = \[-10.0% .. 10.0%\]. Default = 0%.
+
+- _pressureOffset_: The pressure offset in hectopascal.
+  Range = \[-50.0hPa .. 50.0hPa\]. Default = 0hPa.
+
+**Attention**: These offsets are just added to the temperature, humidity or pressure read from the sensor. The relative humidity is not recalculated.
 
 **Attention**: Please be aware that the Homie framework doesn't know per-node settings. If you have more than one instance of a BME280Node, all instances will use the same _temperatureOffset_.
 
@@ -68,6 +74,17 @@ The units are advertised as subtopics:
 ### DHT22Node
 
 A node for DHT22 temperature/humidity sensors. Reports the two values back via MQTT.
+
+It has two settings:
+
+- _temperatureOffset_: The temperature offset in degrees.
+  Range = \[-10.0°C .. 10.0°C\]. Default = 0°C.
+
+- _humidityOffset_: The humidity offset in percentage points.
+  Range = \[-10.0% .. 10.0%\]. Default = 0%.
+
+**Attention**: These offsets are just added to the temperature or humidity read from the sensor.
+
 Depending on whether the sensor could be read successfully advertises status as:
 
 - `homie/<device-id>/<node-name>/status` (ok|error)
@@ -85,6 +102,14 @@ The units are advertised as subtopics:
 ### DS18B20Node
 
 A Homie Node for Dallas 18B20 one wire temperature sensors. Reports the temperature back via MQTT.
+
+It has one setting:
+
+- _temperatureOffset_: The temperature offset in degrees.
+  Range = \[-10.0°C .. 10.0°C\]. Default = 0°C.
+
+**Attention**: These offsets are just added to the temperature read from the sensor.
+
 Depending on whether the sensor could be read successfully advertises status as:
 
 - `homie/<device-id>/<node-name>/status` (ok|error)

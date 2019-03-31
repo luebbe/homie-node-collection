@@ -11,6 +11,8 @@
 #include <Homie.h>
 
 HomieSetting<double> temperatureOffsetSetting("temperatureOffset", "The temperature offset in degrees [-10.0 - 10.0] Default = 0");
+HomieSetting<double> humidityOffsetSetting("humidityOffset", "The humidity offset in percentage points [-20.0 - 20.0] Default = 0");
+HomieSetting<double> pressureOffsetSetting("pressureOffset", "The pressure offset in hectopascal [-50.0 - 50.0] Default = 0");
 
 BME280Node::BME280Node(const char *name,
                        const int i2cAddress,
@@ -53,7 +55,11 @@ void BME280Node::loop()
       temperature += temperatureOffsetSetting.get();
       Homie.getLogger() << cIndent << "Temperature (after offset): " << temperature << " °C" << endl;
       Homie.getLogger() << cIndent << "Humidity: " << humidity << " %" << endl;
+      humidity += humidityOffsetSetting.get();
+      Homie.getLogger() << cIndent << "Humidity (after offset): " << humidity << " %" << endl;
       Homie.getLogger() << cIndent << "Pressure: " << pressure << " hPa" << endl;
+      pressure += pressureOffsetSetting.get();
+      Homie.getLogger() << cIndent << "Pressure (after offset): " << pressure << " hPa" << endl;
 
       setProperty(cStatus).send("ok");
       setProperty(cTemperature).send(String(temperature));
@@ -72,6 +78,12 @@ void BME280Node::beforeHomieSetup()
 {
   temperatureOffsetSetting.setDefaultValue(0.0f).setValidator([](float candidate) {
     return (candidate >= -10.0f) && (candidate <= 10.0f);
+  });
+  humidityOffsetSetting.setDefaultValue(0.0f).setValidator([](float candidate) {
+    return (candidate >= -20.0f) && (candidate <= 20.0f);
+  });
+  pressureOffsetSetting.setDefaultValue(0.0f).setValidator([](float candidate) {
+    return (candidate >= -50.0f) && (candidate <= 50.0f);
   });
 }
 

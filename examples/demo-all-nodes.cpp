@@ -26,7 +26,7 @@ const int I2C_BME280_ADDRESS = 0x76;
 // Create one node of each kind
 BME280Node bme280Node("bme280", I2C_BME280_ADDRESS);
 DHT22Node dht22Node("dht22", PIN_DHT);
-DS18B20Node DS18B20Node("ds18b20", PIN_DS18);
+DS18B20Node ds18b20Node("ds18b20", PIN_DS18);
 RelayNode relayNode("relay", PIN_RELAY, PIN_LED);
 AdcNode adcNode("adc");
 
@@ -47,6 +47,8 @@ void setup()
   // Set default configuration values before Homie.setup()
   adcNode.beforeHomieSetup();
   bme280Node.beforeHomieSetup();
+  dht22Node.beforeHomieSetup();
+  ds18b20Node.beforeHomieSetup();
 
   // Set callback for contact node here, just to show alternative
   contactNode.onChange([](bool open) {
