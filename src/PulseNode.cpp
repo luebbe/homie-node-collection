@@ -12,7 +12,7 @@ PulseNode::PulseNode(const char *name,
                      const uint8_t pulsePin,
                      //  void (*)(void) interruptCallback,
                      TStateChangeCallback stateChangeCallback)
-    : HomieNode(name, "PulseNode")
+    : HomieNode(name, "PulseNode", "sensor")
 {
   _pulsePin = pulsePin;
   _stateChangeCallback = stateChangeCallback;

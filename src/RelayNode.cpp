@@ -9,7 +9,7 @@
 #include "RelayNode.hpp"
 
 RelayNode::RelayNode(const char *name, const int relayPin, const int ledPin)
-    : HomieNode(name, "RelayNode")
+    : HomieNode(name, "RelayNode", "actor")
 {
   _relayPin = relayPin;
   _ledPin = ledPin;

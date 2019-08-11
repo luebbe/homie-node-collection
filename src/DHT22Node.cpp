@@ -11,7 +11,7 @@
 #define DHTTYPE DHT22
 
 DHT22Node::DHT22Node(const char *name, const int sensorPin, const int measurementInterval)
-    : HomieNode(name, "DHT22Sensor"),
+    : HomieNode(name, "DHT22", "sensor"),
       _sensorPin(sensorPin),
       _measurementInterval(measurementInterval),
       _lastMeasurement(0)

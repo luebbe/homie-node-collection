@@ -7,7 +7,11 @@
 
 Collection of nodes and examples for Homie. The nodes are designed as independent classes, so they can work standalone. For instance you can easily wire up a firmware for a Sonoff Relay by combining a ButtonNode with a RelayNode.
 
-The software is based on [Homie (v2.0)](https://github.com/homieiot/homie-esp8266) and is developed using [PlatformIO](https://github.com/platformio)
+The software is based on [Homie](https://github.com/homieiot/homie-esp8266) and is developed using [PlatformIO](https://github.com/platformio)
+It has recently been migrated to the [Homie v3 Develop branch](https://github.com/homieiot/homie-esp8266/tree/develop-v3).
+
+- Releases up to 1.0.x are using the [Homie convention 2.0.1](https://github.com/homieiot/convention/releases/tag/v2.0.1)
+- Releases from 1.1.x onwards are using the [Homie convention 3.0.1](https://github.com/homieiot/convention/releases/tag/v2.0.1)
 
 ## Sensor Nodes
 

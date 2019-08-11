@@ -20,7 +20,7 @@ HomieSetting<double> adcBattMax("battMax", "Measured voltage that corresponds to
 HomieSetting<double> adcBattMin("battMin", "Measured voltage that corresponds to 0% battery level.  [2.5V - 4.0V] Default = 2.6V. Must be less than battMax");
 
 AdcNode::AdcNode(const char *name, const int sendInterval)
-    : HomieNode(name, "AD Converter")
+    : HomieNode(name, "AD Converter", "sensor")
 {
   _lastReadTime = millis() - READ_INTERVAL_MILLISECONDS - 1;
   _lastSendTime = millis() - sendInterval - 1;

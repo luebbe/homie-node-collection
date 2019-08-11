@@ -26,7 +26,7 @@ private:
 
 protected:
   virtual void setup() override;
-  virtual bool handleInput(const String &property, const HomieRange &range, const String &value) override;
+  virtual bool handleInput(const String &property, const HomieRange &range, const String &value);
 
 public:
   RelayNode(const char *name, const int relayPin = DEFAULTPIN, const int ledPin = DEFAULTPIN);

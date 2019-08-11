@@ -11,7 +11,7 @@
 ContactNode::ContactNode(const char *name,
                          const int contactPin,
                          TContactCallback contactCallback)
-    : HomieNode(name, "ContactNode")
+    : HomieNode(name, "ContactNode", "sensor")
 {
   _contactPin = contactPin;
   _contactCallback = contactCallback;
