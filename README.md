@@ -1,9 +1,12 @@
 # Homie Node Collection
 
-[![Travis](https://img.shields.io/travis/luebbe/homie-node-collection.svg?branch=master&style=flat)](https://travis-ci.org/luebbe/homie-node-collection)
-[![Codacy](https://api.codacy.com/project/badge/Grade/e6d5e648b83b4667b399b81e2986dea6)](https://www.codacy.com/app/luebbe/homie-node-collection/dashboard)
-[![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat)](https://opensource.org/licenses/MIT)
-[![GitHub release](https://img.shields.io/github/release/luebbe/homie-node-collection.svg?style=flat)](https://github.com/luebbe/homie-node-collection/releases)
+[![GitHub release](https://img.shields.io/github/release/luebbe/homie-node-collection.svg?style=flat-square)](https://github.com/luebbe/homie-node-collection/releases)
+[![Travis](https://img.shields.io/travis/luebbe/homie-node-collection.svg?branch=master&style=flat-square)](https://travis-ci.org/luebbe/homie-node-collection)
+[![Codacy](https://img.shields.io/codacy/grade/e6d5e648b83b4667b399b81e2986dea6?style=flat-square)](https://www.codacy.com/app/luebbe/homie-node-collection/dashboard)
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![PlatformIO](https://img.shields.io/static/v1?label=Powered&message=PlatformIO&color=blue&style=flat-square)](https://platformio.org/lib/show/555/Homie)
+[![Homie](https://img.shields.io/static/v1?label=Powered&message=Homie&color=blue&style=flat-square)](https://github.com/homieiot/homie-esp8266)
+
 
 Collection of nodes and examples for Homie. The nodes are designed as independent classes, so they can work standalone. For instance you can easily wire up a firmware for a Sonoff Relay by combining a ButtonNode with a RelayNode.
 
