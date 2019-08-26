@@ -7,7 +7,6 @@
 [![PlatformIO](https://img.shields.io/static/v1?label=Powered&message=PlatformIO&color=blue&style=flat-square)](https://platformio.org/lib/show/555/Homie)
 [![Homie](https://img.shields.io/static/v1?label=Powered&message=Homie&color=blue&style=flat-square)](https://github.com/homieiot/homie-esp8266)
 
-
 Collection of nodes and examples for Homie. The nodes are designed as independent classes, so they can work standalone. For instance you can easily wire up a firmware for a Sonoff Relay by combining a ButtonNode with a RelayNode.
 
 The software is based on [Homie](https://github.com/homieiot/homie-esp8266) and is developed using [PlatformIO](https://github.com/platformio)
@@ -25,13 +24,13 @@ Homie Node using the internal ESP ADC to measure voltage.
 It has three settings:
 
 - _adcCorrect_: Correction factor for AD converter.  
-  Range = \[0.5 - 1.5\], Default = 1.
+  Range = \[0.5 - 1.5], Default = 1.
 
 - _battMax_: Measured voltage that corresponds to 100% battery level.  
-  Must be greater than _battMin_. Range = \[2.5V .. 4.0V\]. Default = 3.3V.
+  Must be greater than _battMin_. Range = \[2.5V .. 4.0V]. Default = 3.3V.
 
 - _battMin_: Measured voltage that corresponds to 0% battery level.  
-  Must be less than _battMax_. Range = \[2.5V .. 4.0V\]. Default = 2.6V.
+  Must be less than _battMax_. Range = \[2.5V .. 4.0V]. Default = 2.6V.
 
 Advertises the values as:
 
@@ -50,7 +49,7 @@ A node for Bosch BME280 I2C temperature/humidity/pressure sensors. Reports the t
 It has one setting:
 
 - _temperatureOffset_: The temperature offset in degrees.  
-  Range = \[-10.0°C .. 10.0°C\]. Default = 0°C.
+  Range = \[-10.0°C .. 10.0°C]. Default = 0°C.
 
 **Attention**: This offset is just added to the temperature read from the sensor. The relative humidity is not recalculated.
 
