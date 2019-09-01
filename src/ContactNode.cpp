@@ -17,10 +17,20 @@ ContactNode::ContactNode(const char *name,
   _contactCallback = contactCallback;
 }
 
+int ContactNode::getContactPin() 
+{
+  return _contactPin;
+}
+
+byte ContactNode::readPin() 
+{
+  return digitalRead(_contactPin);
+}
+
 // Debounce input pin.
 bool ContactNode::debouncePin(void)
 {
-  byte inputState = digitalRead(_contactPin);
+  byte inputState = readPin();
   if (inputState != _lastInputState)
   {
     _stateChangedTime = millis();
@@ -79,6 +89,11 @@ void ContactNode::loop()
   }
 }
 
+void ContactNode::setupPin()
+{
+  pinMode(_contactPin, INPUT_PULLUP);
+}
+
 void ContactNode::setup()
 {
   advertise("open");
@@ -88,6 +103,6 @@ void ContactNode::setup()
 
   if (_contactPin > DEFAULTPIN)
   {
-    pinMode(_contactPin, INPUT_PULLUP);
+    setupPin();
   }
 }

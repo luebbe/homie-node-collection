@@ -34,8 +34,11 @@ private:
   void printCaption();
 
 protected:
+  int getContactPin();
   virtual void loop() override;
   virtual void setup() override;
+  virtual void setupPin();
+  virtual byte readPin();
 
 public:
   ContactNode(const char *name, const int contactPin = DEFAULTPIN, TContactCallback contactCallback = NULL);
