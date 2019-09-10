@@ -24,8 +24,9 @@ private:
 
   TContactCallback _contactCallback;
   int _contactPin;
-  int _lastInputState = LOW; // Input pin state.
-  int _lastSentState = LOW;  // Input pin state.
+  // Use invalid values for last states to force sending initial state...
+  int _lastInputState = -1; // Input pin state.
+  int _lastSentState = -1;  // Last pin state sent
   bool _stateChangeHandled = false;
   unsigned long _stateChangedTime = 0;
 
@@ -34,8 +35,11 @@ private:
   void printCaption();
 
 protected:
+  int getContactPin();
   virtual void loop() override;
   virtual void setup() override;
+  virtual void setupPin();
+  virtual byte readPin();
 
 public:
   ContactNode(const char *name, const int contactPin = DEFAULTPIN, TContactCallback contactCallback = NULL);
