@@ -38,6 +38,7 @@ HomieInternals::Uptime relayUptime;
 RelayNode::RelayNode(const char *name, const int relayPin, const int ledPin, const bool reverseSignal)
     : HomieNode(name, "RelayNode", "actor")
 {
+  relayOnLimit = NULL;
   _relayPin = relayPin;
   _ledPin = ledPin;
   if (reverseSignal) {
