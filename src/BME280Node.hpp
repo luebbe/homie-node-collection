@@ -14,15 +14,18 @@
 #include <SPI.h>
 #include <Wire.h>
 
-#include <HomieNode.hpp>
+#include "SensorNode.hpp"
 #include "constants.hpp"
 
-class BME280Node : public HomieNode
+class BME280Node : public SensorNode
 {
 private:
+  const float cMinTemp = -40.0;
+  const float cMaxTemp = 85.0;
+  const float cMinPress = 300.0;
+  const float cMaxPress = 1100.0;
   // suggested rate is 1/60Hz (1m)
   static const int MIN_INTERVAL = 60; // in seconds
-  static const int MEASUREMENT_INTERVAL = 300;
   const char *cCaption = "• BME280 sensor:";
   const char *cIndent = "  ◦ ";
 

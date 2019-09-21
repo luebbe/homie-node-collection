@@ -71,8 +71,8 @@ void AdcNode::send()
   }
   else
   {
-    setProperty(cVoltage).send(String(_voltage));
-    setProperty(cBatteryLevel).send(String(_batteryLevel));
+    setProperty(cVoltageTopic).send(String(_voltage));
+    setProperty(cBatteryLevelTopic).send(String(_batteryLevel));
     Homie.getLogger() << cIndent << "Voltage: " << _voltage << "V" << endl;
     Homie.getLogger() << cIndent << "Battery level: " << _batteryLevel << "%" << endl;
   }
@@ -113,17 +113,17 @@ void AdcNode::beforeHomieSetup()
 void AdcNode::onReadyToOperate()
 {
   // Will be called after MQTT_CONNECT
-  setProperty(cVoltageUnit).send("V");
-  setProperty(cBatteryLevelUnit).send("%");
+  setProperty(cVoltageUnitTopic).send("V");
+  setProperty(cBatteryLevelUnitTopic).send("%");
 };
 
 void AdcNode::setup()
 {
   // Will be called from Homie.setup()
-  advertise(cVoltage);
-  advertise(cVoltageUnit);
-  advertise(cBatteryLevel);
-  advertise(cBatteryLevelUnit);
+  advertise(cVoltageTopic);
+  advertise(cVoltageUnitTopic);
+  advertise(cBatteryLevelTopic);
+  advertise(cBatteryLevelUnitTopic);
 
   printCaption();
   Homie.getLogger() << cIndent << "Send interval: " << _sendInterval / 1000 << " s" << endl;

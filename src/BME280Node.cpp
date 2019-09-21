@@ -18,7 +18,7 @@ BME280Node::BME280Node(const char *name,
                        const Adafruit_BME280::sensor_sampling tempSampling,
                        const Adafruit_BME280::sensor_sampling pressSampling,
                        const Adafruit_BME280::sensor_sampling humSampling,
-                       const Adafruit_BME280::sensor_filter filter) : HomieNode(name, "BME280", "sensor"),
+                       const Adafruit_BME280::sensor_filter filter) : SensorNode(name, "BME280"),
                                                                       _i2cAddress(i2cAddress),
                                                                       _lastMeasurement(0),
                                                                       _tempSampling(tempSampling),
@@ -31,7 +31,7 @@ BME280Node::BME280Node(const char *name,
 
 void BME280Node::printCaption()
 {
-  Homie.getLogger() << cCaption << endl;
+  Homie.getLogger() << cCaption << " i2c[" << _i2cAddress << "]:" << endl;
 }
 
 void BME280Node::loop()
@@ -47,22 +47,30 @@ void BME280Node::loop()
       humidity = bme.readHumidity();
       pressure = bme.readPressure() / 100;
 
+      fixRange(&temperature, cMinTemp, cMaxTemp);
+      fixRange(&humidity, cMinHumid, cMaxHumid);
+      fixRange(&pressure, cMinPress, cMaxPress);
+
       printCaption();
+
+      float absHumidity = computeAbsoluteHumidity(temperature, humidity);
 
       Homie.getLogger() << cIndent << "Temperature: " << temperature << " °C" << endl;
       temperature += temperatureOffsetSetting.get();
       Homie.getLogger() << cIndent << "Temperature (after offset): " << temperature << " °C" << endl;
       Homie.getLogger() << cIndent << "Humidity: " << humidity << " %" << endl;
       Homie.getLogger() << cIndent << "Pressure: " << pressure << " hPa" << endl;
+      Homie.getLogger() << cIndent << "Abs humidity: " << absHumidity << " g/m³" << endl;
 
-      setProperty(cStatus).send("ok");
-      setProperty(cTemperature).send(String(temperature));
-      setProperty(cHumidity).send(String(humidity));
-      setProperty(cPressure).send(String(pressure));
+      setProperty(cStatusTopic).send("ok");
+      setProperty(cTemperatureTopic).send(String(temperature));
+      setProperty(cHumidityTopic).send(String(humidity));
+      setProperty(cPressureTopic).send(String(pressure));
+      setProperty(cAbsHumidityTopic).send(String(absHumidity));
     }
     else
     {
-      setProperty(cStatus).send("error");
+      setProperty(cStatusTopic).send("error");
     }
     _lastMeasurement = millis();
   }
@@ -77,20 +85,23 @@ void BME280Node::beforeHomieSetup()
 
 void BME280Node::onReadyToOperate()
 {
-  setProperty(cTemperatureUnit).send("°C");
-  setProperty(cHumidityUnit).send("%");
-  setProperty(cPressureUnit).send("hPa");
+  setProperty(cTemperatureUnitTopic).send("°C");
+  setProperty(cHumidityUnitTopic).send("%");
+  setProperty(cPressureUnitTopic).send("hPa");
+  setProperty(cAbsHumidityUnitTopic).send("g/m³");
 };
 
 void BME280Node::setup()
 {
-  advertise(cStatus);
-  advertise(cTemperature);
-  advertise(cTemperatureUnit);
-  advertise(cHumidity);
-  advertise(cHumidityUnit);
-  advertise(cPressure);
-  advertise(cPressureUnit);
+  advertise(cStatusTopic);
+  advertise(cTemperatureTopic);
+  advertise(cTemperatureUnitTopic);
+  advertise(cHumidityTopic);
+  advertise(cHumidityUnitTopic);
+  advertise(cPressureTopic);
+  advertise(cPressureUnitTopic);
+  advertise(cAbsHumidityTopic);
+  advertise(cAbsHumidityUnitTopic);
 
   if (bme.begin(_i2cAddress))
   {

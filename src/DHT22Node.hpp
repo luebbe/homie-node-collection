@@ -11,15 +11,18 @@
 #include <Adafruit_Sensor.h>
 #include <DHT_U.h>
 
-#include <Homie.hpp>
+#include "SensorNode.hpp"
 #include "constants.hpp"
 
 #define DEFAULTPIN -1
 
-class DHT22Node : public HomieNode
+class DHT22Node : public SensorNode
 {
 private:
-  static const int MEASUREMENT_INTERVAL = 300;
+  const float cMinTemp = -40.0;
+  const float cMaxTemp = 125.0;
+  const float cMinHumid = 0.0;
+  const float cMaxHumid = 100.0;
   const char *cCaption = "• DHT22 sensor";
   const char *cIndent = "  ◦ ";
 

@@ -9,7 +9,7 @@
 #include "DS18B20Node.hpp"
 
 DS18B20Node::DS18B20Node(const char *name, const int sensorPin, const int measurementInterval)
-    : HomieNode(name, "DS18N20", "sensor"),
+    : SensorNode(name, "DS18N20"),
       _sensorPin(sensorPin),
       _measurementInterval(measurementInterval),
       _lastMeasurement(0)
@@ -34,17 +34,19 @@ void DS18B20Node::loop()
     {
       dallasTemp->requestTemperatures();
       temperature = dallasTemp->getTempCByIndex(0);
+      fixRange(&temperature, cMinTemp, cMaxTemp);
+
       printCaption();
       if (DEVICE_DISCONNECTED_C == temperature)
       {
         Homie.getLogger() << cIndent << "Error reading from Sensor" << endl;
-        setProperty(cStatus).send("error");
+        setProperty(cStatusTopic).send("error");
       }
       else
       {
         Homie.getLogger() << cIndent << "Temperature: " << temperature << " °C" << endl;
-        setProperty(cStatus).send("ok");
-        setProperty(cTemperature).send(String(temperature));
+        setProperty(cStatusTopic).send("ok");
+        setProperty(cTemperatureTopic).send(String(temperature));
       }
       _lastMeasurement = millis();
     }
@@ -53,14 +55,14 @@ void DS18B20Node::loop()
 
 void DS18B20Node::onReadyToOperate()
 {
-  setProperty(cTemperatureUnit).send("°C");
+  setProperty(cTemperatureUnitTopic).send("°C");
 };
 
 void DS18B20Node::setup()
 {
-  advertise(cStatus);
-  advertise(cTemperature);
-  advertise(cTemperatureUnit);
+  advertise(cStatusTopic);
+  advertise(cTemperatureTopic);
+  advertise(cTemperatureUnitTopic);
 
   printCaption();
   Homie.getLogger() << cIndent << "Reading interval: " << _measurementInterval << " s" << endl;

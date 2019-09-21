@@ -11,14 +11,15 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-#include <Homie.hpp>
+#include "SensorNode.hpp"
 #include "constants.hpp"
 
 #define DEFAULTPIN -1
 
-class DS18B20Node : public HomieNode {
+class DS18B20Node : public SensorNode {
 private:
-  static const int MEASUREMENT_INTERVAL = 300;
+  const float cMinTemp = -55.0;
+  const float cMaxTemp = 125.0;
   const char *cCaption = "• DS18B20 sensor";
   const char *cIndent = "  ◦ ";
 

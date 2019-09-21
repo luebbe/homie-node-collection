@@ -11,7 +11,7 @@
 #define DHTTYPE DHT22
 
 DHT22Node::DHT22Node(const char *name, const int sensorPin, const int measurementInterval)
-    : HomieNode(name, "DHT22", "sensor"),
+    : SensorNode(name, "DHT22"),
       _sensorPin(sensorPin),
       _measurementInterval(measurementInterval),
       _lastMeasurement(0)
@@ -37,21 +37,28 @@ void DHT22Node::loop()
       temperature = dht->readTemperature();
       humidity = dht->readHumidity();
 
+      fixRange(&temperature, cMinTemp, cMaxTemp);
+      fixRange(&humidity, cMinHumid, cMaxHumid);
+
       printCaption();
 
       if (isnan(temperature) || isnan(humidity))
       {
         Homie.getLogger() << cIndent << "Error reading from Sensor" << endl;
-        setProperty(cStatus).send("error");
+        setProperty(cStatusTopic).send("error");
       }
       else
       {
+        float absHumidity = computeAbsoluteHumidity(temperature, humidity);
+
         Homie.getLogger() << cIndent << "Temperature: " << temperature << " °C" << endl;
         Homie.getLogger() << cIndent << "Humidity: " << humidity << " %" << endl;
+        Homie.getLogger() << cIndent << "Abs humidity: " << absHumidity << " g/m³" << endl;
 
-        setProperty(cStatus).send("ok");
-        setProperty(cTemperature).send(String(temperature));
-        setProperty(cHumidity).send(String(humidity));
+        setProperty(cStatusTopic).send("ok");
+        setProperty(cTemperatureTopic).send(String(temperature));
+        setProperty(cHumidityTopic).send(String(humidity));
+        setProperty(cAbsHumidityTopic).send(String(absHumidity));
       }
       _lastMeasurement = millis();
     }
@@ -60,17 +67,20 @@ void DHT22Node::loop()
 
 void DHT22Node::onReadyToOperate()
 {
-  setProperty(cTemperatureUnit).send("°C");
-  setProperty(cHumidityUnit).send("%");
+  setProperty(cTemperatureUnitTopic).send("°C");
+  setProperty(cHumidityUnitTopic).send("%");
+  setProperty(cAbsHumidityUnitTopic).send("g/m³");
 };
 
 void DHT22Node::setup()
 {
-  advertise(cStatus);
-  advertise(cTemperature);
-  advertise(cTemperatureUnit);
-  advertise(cHumidity);
-  advertise(cHumidityUnit);
+  advertise(cStatusTopic);
+  advertise(cTemperatureTopic);
+  advertise(cTemperatureUnitTopic);
+  advertise(cHumidityTopic);
+  advertise(cHumidityUnitTopic);
+  advertise(cAbsHumidityTopic);
+  advertise(cAbsHumidityUnitTopic);
 
   printCaption();
   Homie.getLogger() << cIndent << "Reading interval: " << _measurementInterval << " s" << endl;
