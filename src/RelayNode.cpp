@@ -2,35 +2,34 @@
  * RelayNode.cpp
  * Homie Node for a Relay with optional status indicator LED
  *
- * Version: 1.0
+ * Version: 1.1
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
 #include "RelayNode.hpp"
 
-
 HomieSetting<long> *globalRelayOnLimit;
 
-
-void RelayNode::beforeHomieSetup(const long defaultGlobalLimit, const long defaultLimit) 
+void RelayNode::beforeHomieSetup(const long defaultGlobalLimit, const long defaultLimit)
 {
 
-  if ((globalRelayOnLimit == NULL) && (defaultGlobalLimit >= 0)) {
-      globalRelayOnLimit = new HomieSetting<long>("relayOnLimit", "maximum time in seconds to keep relay(s) in 'on' state (0 disable) - relayOnLimit");
-      globalRelayOnLimit->setDefaultValue(defaultGlobalLimit).setValidator([] (long candidate) {
-        return (candidate >= 0);
-      });
+  if ((globalRelayOnLimit == NULL) && (defaultGlobalLimit >= 0))
+  {
+    globalRelayOnLimit = new HomieSetting<long>("relayOnLimit", "maximum time in seconds to keep relay(s) in 'on' state (0 disable) - relayOnLimit");
+    globalRelayOnLimit->setDefaultValue(defaultGlobalLimit).setValidator([](long candidate) {
+      return (candidate >= 0);
+    });
   }
 
-  if ((relayOnLimit == NULL) && (defaultLimit >= -1)) {
-      relayOnLimitPropertyName = String(getId()) + "_OnLimit";
-      relayOnLimitPropertyDescription = "maximum time in seconds to keep the specific relay '" + String(getId()) + "' in 'on' state (-1 disable, 0 use relayOnLimit)";
-      relayOnLimit = new HomieSetting<long>(relayOnLimitPropertyName.c_str(), relayOnLimitPropertyDescription.c_str());
-      relayOnLimit->setDefaultValue(defaultLimit).setValidator([] (long candidate) {
-        return (candidate >= -1);
-      });
+  if ((_relayOnLimit == NULL) && (defaultLimit >= -1))
+  {
+    _relayOnLimitPropertyName = String(getId()) + "_OnLimit";
+    _relayOnLimitPropertyDescription = "maximum time in seconds to keep the specific relay '" + String(getId()) + "' in 'on' state (-1 disable, 0 use relayOnLimit)";
+    _relayOnLimit = new HomieSetting<long>(_relayOnLimitPropertyName.c_str(), _relayOnLimitPropertyDescription.c_str());
+    _relayOnLimit->setDefaultValue(defaultLimit).setValidator([](long candidate) {
+      return (candidate >= -1);
+    });
   }
-
 }
 
 HomieInternals::Uptime relayUptime;
@@ -38,46 +37,71 @@ HomieInternals::Uptime relayUptime;
 RelayNode::RelayNode(const char *name, const int relayPin, const int ledPin, const bool reverseSignal)
     : HomieNode(name, "RelayNode", "actor")
 {
-  relayOnLimit = NULL;
+  _relayOnLimit = NULL;
   _relayPin = relayPin;
   _ledPin = ledPin;
-  if (reverseSignal) {
-    relayOnValue = LOW;
-    relayOffValue = HIGH;
-  } else {
-    relayOnValue = HIGH;
-    relayOffValue = LOW;
+  if (reverseSignal)
+  {
+    _relayOnValue = LOW;
+    _relayOffValue = HIGH;
+  }
+  else
+  {
+    _relayOnValue = HIGH;
+    _relayOffValue = LOW;
   }
 }
 
-#define IS_INTEGER(s) ( s == String(s.toInt()) )
+#define IS_INTEGER(s) (s == String(s.toInt()))
 
-bool RelayNode::handleInput(const String &property, const HomieRange &range, const String &value)
+bool RelayNode::handleOnOff(const String &value)
 {
-  Homie.getLogger() << "Message: " << property << " " << value << endl;
-  if (property == "on") {
-    if (value != "true" && value != "false" && !IS_INTEGER(value)) {
-      return false;
-    }
-
-    if (IS_INTEGER(value)) {
-      long t = value.toInt();
-      if (t == 0)
-        return false;
-      setRelay(true, t);
-    } else {
-      setRelay(value == "true");
-    }
-
-  } else if (property == "timeout" && IS_INTEGER(value)) {
-    // reset timeout for the active relay
-    if (readRelayState()) {
-      setRelay(true, value.toInt());
-    }
-  } else {
+  if (value != "true" && value != "false" && !IS_INTEGER(value))
+  {
     return false;
   }
-  return true;
+
+  if (IS_INTEGER(value))
+  {
+    return handleTimeout(value);
+  }
+  else
+  {
+    setRelay(value == "true");
+    return true;
+  }
+}
+
+bool RelayNode::handleTimeout(const String &value)
+{
+  if (IS_INTEGER(value))
+    // reset timeout for the active relay
+    if (readRelayState())
+    {
+      long t = value.toInt();
+      if (t > 0)
+        setRelay(true, t);
+      return true;
+    }
+  return false;
+}
+
+bool RelayNode::handleInput(const HomieRange &range, const String &property, const String &value)
+{
+  Homie.getLogger() << "Message: " << property << " " << value << endl;
+
+  if (property.equals("on"))
+  {
+    return handleOnOff(value);
+  }
+  else if (property.equals("timeout"))
+  {
+    return handleTimeout(value);
+  }
+  else
+  {
+    return false;
+  }
 }
 
 void RelayNode::printCaption()
@@ -95,20 +119,20 @@ void RelayNode::setLed(bool on)
 
 void RelayNode::setRelayState(bool on)
 {
-    digitalWrite(_relayPin, on ? relayOnValue : relayOffValue); 
+  digitalWrite(_relayPin, on ? _relayOnValue : _relayOffValue);
 }
 
 void RelayNode::setRelay(bool on)
 {
-    long limit = (relayOnLimit != NULL) ? relayOnLimit->get() : 0;
-    long globalLimit = (globalRelayOnLimit != NULL) ? globalRelayOnLimit->get() : 0;
-    setRelay(on, (limit < 0) ? 0 : (limit > 0 ? limit : globalLimit) );
+  long limit = (_relayOnLimit != NULL) ? _relayOnLimit->get() : 0;
+  long globalLimit = (globalRelayOnLimit != NULL) ? globalRelayOnLimit->get() : 0;
+  setRelay(on, (limit < 0) ? 0 : (limit > 0 ? limit : globalLimit));
 }
 
 void RelayNode::sendState()
 {
-    setProperty("on").send(readRelayState() ? "true" : "false");
-    setProperty("timeout").send(String(timeout));
+  setProperty("on").send(readRelayState() ? "true" : "false");
+  setProperty("timeout").send(String(_timeout));
 }
 
 void RelayNode::setRelay(bool on, long timeoutSecs)
@@ -120,52 +144,49 @@ void RelayNode::setRelay(bool on, long timeoutSecs)
   {
     setRelayState(on);
     Homie.getLogger() << cIndent << "Relay is " << (on ? "on" : "off") << endl;
-    if (on && timeoutSecs > 0) {
-      timeout = relayUptime.getSeconds() + timeoutSecs;
-    } else {
-      timeout = 0;
+    if (on && timeoutSecs > 0)
+    {
+      _timeout = relayUptime.getSeconds() + timeoutSecs;
+    }
+    else
+    {
+      _timeout = 0;
     }
     sendState();
-  }
-  else
-  {
-    Homie.getLogger() << cIndent << "No Relay Pin!" << endl;
-  }
-  setLed(on);
-}
-
-bool RelayNode::readRelayState() 
-{
-    return digitalRead(_relayPin) == relayOnValue;
-}
-
-void RelayNode::toggleRelay()
-{
-  if (_relayPin > DEFAULTPIN)
-  {
-    setRelay(!readRelayState());
   }
   else
   {
     printCaption();
     Homie.getLogger() << cIndent << "No Relay Pin!" << endl;
   }
+  setLed(on);
 }
 
-void RelayNode::setupRelay() 
+bool RelayNode::readRelayState()
 {
-    pinMode(_relayPin, OUTPUT);
+  return digitalRead(_relayPin) == _relayOnValue;
 }
 
-int RelayNode::getRelayPin() {
-    return _relayPin;
+void RelayNode::toggleRelay()
+{
+  setRelay(!readRelayState());
+}
+
+void RelayNode::setupRelay()
+{
+  pinMode(_relayPin, OUTPUT);
+}
+
+int RelayNode::getRelayPin()
+{
+  return _relayPin;
 }
 
 void RelayNode::setup()
 {
   advertise("on").settable();
   advertise("timeout").settable();
-  
+
   printCaption();
 
   Homie.getLogger() << cIndent << "Relay Pin: " << _relayPin << endl
@@ -187,8 +208,8 @@ void RelayNode::setup()
 void RelayNode::loop()
 {
   relayUptime.update();
-  if ( (timeout > 0) && readRelayState() && (timeout < relayUptime.getSeconds()) ) {
-      setRelay(false);
+  if ((_timeout > 0) && readRelayState() && (_timeout < relayUptime.getSeconds()))
+  {
+    setRelay(false);
   }
 }
-
