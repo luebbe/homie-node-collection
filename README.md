@@ -1,5 +1,6 @@
 # Homie Node Collection
 
+[![Languages](https://img.shields.io/github/languages/top/luebbe/homie-node-collection.svg?style=flat-square)](https://img.shields.io/github/languages/top/luebbe/homie-node-collection)
 [![GitHub release](https://img.shields.io/github/release/luebbe/homie-node-collection.svg?style=flat-square)](https://github.com/luebbe/homie-node-collection/releases)
 [![Travis](https://img.shields.io/travis/luebbe/homie-node-collection.svg?branch=master&style=flat-square)](https://travis-ci.org/luebbe/homie-node-collection)
 [![Codacy](https://img.shields.io/codacy/grade/e6d5e648b83b4667b399b81e2986dea6?style=flat-square)](https://www.codacy.com/app/luebbe/homie-node-collection/dashboard)
