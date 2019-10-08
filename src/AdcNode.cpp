@@ -25,6 +25,16 @@ AdcNode::AdcNode(const char *name, const int sendInterval)
   _lastReadTime = millis() - READ_INTERVAL_MILLISECONDS - 1;
   _lastSendTime = millis() - sendInterval - 1;
   _sendInterval = sendInterval;
+
+  advertise(cStatusTopic)
+      .setDatatype("enum")
+      .setFormat("error, ok");
+  advertise(cVoltageTopic)
+      .setDatatype("float")
+      .setUnit(cUnitVolt);
+  advertise(cBatteryLevelTopic)
+      .setDatatype("float")
+      .setUnit(cUnitPercent);
 }
 
 void AdcNode::printCaption()
@@ -68,13 +78,17 @@ void AdcNode::send()
   if (isnan(_voltage))
   {
     Homie.getLogger() << cIndent << "Error reading from ADC" << endl;
+
+    setProperty(cStatusTopic).send("error");
   }
   else
   {
-    setProperty(cVoltageTopic).send(String(_voltage));
-    setProperty(cBatteryLevelTopic).send(String(_batteryLevel));
     Homie.getLogger() << cIndent << "Voltage: " << _voltage << "V" << endl;
     Homie.getLogger() << cIndent << "Battery level: " << _batteryLevel << "%" << endl;
+
+    setProperty(cStatusTopic).send("ok");
+    setProperty(cVoltageTopic).send(String(_voltage));
+    setProperty(cBatteryLevelTopic).send(String(_batteryLevel));
   }
 }
 
@@ -84,14 +98,14 @@ void AdcNode::loop()
 
   if (now - _lastReadTime >= READ_INTERVAL_MILLISECONDS)
   {
-    _lastReadTime = now;
     readVoltage();
+    _lastReadTime = now;
   }
 
-  if (now - _lastSendTime >= _sendInterval)
+  if (_ready && (now - _lastSendTime >= _sendInterval))
   {
-    _lastSendTime = now;
     send();
+    _lastSendTime = now;
   }
 }
 
@@ -112,19 +126,11 @@ void AdcNode::beforeHomieSetup()
 
 void AdcNode::onReadyToOperate()
 {
-  // Will be called after MQTT_CONNECT
-  setProperty(cVoltageUnitTopic).send("V");
-  setProperty(cBatteryLevelUnitTopic).send("%");
-};
+  _ready = true;
+}
 
 void AdcNode::setup()
 {
-  // Will be called from Homie.setup()
-  advertise(cVoltageTopic);
-  advertise(cVoltageUnitTopic);
-  advertise(cBatteryLevelTopic);
-  advertise(cBatteryLevelUnitTopic);
-
   printCaption();
   Homie.getLogger() << cIndent << "Send interval: " << _sendInterval / 1000 << " s" << endl;
 }

@@ -26,6 +26,7 @@ private:
   const char *cCaption = "• DHT22 sensor";
   const char *cIndent = "  ◦ ";
 
+  bool _ready = false;
   int _sensorPin;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
@@ -36,10 +37,12 @@ private:
   DHT *dht;
 
   void printCaption();
+  void send();
 
 protected:
   virtual void setup() override;
   virtual void loop() override;
+  virtual void onReadyToOperate() override;
 
 public:
   DHT22Node(const char *name,
@@ -48,6 +51,4 @@ public:
 
   float getHumidity() const { return humidity; }
   float getTemperature() const { return temperature; }
-
-  void onReadyToOperate();
 };

@@ -29,7 +29,9 @@ private:
   const char *cCaption = "• BME280 sensor ";
   const char *cIndent = "  ◦ ";
 
+  bool _ready = false;
   bool _sensorFound = false;
+
   unsigned int _i2cAddress;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
@@ -46,10 +48,12 @@ private:
   Adafruit_BME280 bme;
 
   void printCaption();
+  void send();
 
 protected:
   virtual void setup() override;
   virtual void loop() override;
+  virtual void onReadyToOperate() override;
 
 public:
   BME280Node(const char *name,
@@ -65,5 +69,4 @@ public:
   float getPressure() const { return pressure; }
 
   void beforeHomieSetup();
-  void onReadyToOperate();
 };

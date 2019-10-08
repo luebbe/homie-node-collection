@@ -29,6 +29,8 @@ private:
   unsigned long _lastSendTime;
   unsigned long _sendInterval;
 
+  bool _ready = false;
+  
   float _batteryLevel = NAN;
   float _voltage = NAN;
 
@@ -39,6 +41,7 @@ private:
 protected:
   virtual void setup() override;
   virtual void loop() override;
+  virtual void onReadyToOperate() override;
 
 public:
   AdcNode(const char *name, const int sendInterval = SEND_INTERVAL_MILLISECONDS);
@@ -48,6 +51,5 @@ public:
   String getVoltageStr();
 
   void beforeHomieSetup();
-  void onReadyToOperate();
 };
 
