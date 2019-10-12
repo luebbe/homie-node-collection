@@ -18,6 +18,16 @@ It has recently been migrated to the [Homie v3 Develop branch](https://github.co
 
 ## Sensor Nodes
 
+All sensor nodes have a common `$status` subtopic wit the enum values: `ok|error`. `$status` is `ok` when a sensor could be detected and a valid measurement could be taken, `error` otherwise.
+All sensor nodes publish their unit on the `$unit` subtopic.
+All sensor nodes publish their data type on the `$datatype` subtopic.
+So if a sensor nodes publishes a temperature, you will see the following subtopics:
+
+- `homie/<device-id>/<node-name>/status`
+- `homie/<device-id>/<node-name>/temperature`
+- `homie/<device-id>/<node-name>/temperature/unit`
+- `homie/<device-id>/<node-name>/temperature/datatype`
+
 ### AdcNode.cpp
 
 Homie Node using the internal ESP ADC to measure voltage.
@@ -38,11 +48,6 @@ Advertises the values as:
 - `homie/<device-id>/<node-name>/voltage`
 - `homie/<device-id>/<node-name>/batterylevel`
 
-The units are advertised as subtopics:
-
-- `homie/<device-id>/<node-name>/voltage/unit`
-- `homie/<device-id>/<node-name>/batterylevel/unit`
-
 ### BME280Node
 
 A node for Bosch BME280 I2C temperature/humidity/pressure sensors. Reports the three values back via MQTT.
@@ -56,53 +61,28 @@ It has one setting:
 
 **Attention**: Please be aware that the Homie framework doesn't know per-node settings. If you have more than one instance of a BME280Node, all instances will use the same _temperatureOffset_.
 
-Depending on whether the sensor could be read successfully advertises status as:
-
-- `homie/<device-id>/<node-name>/status` (ok|error)
-
 Advertises the values as:
 
 - `homie/<device-id>/<node-name>/temperature`
 - `homie/<device-id>/<node-name>/humidity`
 - `homie/<device-id>/<node-name>/pressure`
 
-The units are advertised as subtopics:
-
-- `homie/<device-id>/<node-name>/temperature/unit`
-- `homie/<device-id>/<node-name>/humidity/unit`
-- `homie/<device-id>/<node-name>/pressure/unit`
-
 ### DHT22Node
 
 A node for DHT22 temperature/humidity sensors. Reports the two values back via MQTT.
-Depending on whether the sensor could be read successfully advertises status as:
-
-- `homie/<device-id>/<node-name>/status` (ok|error)
 
 Advertises the values as:
 
 - `homie/<device-id>/<node-name>/temperature`
 - `homie/<device-id>/<node-name>/humidity`
 
-The units are advertised as subtopics:
-
-- `homie/<device-id>/<node-name>/temperature/unit`
-- `homie/<device-id>/<node-name>/humidity/unit`
-
 ### DS18B20Node
 
 A Homie Node for Dallas 18B20 one wire temperature sensors. Reports the temperature back via MQTT.
-Depending on whether the sensor could be read successfully advertises status as:
-
-- `homie/<device-id>/<node-name>/status` (ok|error)
 
 Advertises the value as:
 
 - `homie/<device-id>/<node-name>/temperature`
-
-The unit is advertised as subtopic:
-
-- `homie/<device-id>/<node-name>/temperature/unit`
 
 ## Actor Nodes
 
