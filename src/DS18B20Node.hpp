@@ -23,7 +23,9 @@ private:
   const char *cCaption = "• DS18B20 sensor";
   const char *cIndent = "  ◦ ";
 
-  int _sensorPin;
+  int _sensorPin = DEFAULTPIN;
+  bool _ready = false;
+  bool _sensorFound = false;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
 
@@ -33,10 +35,12 @@ private:
   DallasTemperature *dallasTemp;
 
   void printCaption();
+  void send();
 
 protected:
   virtual void setup() override;
   virtual void loop() override;
+  virtual void onReadyToOperate() override;
 
 public:
   DS18B20Node(const char *name,
@@ -44,6 +48,4 @@ public:
             const int measurementInterval = MEASUREMENT_INTERVAL);
 
   float getTemperature() const { return temperature; }
-
-  void onReadyToOperate();
 };

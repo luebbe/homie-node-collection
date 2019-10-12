@@ -104,8 +104,11 @@ void BME280Node::beforeHomieSetup()
 
 void BME280Node::onReadyToOperate()
 {
-  _ready = true;
-  if (!_sensorFound)
+  if (_sensorFound)
+  {
+    _ready = true;
+  }
+  else
   {
     setProperty(cStatusTopic).send("error");
   }
