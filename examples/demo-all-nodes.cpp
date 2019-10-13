@@ -40,6 +40,8 @@ ButtonNode buttonNode("button", PIN_BUTTON, []() {
 
 void setup()
 {
+  Homie_setFirmware(FW_NAME, FW_VERSION);
+
   Serial.begin(SERIAL_SPEED);
   Serial << endl
          << endl;
@@ -56,8 +58,6 @@ void setup()
   // Initializes I2C for BME280 sensor and display
   Homie.getLogger() << "• Wire begin SDA=" << PIN_SDA << " SCL=" << PIN_SCL << endl;
   Wire.begin(PIN_SDA, PIN_SCL);
-
-  Homie_setFirmware(FW_NAME, FW_VERSION);
 
   Homie.disableLedFeedback();
   Homie.disableResetTrigger();
