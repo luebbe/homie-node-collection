@@ -34,7 +34,7 @@ private:
   float temperature = NAN;
   float humidity = NAN;
 
-  DHT *dht;
+  DHT *dht = NULL;
 
   void printCaption();
   void send();

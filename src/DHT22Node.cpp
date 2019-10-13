@@ -66,7 +66,7 @@ void DHT22Node::send()
 
 void DHT22Node::loop()
 {
-  if (_sensorPin > DEFAULTPIN)
+  if (dht && _ready)
   {
     if ((millis() - _lastMeasurement >= _measurementInterval * 1000UL) ||
         (_lastMeasurement == 0))

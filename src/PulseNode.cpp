@@ -16,6 +16,8 @@ PulseNode::PulseNode(const char *name,
 {
   _pulsePin = pulsePin;
   _stateChangeCallback = stateChangeCallback;
+  advertise("active")
+      .setDatatype("boolean");
 }
 
 // Debounce input pin.
@@ -47,7 +49,11 @@ bool PulseNode::debouncePulse(void)
 
 void PulseNode::handleStateChange(bool active)
 {
-  setProperty("active").send(active ? "true" : "false");
+  if (_ready)
+  {
+    setProperty("active").send(active ? "true" : "false");
+  }
+
   if (_stateChangeCallback)
   {
     _stateChangeCallback(active);
@@ -73,6 +79,11 @@ void PulseNode::pulseDetected()
   _pulseState = true;
 }
 
+void PulseNode::onReadyToOperate()
+{
+  _ready = true;
+}
+
 void PulseNode::loop()
 {
   if (_pulsePin > DEFAULTPIN)
@@ -92,8 +103,6 @@ void PulseNode::loop()
 
 void PulseNode::setup()
 {
-  advertise("active");
-
   printCaption();
   Homie.getLogger() << cIndent << "Pin: " << _pulsePin << endl;
 
