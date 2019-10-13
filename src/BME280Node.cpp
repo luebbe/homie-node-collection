@@ -48,7 +48,9 @@ BME280Node::BME280Node(const char *name,
 
 void BME280Node::printCaption()
 {
-  Homie.getLogger() << cCaption << " i2c[" << _i2cAddress << "]:" << endl;
+  char hexbuf[3];
+  snprintf(hexbuf, 3, "%2x", _i2cAddress);
+  Homie.getLogger() << cCaption << " i2c[0x" << hexbuf << "]:" << endl;
 }
 
 void BME280Node::send()
