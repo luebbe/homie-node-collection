@@ -25,8 +25,8 @@ So if a sensor nodes publishes a temperature, you will see the following subtopi
 
 - `homie/<device-id>/<node-name>/status`
 - `homie/<device-id>/<node-name>/temperature`
-- `homie/<device-id>/<node-name>/temperature/unit`
-- `homie/<device-id>/<node-name>/temperature/datatype`
+- `homie/<device-id>/<node-name>/temperature/$unit`
+- `homie/<device-id>/<node-name>/temperature/$datatype`
 
 ### AdcNode.cpp
 
