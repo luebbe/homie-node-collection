@@ -26,7 +26,6 @@ private:
   const char *cCaption = "• DHT22 sensor";
   const char *cIndent = "  ◦ ";
 
-  bool _ready = false;
   int _sensorPin;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
@@ -42,7 +41,6 @@ private:
 protected:
   virtual void setup() override;
   virtual void loop() override;
-  virtual void onReadyToOperate() override;
 
 public:
   DHT22Node(const char *name,

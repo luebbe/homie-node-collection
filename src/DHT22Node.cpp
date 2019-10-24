@@ -26,9 +26,11 @@ DHT22Node::DHT22Node(const char *name, const int sensorPin, const int measuremen
       .setFormat("error, ok");
   advertise(cTemperatureTopic)
       .setDatatype("float")
+      .setFormat("-40:125")
       .setUnit(cUnitDegrees);
   advertise(cHumidityTopic)
       .setDatatype("float")
+      .setFormat("0:100")
       .setUnit(cUnitPercent);
   advertise(cAbsHumidityTopic)
       .setDatatype("float")
@@ -47,7 +49,11 @@ void DHT22Node::send()
   if (isnan(temperature) || isnan(humidity))
   {
     Homie.getLogger() << cIndent << "Error reading from Sensor" << endl;
-    setProperty(cStatusTopic).send("error");
+
+    if (Homie.isConnected())
+    {
+      setProperty(cStatusTopic).send("error");
+    }
   }
   else
   {
@@ -57,16 +63,19 @@ void DHT22Node::send()
     Homie.getLogger() << cIndent << "Humidity: " << humidity << " %" << endl;
     Homie.getLogger() << cIndent << "Abs humidity: " << absHumidity << " g/m³" << endl;
 
-    setProperty(cStatusTopic).send("ok");
-    setProperty(cTemperatureTopic).send(String(temperature));
-    setProperty(cHumidityTopic).send(String(humidity));
-    setProperty(cAbsHumidityTopic).send(String(absHumidity));
+    if (Homie.isConnected())
+    {
+      setProperty(cStatusTopic).send("ok");
+      setProperty(cTemperatureTopic).send(String(temperature));
+      setProperty(cHumidityTopic).send(String(humidity));
+      setProperty(cAbsHumidityTopic).send(String(absHumidity));
+    }
   }
 }
 
 void DHT22Node::loop()
 {
-  if (dht && _ready)
+  if (dht)
   {
     if ((millis() - _lastMeasurement >= _measurementInterval * 1000UL) ||
         (_lastMeasurement == 0))
@@ -83,11 +92,6 @@ void DHT22Node::loop()
     }
   }
 }
-
-void DHT22Node::onReadyToOperate()
-{
-  _ready = true;
-};
 
 void DHT22Node::setup()
 {

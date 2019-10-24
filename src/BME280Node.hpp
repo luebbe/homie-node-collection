@@ -29,7 +29,6 @@ private:
   const char *cCaption = "• BME280 sensor";
   const char *cIndent = "  ◦ ";
 
-  bool _ready = false;
   bool _sensorFound = false;
 
   unsigned int _i2cAddress;

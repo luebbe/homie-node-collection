@@ -34,12 +34,15 @@ BME280Node::BME280Node(const char *name,
       .setFormat("error, ok");
   advertise(cTemperatureTopic)
       .setDatatype("float")
+      .setFormat("-40:85")
       .setUnit(cUnitDegrees);
   advertise(cHumidityTopic)
       .setDatatype("float")
+      .setFormat("0:100")
       .setUnit(cUnitPercent);
   advertise(cPressureTopic)
       .setDatatype("float")
+      .setFormat("300:1100")
       .setUnit(cUnitHpa);
   advertise(cAbsHumidityTopic)
       .setDatatype("float")
@@ -66,16 +69,19 @@ void BME280Node::send()
   Homie.getLogger() << cIndent << "Pressure: " << pressure << " hPa" << endl;
   Homie.getLogger() << cIndent << "Abs humidity: " << absHumidity << " g/m³" << endl;
 
-  setProperty(cStatusTopic).send("ok");
-  setProperty(cTemperatureTopic).send(String(temperature));
-  setProperty(cHumidityTopic).send(String(humidity));
-  setProperty(cPressureTopic).send(String(pressure));
-  setProperty(cAbsHumidityTopic).send(String(absHumidity));
+  if (Homie.isConnected())
+  {
+    setProperty(cStatusTopic).send("ok");
+    setProperty(cTemperatureTopic).send(String(temperature));
+    setProperty(cHumidityTopic).send(String(humidity));
+    setProperty(cPressureTopic).send(String(pressure));
+    setProperty(cAbsHumidityTopic).send(String(absHumidity));
+  }
 }
 
 void BME280Node::loop()
 {
-  if (_sensorFound && _ready)
+  if (_sensorFound)
   {
     if (millis() - _lastMeasurement >= _measurementInterval * 1000UL ||
         _lastMeasurement == 0)
@@ -106,11 +112,7 @@ void BME280Node::beforeHomieSetup()
 
 void BME280Node::onReadyToOperate()
 {
-  if (_sensorFound)
-  {
-    _ready = true;
-  }
-  else
+  if (!_sensorFound && Homie.isConnected())
   {
     setProperty(cStatusTopic).send("error");
   }
