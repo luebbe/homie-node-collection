@@ -14,7 +14,7 @@ The software is based on [Homie](https://github.com/homieiot/homie-esp8266) and 
 It has recently been migrated to the [Homie v3 Develop branch](https://github.com/homieiot/homie-esp8266/tree/develop-v3).
 
 - Releases up to 1.0.x are using the [Homie convention 2.0.1](https://github.com/homieiot/convention/releases/tag/v2.0.1)
-- Releases from 1.1.x onwards are using the [Homie convention 3.0.1](https://github.com/homieiot/convention/releases/tag/v2.0.1)
+- Releases from 1.1.x onwards are using the [Homie convention 3.0.1](https://github.com/homieiot/convention/releases/tag/v3.0.1)
 
 ## Sensor Nodes
 
@@ -25,8 +25,8 @@ So if a sensor nodes publishes a temperature, you will see the following subtopi
 
 - `homie/<device-id>/<node-name>/status`
 - `homie/<device-id>/<node-name>/temperature`
-- `homie/<device-id>/<node-name>/temperature/unit`
-- `homie/<device-id>/<node-name>/temperature/datatype`
+- `homie/<device-id>/<node-name>/temperature/$unit`
+- `homie/<device-id>/<node-name>/temperature/$datatype`
 
 ### AdcNode.cpp
 
