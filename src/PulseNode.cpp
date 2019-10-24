@@ -49,7 +49,7 @@ bool PulseNode::debouncePulse(void)
 
 void PulseNode::handleStateChange(bool active)
 {
-  if (_ready)
+  if (Homie.isConnected())
   {
     setProperty("active").send(active ? "true" : "false");
   }
@@ -77,11 +77,6 @@ void PulseNode::pulseDetected()
 {
   _lastPulseTime = millis();
   _pulseState = true;
-}
-
-void PulseNode::onReadyToOperate()
-{
-  _ready = true;
 }
 
 void PulseNode::loop()

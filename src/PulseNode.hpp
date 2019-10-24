@@ -26,7 +26,6 @@ private:
 
   TStateChangeCallback _stateChangeCallback;
   uint8_t _pulsePin;
-  bool _ready = false;
   bool _pulseState = false;
   bool _lastPulseState = true; // force sending of "false" in first loop
   bool _lastSentState = true;
@@ -41,7 +40,6 @@ private:
 protected:
   virtual void loop() override;
   virtual void setup() override;
-  virtual void onReadyToOperate() override;
 
 public:
   PulseNode(const char *name, const uint8_t pulsePin = DEFAULTPIN,
