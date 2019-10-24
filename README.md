@@ -19,14 +19,16 @@ It has recently been migrated to the [Homie v3 Develop branch](https://github.co
 ## Sensor Nodes
 
 All sensor nodes have a common `$status` subtopic wit the enum values: `ok|error`. `$status` is `ok` when a sensor could be detected and a valid measurement could be taken, `error` otherwise.
-All sensor nodes publish their unit on the `$unit` subtopic.
 All sensor nodes publish their data type on the `$datatype` subtopic.
+All sensor nodes publish their unit on the `$unit` subtopic.
+Most sensor nodes publish their format/value range on the `$format` subtopic.
 So if a sensor nodes publishes a temperature, you will see the following subtopics:
 
 - `homie/<device-id>/<node-name>/status`
 - `homie/<device-id>/<node-name>/temperature`
-- `homie/<device-id>/<node-name>/temperature/$unit`
 - `homie/<device-id>/<node-name>/temperature/$datatype`
+- `homie/<device-id>/<node-name>/temperature/$unit`
+- `homie/<device-id>/<node-name>/temperature/$format`
 
 ### AdcNode.cpp
 
@@ -120,10 +122,12 @@ In order to use the PulseNode you need an interrupt procedure which is attached 
 
 ### RelayNode
 
-A relay that can be set on (true|false) via MQTT message. An optional GPIO pin (e.g. to light up a LED) can be passed in the constructor. This pin will be set high/low synchronous to the relay.
+A relay that can be set on (true|false) via MQTT message. An optional GPIO pin (e.g. to light up a LED) can be passed in the constructor. This pin will be set high/low synchronous to the relay. Additonally the relay can be turned on for a number of seconds by sending this number to the timeout subtopic.
 
 - `homie/<device-id>/<node-name>/on/set` (true|false)
+- `homie/<device-id>/<node-name>/timeout/set` (positive integer) - turns the relay on for the corresponding number of seconds.
 
 Advertises the state as:
 
 - `homie/<device-id>/<node-name>/on` (true|false)
+- `homie/<device-id>/<node-name>/timeout/` (positive integer) - the second (uptime of the relay node) when the relay will turn off again.

@@ -17,12 +17,12 @@ ContactNode::ContactNode(const char *name,
   _contactCallback = contactCallback;
 }
 
-int ContactNode::getContactPin() 
+int ContactNode::getContactPin()
 {
   return _contactPin;
 }
 
-byte ContactNode::readPin() 
+byte ContactNode::readPin()
 {
   return digitalRead(_contactPin);
 }
@@ -57,7 +57,10 @@ bool ContactNode::debouncePin(void)
 
 void ContactNode::handleStateChange(bool open)
 {
-  setProperty("open").send(open ? "true" : "false");
+  if (Homie.isConnected())
+  {
+    setProperty("open").send(open ? "true" : "false");
+  }
   if (_contactCallback)
   {
     _contactCallback(open);
