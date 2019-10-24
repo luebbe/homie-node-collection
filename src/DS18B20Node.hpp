@@ -3,6 +3,7 @@
  * Homie Node for Dallas 18B20 sensors.
  *
  * Version: 1.0
+ * Author: Lübbe Onken (http://github.com/luebbe)
  * Author: Marcus Klein (http://github.com/kleini)
  */
 
@@ -16,7 +17,8 @@
 
 #define DEFAULTPIN -1
 
-class DS18B20Node : public SensorNode {
+class DS18B20Node : public SensorNode
+{
 private:
   const float cMinTemp = -55.0;
   const float cMaxTemp = 125.0;
@@ -24,7 +26,6 @@ private:
   const char *cIndent = "  ◦ ";
 
   int _sensorPin = DEFAULTPIN;
-  bool _ready = false;
   bool _sensorFound = false;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
@@ -36,6 +37,8 @@ private:
 
   void printCaption();
   void send();
+  void sendError();
+  void sendData();
 
 protected:
   virtual void setup() override;
@@ -44,8 +47,8 @@ protected:
 
 public:
   DS18B20Node(const char *name,
-            const int sensorPin = DEFAULTPIN,
-            const int measurementInterval = MEASUREMENT_INTERVAL);
+              const int sensorPin = DEFAULTPIN,
+              const int measurementInterval = MEASUREMENT_INTERVAL);
 
   float getTemperature() const { return temperature; }
 };

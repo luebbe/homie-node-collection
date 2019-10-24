@@ -3,6 +3,7 @@
  * Homie Node for Dallas 18B20 sensors.
  *
  * Version: 1.0
+ * Author: Lübbe Onken (http://github.com/luebbe)
  * Author: Marcus Klein (http://github.com/kleini)
  */
 
@@ -24,6 +25,7 @@ DS18B20Node::DS18B20Node(const char *name, const int sensorPin, const int measur
       .setFormat("error, ok");
   advertise(cTemperatureTopic)
       .setDatatype("float")
+      .setFormat("-55:125")
       .setUnit(cUnitDegrees);
 }
 
@@ -39,11 +41,27 @@ void DS18B20Node::send()
   if (DEVICE_DISCONNECTED_C == temperature)
   {
     Homie.getLogger() << cIndent << "Error reading from Sensor" << endl;
-    setProperty(cStatusTopic).send("error");
+    sendError();
   }
   else
   {
     Homie.getLogger() << cIndent << "Temperature: " << temperature << " °C" << endl;
+    sendData();
+  }
+}
+
+void DS18B20Node::sendError()
+{
+  if (Homie.isConnected())
+  {
+    setProperty(cStatusTopic).send("error");
+  }
+}
+
+void DS18B20Node::sendData()
+{
+  if (Homie.isConnected())
+  {
     setProperty(cStatusTopic).send("ok");
     setProperty(cTemperatureTopic).send(String(temperature));
   }
@@ -51,7 +69,7 @@ void DS18B20Node::send()
 
 void DS18B20Node::loop()
 {
-  if (_sensorFound && _ready)
+  if (_sensorFound)
   {
     if ((millis() - _lastMeasurement >= _measurementInterval * 1000UL) || (_lastMeasurement == 0))
     {
@@ -68,13 +86,9 @@ void DS18B20Node::loop()
 
 void DS18B20Node::onReadyToOperate()
 {
-  if (_sensorFound)
+  if (!_sensorFound)
   {
-    _ready = true;
-  }
-  else
-  {
-    setProperty(cStatusTopic).send("error");
+    sendError();
   }
 };
 

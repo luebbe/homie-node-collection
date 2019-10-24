@@ -31,9 +31,11 @@ AdcNode::AdcNode(const char *name, const int sendInterval)
       .setFormat("error, ok");
   advertise(cVoltageTopic)
       .setDatatype("float")
+      .setFormat("2.5:3.5")
       .setUnit(cUnitVolt);
   advertise(cBatteryLevelTopic)
       .setDatatype("float")
+      .setFormat("0:100")
       .setUnit(cUnitPercent);
 }
 
@@ -78,14 +80,28 @@ void AdcNode::send()
   if (isnan(_voltage))
   {
     Homie.getLogger() << cIndent << "Error reading from ADC" << endl;
-
-    setProperty(cStatusTopic).send("error");
+    sendError();
   }
   else
   {
     Homie.getLogger() << cIndent << "Voltage: " << _voltage << "V" << endl;
     Homie.getLogger() << cIndent << "Battery level: " << _batteryLevel << "%" << endl;
+    sendData();
+  }
+}
 
+void AdcNode::sendError()
+{
+  if (Homie.isConnected())
+  {
+    setProperty(cStatusTopic).send("error");
+  }
+}
+
+void AdcNode::sendData()
+{
+  if (Homie.isConnected())
+  {
     setProperty(cStatusTopic).send("ok");
     setProperty(cVoltageTopic).send(String(_voltage));
     setProperty(cBatteryLevelTopic).send(String(_batteryLevel));
@@ -102,7 +118,7 @@ void AdcNode::loop()
     _lastReadTime = now;
   }
 
-  if (_ready && (now - _lastSendTime >= _sendInterval))
+  if (now - _lastSendTime >= _sendInterval)
   {
     send();
     _lastSendTime = now;
@@ -122,11 +138,6 @@ void AdcNode::beforeHomieSetup()
   adcBattMin.setDefaultValue(cVoltMin).setValidator([](float candidate) {
     return (candidate >= 2.5f) && (candidate < adcBattMax.get());
   });
-}
-
-void AdcNode::onReadyToOperate()
-{
-  _ready = true;
 }
 
 void AdcNode::setup()
