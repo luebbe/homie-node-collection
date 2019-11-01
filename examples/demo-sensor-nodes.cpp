@@ -11,8 +11,8 @@
 // Insert your pin number(s) here
 const int PIN_LED = 2;   // =D4 on Wemos
 const int PIN_DHT = 0;   // =D3 on Wemos
-const int PIN_SDA = 5;   // =D2 on Wemos
-const int PIN_SCL = 4;   // =D1 on Wemos
+const int PIN_SDA = 4;   // =D2 on Wemos
+const int PIN_SCL = 5;   // =D1 on Wemos
 const int PIN_DS18 = 16; // =D0 on Wemos
 
 const int I2C_BME280_ADDRESS = 0x77; // Default I2C address for BME280. can be changed to 0x76 by changing a solder bridge
