@@ -8,7 +8,9 @@ cache:
         - "~/.platformio"
 
 env:
-    - PLATFORMIO_CI_SRC=examples/demo-all-nodes.cpp
+    - PLATFORMIO_CI_SRC=examples/demo-sensor-nodes.cpp
+    - PLATFORMIO_CI_SRC=examples/demo-relay-contact-nodes.cpp
+    - PLATFORMIO_CI_SRC=examples/demo-pulse-node.cpp
 
 install:
     - pip install -U platformio
