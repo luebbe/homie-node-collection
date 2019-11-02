@@ -42,6 +42,6 @@ protected:
   virtual byte readPin();
 
 public:
-  ContactNode(const char *name, const int contactPin = DEFAULTPIN, TContactCallback contactCallback = NULL);
+  explicit ContactNode(const char *name, const int contactPin = DEFAULTPIN, TContactCallback contactCallback = NULL);
   void onChange(TContactCallback contactCallback);
 };

@@ -35,6 +35,6 @@ protected:
   virtual void setup() override;
 
 public:
-  ButtonNode(const char *name, const int buttonPin = DEFAULTPIN, TButtonCallback buttonCallback = NULL);
+  explicit ButtonNode(const char *name, const int buttonPin = DEFAULTPIN, TButtonCallback buttonCallback = NULL);
   void onPress(TButtonCallback buttonCallback);
 };

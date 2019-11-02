@@ -55,13 +55,13 @@ protected:
   virtual void onReadyToOperate() override;
 
 public:
-  BME280Node(const char *name,
-             const int i2cAddress = 0x77,
-             const int measurementInterval = MEASUREMENT_INTERVAL,
-             Adafruit_BME280::sensor_sampling tempSampling = Adafruit_BME280::SAMPLING_X1,
-             Adafruit_BME280::sensor_sampling pressSampling = Adafruit_BME280::SAMPLING_X1,
-             Adafruit_BME280::sensor_sampling humSampling = Adafruit_BME280::SAMPLING_X1,
-             Adafruit_BME280::sensor_filter filter = Adafruit_BME280::FILTER_OFF);
+  explicit BME280Node(const char *name,
+                      const int i2cAddress = 0x77,
+                      const int measurementInterval = MEASUREMENT_INTERVAL,
+                      Adafruit_BME280::sensor_sampling tempSampling = Adafruit_BME280::SAMPLING_X1,
+                      Adafruit_BME280::sensor_sampling pressSampling = Adafruit_BME280::SAMPLING_X1,
+                      Adafruit_BME280::sensor_sampling humSampling = Adafruit_BME280::SAMPLING_X1,
+                      Adafruit_BME280::sensor_filter filter = Adafruit_BME280::FILTER_OFF);
 
   float getHumidity() const { return humidity; }
   float getTemperature() const { return temperature; }

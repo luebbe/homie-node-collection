@@ -42,9 +42,9 @@ protected:
   virtual void setup() override;
 
 public:
-  PulseNode(const char *name, const uint8_t pulsePin = DEFAULTPIN,
-            // void (*)(void) interruptCallback,
-            TStateChangeCallback stateChangeCallback = NULL);
+  explicit PulseNode(const char *name, const uint8_t pulsePin = DEFAULTPIN,
+                     // void (*)(void) interruptCallback,
+                     TStateChangeCallback stateChangeCallback = NULL);
   void onChange(TStateChangeCallback stateChangeCallback);
   void pulseDetected();
 };

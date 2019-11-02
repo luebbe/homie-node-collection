@@ -46,9 +46,9 @@ protected:
   virtual void onReadyToOperate() override;
 
 public:
-  DS18B20Node(const char *name,
-              const int sensorPin = DEFAULTPIN,
-              const int measurementInterval = MEASUREMENT_INTERVAL);
+  explicit DS18B20Node(const char *name,
+                       const int sensorPin = DEFAULTPIN,
+                       const int measurementInterval = MEASUREMENT_INTERVAL);
 
   float getTemperature() const { return temperature; }
 };

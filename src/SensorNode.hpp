@@ -22,5 +22,5 @@ protected:
   void fixRange(float *value, float min, float max);
 
 public:
-  SensorNode(const char *name, const char *type);
+  explicit SensorNode(const char *name, const char *type);
 };

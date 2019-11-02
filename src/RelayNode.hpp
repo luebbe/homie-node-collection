@@ -43,7 +43,7 @@ protected:
   virtual void loop() override;
 
 public:
-  RelayNode(const char *name, const int relayPin = DEFAULTPIN, const int ledPin = DEFAULTPIN, const bool reverseSignal = false);
+  explicit RelayNode(const char *name, const int relayPin = DEFAULTPIN, const int ledPin = DEFAULTPIN, const bool reverseSignal = false);
   void setRelay(bool on, long timeoutSecs = 0);
   void toggleRelay();
 };
