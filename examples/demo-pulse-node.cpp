@@ -17,7 +17,7 @@ void ICACHE_RAM_ATTR onOptoCouplerPulse()
 
 void onHomieEvent(const HomieEvent &event)
 {
-  // The device rebooted when attachInterrupt was called in setup() 
+  // The device rebooted when attachInterrupt was called in setup()
   // before Wifi was connected and interrupts were already coming in.
   switch (event.type)
   {
@@ -43,6 +43,7 @@ void setup()
   Homie.disableResetTrigger();
   Homie.disableLedFeedback();
 
+  Homie.onEvent(onHomieEvent);
   Homie.setup();
 }
 
