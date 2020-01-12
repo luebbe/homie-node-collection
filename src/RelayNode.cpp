@@ -125,7 +125,7 @@ void RelayNode::sendState()
   if (Homie.isConnected())
   {
     setProperty("on").send(on ? "true" : "false");
-    setProperty("timeout").send(String(_timeout));
+    setProperty("timeout").send(String(long(_timeout)));
   }
 }
 

@@ -23,7 +23,7 @@ private:
 
   uint8_t _relayOnValue;
   uint8_t _relayOffValue;
-  long _timeout;
+  uint64_t _timeout;
 
   bool handleOnOff(const String &value);
   bool handleTimeout(const String &value);
