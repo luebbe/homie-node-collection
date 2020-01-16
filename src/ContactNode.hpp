@@ -31,7 +31,7 @@ private:
   unsigned long _stateChangedTime = 0;
 
   bool debouncePin(void);
-  void handleStateChange(bool open);
+  void handleStateChange();
   void printCaption();
 
 protected:
@@ -44,4 +44,5 @@ protected:
 public:
   explicit ContactNode(const char *name, const int contactPin = DEFAULTPIN, TContactCallback contactCallback = NULL);
   void onChange(TContactCallback contactCallback);
+  void sendState();
 };

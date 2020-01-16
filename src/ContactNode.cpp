@@ -55,12 +55,18 @@ bool ContactNode::debouncePin(void)
   return false;
 }
 
-void ContactNode::handleStateChange(bool open)
+void ContactNode::sendState() 
 {
   if (Homie.isConnected())
   {
-    setProperty("open").send(open ? "true" : "false");
+    setProperty("open").send((_lastSentState == HIGH) ? "true" : "false");
   }
+}
+
+void ContactNode::handleStateChange()
+{
+  bool open = _lastSentState == HIGH;
+  sendState();
   if (_contactCallback)
   {
     _contactCallback(open);
@@ -86,8 +92,8 @@ void ContactNode::loop()
   {
     if (debouncePin() && (_lastSentState != _lastInputState))
     {
-      handleStateChange(_lastInputState == HIGH);
       _lastSentState = _lastInputState;
+      handleStateChange();
     }
   }
 }

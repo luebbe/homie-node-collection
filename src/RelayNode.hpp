@@ -29,7 +29,6 @@ private:
   bool handleTimeout(const String &value);
 
   void printCaption();
-  void sendState();
 
   void setupRelay();
   bool getRelayState();
@@ -46,4 +45,5 @@ public:
   explicit RelayNode(const char *name, const int relayPin = DEFAULTPIN, const int ledPin = DEFAULTPIN, const bool reverseSignal = false);
   void setRelay(bool on, long timeoutSecs = 0);
   void toggleRelay();
+  void sendState();
 };
