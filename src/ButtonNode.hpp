@@ -26,6 +26,7 @@ private:
   byte _lastButtonState = HIGH;
   bool _buttonPressHandled = 0;
   unsigned long _buttonDownTime = 0;
+  unsigned short _minButtonDownTime = 90;
 
   void handleButtonPress(unsigned long dt);
   void printCaption();
@@ -37,4 +38,5 @@ protected:
 public:
   explicit ButtonNode(const char *name, const int buttonPin = DEFAULTPIN, TButtonCallback buttonCallback = NULL);
   void onPress(TButtonCallback buttonCallback);
+  void setMinButtonDownTime(unsigned short downTime);
 };
