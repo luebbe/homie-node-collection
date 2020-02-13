@@ -34,6 +34,11 @@ void ButtonNode::onPress(TButtonCallback buttonCallback)
   _buttonCallback = buttonCallback;
 }
 
+void ButtonNode::setMinButtonDownTime(unsigned short downTime)
+{
+  _minButtonDownTime = downTime;
+}
+
 void ButtonNode::printCaption()
 {
   Homie.getLogger() << cCaption << endl;
@@ -59,7 +64,7 @@ void ButtonNode::loop()
       else
       {
         unsigned long dt = millis() - _buttonDownTime;
-        if (dt >= 90 && dt <= 900 && !_buttonPressHandled)
+        if (dt >= _minButtonDownTime && dt <= 900 && !_buttonPressHandled)
         {
           handleButtonPress(dt);
           _buttonPressHandled = true;
