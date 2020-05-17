@@ -36,9 +36,15 @@ HomieInternals::Uptime relayUptime;
 
 bool RelayNode::handleOnOff(const String &value)
 {
-  if (value == "true" || value == "false")
+  if (value == "true" || value == "false" || value == "toggle")
   {
-    setRelay(value == "true");
+    if (value == "toggle")
+    {
+      bool current = getRelayState();
+      setRelay(!current);
+    }
+    else
+      setRelay(value == "true");
     return true;
   }
   else

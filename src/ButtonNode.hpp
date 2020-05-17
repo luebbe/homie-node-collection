@@ -15,20 +15,28 @@
 class ButtonNode : public HomieNode
 {
 public:
-  typedef std::function<void(void)> TButtonCallback;
+  typedef std::function<void(void)> TButtonPressCallback;
+  typedef std::function<void(bool)> TButtonChangeCallback;
+
 
 private:
   const char *cCaption = "• Button:";
   const char *cIndent = "  ◦ ";
 
-  TButtonCallback _buttonCallback;
+  TButtonPressCallback _buttonPressCallback;
+  TButtonChangeCallback _buttonChangeCallback;
   int _buttonPin;
-  byte _lastButtonState = HIGH;
+  byte _lastReading = HIGH;
+  byte _buttonState = HIGH;
   bool _buttonPressHandled = 0;
+  bool _buttonChangeHandled = 0;
   unsigned long _buttonDownTime = 0;
-  unsigned short _minButtonDownTime = 90;
+  unsigned long _minButtonDownTime = 90;
+  unsigned long _maxButtonDownTime = 2000;
+  unsigned long _lastDebounceTime = 0;  // the last time the button pin was toggled
 
   void handleButtonPress(unsigned long dt);
+  void handleButtonChange(bool down);  
   void printCaption();
 
 protected:
@@ -36,7 +44,9 @@ protected:
   virtual void setup() override;
 
 public:
-  explicit ButtonNode(const char *name, const int buttonPin = DEFAULTPIN, TButtonCallback buttonCallback = NULL);
-  void onPress(TButtonCallback buttonCallback);
+  explicit ButtonNode(const char *name, const int buttonPin = DEFAULTPIN, TButtonPressCallback buttonPressedCallback = NULL,  TButtonChangeCallback buttonChangedCallback = NULL);
+  void onPress(TButtonPressCallback buttonCallback);
+  void onChange(TButtonChangeCallback buttonCallback);
   void setMinButtonDownTime(unsigned short downTime);
+  void setMaxButtonDownTime(unsigned short downTime);
 };
