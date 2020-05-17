@@ -10,33 +10,64 @@
 
 ButtonNode::ButtonNode(const char *name,
                        const int buttonPin,
-                       TButtonCallback buttonCallback)
+                       TButtonPressCallback buttonPressCallback,
+                       TButtonChangeCallback buttonChangeCallback)
     : HomieNode(name, "ButtonNode", "sensor")
 {
   _buttonPin = buttonPin;
-  _buttonCallback = buttonCallback;
+  _buttonPressCallback = buttonPressCallback;
+  _buttonChangeCallback = buttonChangeCallback;
 }
 
 void ButtonNode::handleButtonPress(unsigned long dt)
 {
-#ifdef DEBUG
+  if (Homie.isConnected())
+  {
+    setProperty("duration").send(String(dt));
+  }
+
   printCaption();
   Homie.getLogger() << cIndent << "pressed: " << dt << " ms" << endl;
-#endif
-  if (_buttonCallback)
+
+  if (_buttonPressCallback)
   {
-    _buttonCallback();
+    _buttonPressCallback();
   }
 }
 
-void ButtonNode::onPress(TButtonCallback buttonCallback)
+void ButtonNode::handleButtonChange(bool down) {
+  if (Homie.isConnected())
+  {
+    setProperty("down").send(down ? "true" : "false");
+  }
+  
+  printCaption();
+  Homie.getLogger() << cIndent << (down ? "down" : "up") << endl;
+
+  if (_buttonChangeCallback)
+  {
+    _buttonChangeCallback(down);
+  }
+}
+
+void ButtonNode::onPress(TButtonPressCallback buttonCallback)
 {
-  _buttonCallback = buttonCallback;
+  _buttonPressCallback = buttonCallback;
+}
+
+void ButtonNode::onChange(TButtonChangeCallback buttonCallback)
+{
+  _buttonChangeCallback = buttonCallback;
 }
 
 void ButtonNode::setMinButtonDownTime(unsigned short downTime)
 {
   _minButtonDownTime = downTime;
+}
+
+void ButtonNode::setMaxButtonDownTime(unsigned short downTime)
+{
+  _maxButtonDownTime = downTime;
 }
 
 void ButtonNode::printCaption()
@@ -53,30 +84,50 @@ void ButtonNode::loop()
   //  b) react by calling different callbacks
   if (_buttonPin > DEFAULTPIN)
   {
-    byte buttonState = digitalRead(_buttonPin);
-    if (buttonState != _lastButtonState)
-    {
-      if (buttonState == LOW)
+    byte reading = digitalRead(_buttonPin);
+
+    if (reading != _lastReading) {
+       // reset the debouncing timer
+       _lastDebounceTime = millis();
+    }
+
+    if ((millis() - _lastDebounceTime) > _minButtonDownTime) {
+      // whatever the reading is at, it's been there for longer than the debounce
+      // delay, so take it as the actual current state:
+      if (reading != _buttonState)
       {
-        _buttonDownTime = millis();
-        _buttonPressHandled = false;
-      }
-      else
-      {
-        unsigned long dt = millis() - _buttonDownTime;
-        if (dt >= _minButtonDownTime && dt <= 900 && !_buttonPressHandled)
+        _buttonState = reading;
+
+        if (_buttonState == LOW)
         {
-          handleButtonPress(dt);
-          _buttonPressHandled = true;
+          handleButtonChange(true);
+          _buttonChangeHandled = true;
+          _buttonDownTime = millis();
+          _buttonPressHandled = false;
+        }
+        else
+        {
+          handleButtonChange(false);
+          _buttonChangeHandled = true;
+          
+          unsigned long dt = millis() - _buttonDownTime;
+          if (dt >= _minButtonDownTime &&  dt <= _maxButtonDownTime && !_buttonPressHandled)
+          {
+            handleButtonPress(dt);
+            _buttonPressHandled = true;
+          }
         }
       }
-      _lastButtonState = buttonState;
     }
+    _lastReading = reading;
   }
 }
 
 void ButtonNode::setup()
 {
+  advertise("down").setDatatype("boolean");
+  advertise("duration").setDatatype("integer").setUnit("ms");
+
   printCaption();
   Homie.getLogger() << cIndent << "Pin: " << _buttonPin << endl;
 
@@ -85,3 +136,4 @@ void ButtonNode::setup()
     pinMode(_buttonPin, INPUT_PULLUP);
   }
 }
+

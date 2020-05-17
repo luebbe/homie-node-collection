@@ -90,7 +90,19 @@ Advertises the value as:
 
 ### ButtonNode
 
-A pushbutton that just detects a single button press. An optional callback can be triggered by the button press event. The button press is _not_ reported back via MQTT. ToDo: detect multiple button presses and report them back.
+A pushbutton that just detects a single (debounced) button press. An optional callback can be triggered by the button press event. The button press is reported via these topics:
+
+- `homie/<device-id>/<node-name>/down` (true|false) - signals when the button is pressed
+- `homie/<device-id>/<node-name>/duraction` - after the button is pressed and released, it signals the total time that the button was pressed. This is useful to detect a short of long button press.
+
+The minimum and maximum button press time in milliseconds can be set with:
+
+```cpp
+void setMinButtonDownTime(unsigned short downTime);
+void setMaxButtonDownTime(unsigned short downTime);
+```
+
+ToDo: detect multiple button presses and report them back.
 
 ### ContactNode
 
@@ -110,24 +122,48 @@ Advertises the state as:
 
 In order to use the PulseNode you need an interrupt procedure which is attached to the selected pin. e.G.:
 
-    void onOptoCouplerPulse()
-    {
-      pulseNode.pulseDetected();
-    }
+```cpp
+void onOptoCouplerPulse()
+{
+  pulseNode.pulseDetected();
+}
 
-    void setup()
-    {
-      attachInterrupt(PIN_OPTOCOUPLER, onOptoCouplerPulse, FALLING);
-    }
+void setup()
+{
+  attachInterrupt(PIN_OPTOCOUPLER, onOptoCouplerPulse, FALLING);
+}
+```
 
 ### RelayNode
 
 A relay that can be set on (true|false) via MQTT message. An optional GPIO pin (e.g. to light up a LED) can be passed in the constructor. This pin will be set high/low synchronous to the relay. Additonally the relay can be turned on for a number of seconds by sending this number to the timeout subtopic.
 
-- `homie/<device-id>/<node-name>/on/set` (true|false)
+- `homie/<device-id>/<node-name>/on/set` (true|false|toggle)
 - `homie/<device-id>/<node-name>/timeout/set` (positive integer) - turns the relay on for the corresponding number of seconds.
 
 Advertises the state as:
 
 - `homie/<device-id>/<node-name>/on` (true|false)
 - `homie/<device-id>/<node-name>/timeout/` (positive integer) - the second (uptime of the relay node) when the relay will turn off again.
+
+### PingNode
+
+An ultrasonic sensor that reports the distance to an object based on the echo time.
+
+The following topics are advertised:
+
+- `homie/<device-id>/<node-name>/distance` - the distance between the sensor and the object
+- `homie/<device-id>/<node-name>/ping` - the time between pulse and echo in microseconds
+- `homie/<device-id>/<node-name>/valid` (ok|error) - signals if the measurement was valid
+- `homie/<device-id>/<node-name>/changed` (true|false) - signals if the distance to the object changed significantly (i.e. if the object was moved).
+
+The reported distance is calculated from the ping time. This distance depends on the [speed of sound](https://en.wikipedia.org/wiki/Speed_of_sound) and therefore on the temperature. The temperature can be adjusted with the
+`setTemperature(float temperatureCelcius)` method, e.g. in conjuction with a temperature sensor such as the DHT22Node:
+
+```cpp
+void loopHandler() {
+  //...
+  pingNode.setTemperature(temperatureNode.getTemperature());
+  //...
+}
+```
