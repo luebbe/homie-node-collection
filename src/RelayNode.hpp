@@ -31,14 +31,13 @@ private:
   void printCaption();
   void sendState();
 
-  void setupRelay();
-  bool getRelayState();
-  void setRelayState(bool on);
-
   void setLed(bool on);
+
+  bool getRelay();
 
 protected:
   virtual bool handleInput(const HomieRange &range, const String &property, const String &value) override;
+  virtual void onReadyToOperate() override;
   virtual void setup() override;
   virtual void loop() override;
 

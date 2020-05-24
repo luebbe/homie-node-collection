@@ -40,7 +40,7 @@ bool RelayNode::handleOnOff(const String &value)
   {
     if (value == "toggle")
     {
-      bool current = getRelayState();
+      bool current = getRelay();
       setRelay(!current);
     }
     else
@@ -87,9 +87,27 @@ bool RelayNode::handleInput(const HomieRange &range, const String &property, con
   }
 }
 
+void RelayNode::onReadyToOperate()
+{
+  setRelay(false);
+  sendState();
+};
+
 void RelayNode::printCaption()
 {
   Homie.getLogger() << cCaption << endl;
+}
+
+void RelayNode::sendState()
+{
+  printCaption();
+  bool on = getRelay();
+  Homie.getLogger() << cIndent << "Relay is " << (on ? "on" : "off") << endl;
+  if (Homie.isConnected())
+  {
+    setProperty("on").send(on ? "true" : "false");
+    setProperty("timeout").send(String(long(_timeout)));
+  }
 }
 
 void RelayNode::setLed(bool on)
@@ -100,13 +118,23 @@ void RelayNode::setLed(bool on)
   }
 }
 
-void RelayNode::setRelay(bool on, long timeoutSecs)
+bool RelayNode::getRelay()
 {
-  printCaption();
-
   if (_relayPin > DEFAULTPIN)
   {
-    setRelayState(on);
+    return digitalRead(_relayPin) == _relayOnValue;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+void RelayNode::setRelay(bool on, long timeoutSecs)
+{
+  if (_relayPin > DEFAULTPIN)
+  {
+    digitalWrite(_relayPin, on ? _relayOnValue : _relayOffValue);
     if (on && timeoutSecs > 0)
     {
       _timeout = relayUptime.getSeconds() + timeoutSecs;
@@ -121,38 +149,13 @@ void RelayNode::setRelay(bool on, long timeoutSecs)
   {
     Homie.getLogger() << cIndent << "No Relay Pin!" << endl;
   }
+  // Set Led according to relay
   setLed(on);
-}
-
-void RelayNode::sendState()
-{
-  bool on = getRelayState();
-  Homie.getLogger() << cIndent << "Relay is " << (on ? "on" : "off") << endl;
-  if (Homie.isConnected())
-  {
-    setProperty("on").send(on ? "true" : "false");
-    setProperty("timeout").send(String(long(_timeout)));
-  }
-}
-
-void RelayNode::setRelayState(bool on)
-{
-  digitalWrite(_relayPin, on ? _relayOnValue : _relayOffValue);
-}
-
-bool RelayNode::getRelayState()
-{
-  return digitalRead(_relayPin) == _relayOnValue;
 }
 
 void RelayNode::toggleRelay()
 {
-  setRelay(!getRelayState());
-}
-
-void RelayNode::setupRelay()
-{
-  pinMode(_relayPin, OUTPUT);
+  setRelay(!getRelay());
 }
 
 void RelayNode::setup()
@@ -165,20 +168,18 @@ void RelayNode::setup()
   if (_ledPin > DEFAULTPIN)
   {
     pinMode(_ledPin, OUTPUT);
-    setLed(false);
   }
 
   if (_relayPin > DEFAULTPIN)
   {
-    setupRelay();
-    setRelay(false);
+    pinMode(_relayPin, OUTPUT);
   }
 }
 
 void RelayNode::loop()
 {
   relayUptime.update();
-  if ((_timeout > 0) && getRelayState() && (_timeout < relayUptime.getSeconds()))
+  if ((_timeout > 0) && getRelay() && (_timeout < relayUptime.getSeconds()))
   {
     setRelay(false);
   }
