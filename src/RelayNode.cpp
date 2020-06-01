@@ -90,7 +90,6 @@ bool RelayNode::handleInput(const HomieRange &range, const String &property, con
 void RelayNode::onReadyToOperate()
 {
   setRelay(false);
-  sendState();
 };
 
 void RelayNode::printCaption()
@@ -169,11 +168,11 @@ void RelayNode::setup()
   {
     pinMode(_ledPin, OUTPUT);
   }
-
   if (_relayPin > DEFAULTPIN)
   {
     pinMode(_relayPin, OUTPUT);
   }
+  setRelay(false);
 }
 
 void RelayNode::loop()
