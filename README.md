@@ -37,7 +37,7 @@ Homie Node using the internal ESP ADC to measure voltage.
 It has three settings:
 
 - _adcCorrect_: Correction factor for AD converter.  
-  Range = \[0.5 - 1.5], Default = 1.
+  Range = \[0.5 .. 1.5], Default = 1.
 
 - _battMax_: Measured voltage that corresponds to 100% battery level.  
   Must be greater than _battMin_. Range = \[2.5V .. 4.0V]. Default = 3.3V.
@@ -85,6 +85,28 @@ A Homie Node for Dallas 18B20 one wire temperature sensors. Reports the temperat
 Advertises the value as:
 
 - `homie/<device-id>/<node-name>/temperature`
+
+### PingNode
+
+An ultrasonic sensor that reports the distance to an object based on the echo time.
+
+The following topics are advertised:
+
+- `homie/<device-id>/<node-name>/distance` - the distance between the sensor and the object
+- `homie/<device-id>/<node-name>/ping` - the time between pulse and echo in microseconds
+- `homie/<device-id>/<node-name>/valid` (ok|error) - signals if the measurement was valid
+- `homie/<device-id>/<node-name>/changed` (true|false) - signals if the distance to the object changed significantly (i.e. if the object was moved).
+
+The reported distance is calculated from the ping time. This distance depends on the [speed of sound](https://en.wikipedia.org/wiki/Speed_of_sound) and therefore on the temperature. The temperature can be adjusted with the
+`setTemperature(float temperatureCelcius)` method, e.g. in conjuction with a temperature sensor such as the DHT22Node:
+
+```cpp
+void loopHandler() {
+  //...
+  pingNode.setTemperature(temperatureNode.getTemperature());
+  //...
+}
+```
 
 ## Actor Nodes
 
@@ -145,25 +167,3 @@ Advertises the state as:
 
 - `homie/<device-id>/<node-name>/on` (true|false)
 - `homie/<device-id>/<node-name>/timeout/` (positive integer) - the second (uptime of the relay node) when the relay will turn off again.
-
-### PingNode
-
-An ultrasonic sensor that reports the distance to an object based on the echo time.
-
-The following topics are advertised:
-
-- `homie/<device-id>/<node-name>/distance` - the distance between the sensor and the object
-- `homie/<device-id>/<node-name>/ping` - the time between pulse and echo in microseconds
-- `homie/<device-id>/<node-name>/valid` (ok|error) - signals if the measurement was valid
-- `homie/<device-id>/<node-name>/changed` (true|false) - signals if the distance to the object changed significantly (i.e. if the object was moved).
-
-The reported distance is calculated from the ping time. This distance depends on the [speed of sound](https://en.wikipedia.org/wiki/Speed_of_sound) and therefore on the temperature. The temperature can be adjusted with the
-`setTemperature(float temperatureCelcius)` method, e.g. in conjuction with a temperature sensor such as the DHT22Node:
-
-```cpp
-void loopHandler() {
-  //...
-  pingNode.setTemperature(temperatureNode.getTemperature());
-  //...
-}
-```
