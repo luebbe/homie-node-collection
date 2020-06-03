@@ -43,7 +43,7 @@ protected:
   virtual void loop() override;
 
 public:
-  AdcNode(const char *name, const int sendInterval = SEND_INTERVAL_MILLISECONDS);
+  explicit AdcNode(const char *name, const int sendInterval = SEND_INTERVAL_MILLISECONDS);
 
   float getBatteryLevel() const { return _batteryLevel; }
   float getVoltage() const { return _voltage; }
