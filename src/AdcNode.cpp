@@ -108,6 +108,11 @@ void AdcNode::sendData()
   }
 }
 
+void AdcNode::onReadyToOperate()
+{
+  send();
+};
+
 void AdcNode::loop()
 {
   unsigned long now = millis();
