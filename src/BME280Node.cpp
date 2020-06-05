@@ -2,15 +2,13 @@
  * BME280Node.cpp
  * Homie Node for BME280 sensors using Adafruit BME280 library.
  *
- * Version: 1.1
+ * Version: 1.2
  * Author: Lübbe Onken (http://github.com/luebbe)
  * Author: Markus Haack (http://github.com/mhaack)
  */
 
 #include "BME280Node.hpp"
 #include <Homie.h>
-
-HomieSetting<double> temperatureOffsetSetting("temperatureOffset", "The temperature offset in degrees [-10.0 - 10.0] Default = 0");
 
 BME280Node::BME280Node(const char *name,
                        const int i2cAddress,
@@ -28,6 +26,7 @@ BME280Node::BME280Node(const char *name,
       _filter(filter)
 {
   _measurementInterval = (measurementInterval > MIN_INTERVAL) ? measurementInterval : MIN_INTERVAL;
+  _temperatureOffset = new HomieSetting<double>("temperatureOffset", "The temperature offset in degrees [-10.0 - 10.0] Default = 0");
 
   advertise(cStatusTopic)
       .setDatatype("enum")
@@ -63,7 +62,7 @@ void BME280Node::send()
   float absHumidity = computeAbsoluteHumidity(temperature, humidity);
 
   Homie.getLogger() << cIndent << "Temperature: " << temperature << " °C" << endl;
-  temperature += temperatureOffsetSetting.get();
+  temperature += _temperatureOffset->get();
   Homie.getLogger() << cIndent << "Temperature (after offset): " << temperature << " °C" << endl;
   Homie.getLogger() << cIndent << "Humidity: " << humidity << " %" << endl;
   Homie.getLogger() << cIndent << "Pressure: " << pressure << " hPa" << endl;
@@ -105,7 +104,7 @@ void BME280Node::loop()
 
 void BME280Node::beforeHomieSetup()
 {
-  temperatureOffsetSetting.setDefaultValue(0.0f).setValidator([](float candidate) {
+  _temperatureOffset->setDefaultValue(0.0f).setValidator([](float candidate) {
     return (candidate >= -10.0f) && (candidate <= 10.0f);
   });
 }

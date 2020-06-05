@@ -2,7 +2,7 @@
  * AdcNode.cpp
  * Homie Node using the internal ESP ADC to measure voltage.
  *
- * Version: 1.1
+ * Version: 1.2
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
@@ -15,13 +15,13 @@ ADC_MODE(ADC_VCC);
 // Measuring the voltage with a ditital multi meter yields a denominator <> 1024.0f.
 // Correction factor for NodeMCU = 1.0611. Pass this value in the settings.
 
-HomieSetting<double> adcVoltageCorrection("adcCorrect", "Correction factor for AD converter.  [0.5 - 1.5] Default = 1");
-HomieSetting<double> adcBattMax("battMax", "Measured voltage that corresponds to 100% battery level.  [2.5V - 4.0V] Default = 3.3V. Must be greater than battMin");
-HomieSetting<double> adcBattMin("battMin", "Measured voltage that corresponds to 0% battery level.  [2.5V - 4.0V] Default = 2.6V. Must be less than battMax");
-
 AdcNode::AdcNode(const char *name, const int sendInterval)
     : HomieNode(name, "AD Converter", "sensor")
 {
+  _adcCorrection = new HomieSetting<double>("adcCorrect", "Correction factor for AD converter.  [0.5 - 1.5] Default = 1");
+  _adcBattMin = new HomieSetting<double>("battMin", "Measured voltage that corresponds to 0% battery level.  [2.5V - 4.0V] Default = 2.6V. Must be less than battMax");
+  _adcBattMax = new HomieSetting<double>("battMax", "Measured voltage that corresponds to 100% battery level.  [2.5V - 4.0V] Default = 3.3V. Must be greater than battMin");
+
   _lastReadTime = millis() - READ_INTERVAL_MILLISECONDS - 1;
   _lastSendTime = millis() - sendInterval - 1;
   _sendInterval = sendInterval;
@@ -47,14 +47,14 @@ void AdcNode::printCaption()
 void AdcNode::readVoltage()
 {
   uint16_t v_raw = ESP.getVcc();
-  _voltage = (((float)v_raw / 1024.0f) * adcVoltageCorrection.get());
+  _voltage = (((float)v_raw / 1024.0f) * _adcCorrection->get());
   if (isnan(_voltage))
   {
     _batteryLevel = NAN;
   }
   else
   {
-    _batteryLevel = 100 * (_voltage - adcBattMin.get()) / (adcBattMax.get() - adcBattMin.get());
+    _batteryLevel = 100 * (_voltage - _adcBattMin->get()) / (_adcBattMax->get() - _adcBattMin->get());
   }
 }
 
@@ -134,14 +134,14 @@ void AdcNode::beforeHomieSetup()
 {
   // Has to be called manually before Homie.setup()
   // Otherwise homie will go into config mode, because the defaults are missing
-  adcVoltageCorrection.setDefaultValue(1.0f).setValidator([](float candidate) {
+  _adcCorrection->setDefaultValue(1.0f).setValidator([](float candidate) {
     return (candidate >= 0.5f) && (candidate <= 1.5f);
   });
-  adcBattMax.setDefaultValue(cVoltMax).setValidator([](float candidate) {
-    return (candidate > adcBattMin.get()) && (candidate <= 4.0f);
+  _adcBattMax->setDefaultValue(cVoltMax).setValidator([](float candidate) {
+    return (candidate > 2.5f) && (candidate <= 4.0f);
   });
-  adcBattMin.setDefaultValue(cVoltMin).setValidator([](float candidate) {
-    return (candidate >= 2.5f) && (candidate < adcBattMax.get());
+  _adcBattMin->setDefaultValue(cVoltMin).setValidator([](float candidate) {
+    return (candidate >= 2.5f) && (candidate < 4.0f);
   });
 }
 

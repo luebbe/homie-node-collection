@@ -2,7 +2,7 @@
  * BME280Node.h
  * Homie Node for BME280 sensors using Adafruit BME280 library.
  *
- * Version: 1.1
+ * Version: 1.2
  * Author: Lübbe Onken (http://github.com/luebbe)
  * Author: Markus Haack (http://github.com/mhaack)
  */
@@ -50,6 +50,8 @@ private:
   void send();
 
 protected:
+  HomieSetting<double> *_temperatureOffset;
+
   virtual void setup() override;
   virtual void loop() override;
   virtual void onReadyToOperate() override;

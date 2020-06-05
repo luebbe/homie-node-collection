@@ -2,7 +2,7 @@
  * AdcNode.cpp
  * Homie Node using the internal ESP ADC to measure voltage.
  *
- * Version: 1.1
+ * Version: 1.2
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
@@ -14,7 +14,7 @@
 class AdcNode : public HomieNode
 {
 private:
-  // Read ADC every 10 seconds to have the current value available 
+  // Read ADC every 10 seconds to have the current value available
   // when another part of the application needs it
   static const int READ_INTERVAL_MILLISECONDS = 10 * 1000;
   // Send ADC every 5 minutes
@@ -24,6 +24,10 @@ private:
   const char *cIndent = "  ◦ ";
   const float cVoltMax = 3.3; // = 100% battery
   const float cVoltMin = 2.6; // =   0% battery
+
+  HomieSetting<double> *_adcCorrection;
+  HomieSetting<double> *_adcBattMax;
+  HomieSetting<double> *_adcBattMin;
 
   unsigned long _lastReadTime;
   unsigned long _lastSendTime;
@@ -52,4 +56,3 @@ public:
 
   void beforeHomieSetup();
 };
-
