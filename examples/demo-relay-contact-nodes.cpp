@@ -13,16 +13,36 @@ const int PIN_CONTACT = 12; // =D6 on Wemos
 const int PIN_RELAY = 13;   // =D7 on Wemos
 const int PIN_BUTTON = 14;  // =D5 on Wemos
 
-// Create one node of each kind
-RelayNode relayNode("relay", PIN_RELAY, PIN_LED);
+// You need one bool state for each relay with callback
+bool relayState;
+
+bool OnGetRelayState(int8_t id);
+void OnSetRelayState(int8_t id, bool on);
+
+// Normal relay, hardwired to a GPIO pin
+RelayNode relayPin("relay", PIN_RELAY, PIN_LED);
+
+// Relay with callback. It could be connected to a port expander and its state is not known inside the relay node.
+RelayNode relayCallback("relayCallback", 1, OnGetRelayState, OnSetRelayState);
 
 // Initialize contact node without callback
 ContactNode contactNode("contact", PIN_CONTACT);
 
 // Initialize button node with callback to button press
 ButtonNode buttonNode("button", PIN_BUTTON, []() {
-  relayNode.toggleRelay();
+  relayPin.toggleRelay();
 });
+
+bool OnGetRelayState(int8_t id)
+{
+  Homie.getLogger() << "OnGetRelayState: " << id << "=" << relayState << endl;
+  return relayState;
+}
+void OnSetRelayState(int8_t id, bool on)
+{
+  relayState = on;
+  Homie.getLogger() << "OnSetRelayState: " << id << "=" << relayState << endl;
+}
 
 void setup()
 {
@@ -34,7 +54,7 @@ void setup()
 
   // Set callback for contact node here, just to show alternative
   contactNode.onChange([](bool open) {
-    relayNode.setRelay(open);
+    relayPin.setRelay(open);
   });
 
   Homie.disableLedFeedback();

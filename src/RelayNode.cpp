@@ -2,15 +2,17 @@
  * RelayNode.cpp
  * Homie Node for a Relay with optional status indicator LED
  *
- * Version: 1.1
+ * Version: 1.2
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
 #include "RelayNode.hpp"
 
-RelayNode::RelayNode(const char *name, const int relayPin, const int ledPin, const bool reverseSignal)
+RelayNode::RelayNode(const char *name, const int8_t relayPin, const int8_t ledPin, const bool reverseSignal)
     : HomieNode(name, "RelayNode", "actor")
 {
+  _name = name;
+  _id = 0;
   _relayPin = relayPin;
   _ledPin = ledPin;
   if (reverseSignal)
@@ -23,6 +25,21 @@ RelayNode::RelayNode(const char *name, const int relayPin, const int ledPin, con
     _relayOnValue = HIGH;
     _relayOffValue = LOW;
   }
+  advertiseProps();
+}
+
+RelayNode::RelayNode(const char *name, const uint8_t id, TGetRelayState OnGetRelayState, TSetRelayState OnSetRelayState)
+    : HomieNode(name, "RelayNode", "actor")
+{
+  _name = name;
+  _id = id;
+  _onGetRelayState = OnGetRelayState;
+  _onSetRelayState = OnSetRelayState;
+  advertiseProps();
+}
+
+void RelayNode::advertiseProps()
+{
   advertise("on")
       .setDatatype("boolean")
       .settable();
@@ -31,8 +48,6 @@ RelayNode::RelayNode(const char *name, const int relayPin, const int ledPin, con
       .setDatatype("integer")
       .settable();
 }
-
-HomieInternals::Uptime relayUptime;
 
 bool RelayNode::handleOnOff(const String &value)
 {
@@ -94,14 +109,14 @@ void RelayNode::onReadyToOperate()
 
 void RelayNode::printCaption()
 {
-  Homie.getLogger() << cCaption << endl;
+  Homie.getLogger() << cCaption << _name.c_str() << ":" << endl;
 }
 
 void RelayNode::sendState()
 {
   printCaption();
   bool on = getRelay();
-  Homie.getLogger() << cIndent << "Relay is " << (on ? "on" : "off") << endl;
+  Homie.getLogger() << cIndent << "is " << (on ? "on" : "off") << endl;
   if (Homie.isConnected())
   {
     setProperty("on").send(on ? "true" : "false");
@@ -119,7 +134,11 @@ void RelayNode::setLed(bool on)
 
 bool RelayNode::getRelay()
 {
-  if (_relayPin > DEFAULTPIN)
+  if (_onGetRelayState != NULL)
+  {
+    return _onGetRelayState(_id);
+  }
+  else if (_relayPin > DEFAULTPIN)
   {
     return digitalRead(_relayPin) == _relayOnValue;
   }
@@ -131,25 +150,50 @@ bool RelayNode::getRelay()
 
 void RelayNode::setRelay(bool on, long timeoutSecs)
 {
-  if (_relayPin > DEFAULTPIN)
+  if (_onSetRelayState != NULL)
   {
-    digitalWrite(_relayPin, on ? _relayOnValue : _relayOffValue);
-    if (on && timeoutSecs > 0)
-    {
-      _timeout = relayUptime.getSeconds() + timeoutSecs;
-    }
-    else
-    {
-      _timeout = 0;
-    }
+    _onSetRelayState(_id, on);
+    setTimeout(on, timeoutSecs);
     sendState();
   }
-  else
+  else if (_relayPin > DEFAULTPIN)
   {
-    Homie.getLogger() << cIndent << "No Relay Pin!" << endl;
+    digitalWrite(_relayPin, on ? _relayOnValue : _relayOffValue);
+    setTimeout(on, timeoutSecs);
+    sendState();
   }
   // Set Led according to relay
   setLed(on);
+}
+
+void RelayNode::setTimeout(bool on, long timeoutSecs)
+{
+  if (on && timeoutSecs > 0)
+  {
+    _ticker.attach(1.0f, std::bind(&RelayNode::tick, this));
+    _timeout = timeoutSecs;
+  }
+  else
+  {
+    _ticker.detach();
+  }
+}
+
+void RelayNode::tick()
+{
+  if (_timeout > 0)
+  {
+    _timeout--;
+  }
+  else
+  {
+    setRelay(false);
+    _ticker.detach();
+  }
+  if (Homie.isConnected())
+  {
+    setProperty("timeout").send(String(long(_timeout)));
+  }
 }
 
 void RelayNode::toggleRelay()
@@ -161,25 +205,29 @@ void RelayNode::setup()
 {
   printCaption();
 
-  Homie.getLogger() << cIndent << "Relay Pin: " << _relayPin << endl
-                    << cIndent << "Led Pin  : " << _ledPin << endl;
+  std::string info;
+
+  if ((_onSetRelayState != NULL) && (_onGetRelayState != NULL))
+  {
+    Homie.getLogger() << cIndent << "Callback" << endl;
+  }
+  else if (_relayPin > DEFAULTPIN)
+  {
+    Homie.getLogger() << cIndent << "Relay Pin: " << _relayPin << endl
+                      << cIndent << "Led Pin  : " << _ledPin << endl;
+  }
+  else
+  {
+    Homie.getLogger() << cIndent << "No Relay Pin or callback!" << endl;
+  }
 
   if (_ledPin > DEFAULTPIN)
   {
     pinMode(_ledPin, OUTPUT);
   }
+
   if (_relayPin > DEFAULTPIN)
   {
     pinMode(_relayPin, OUTPUT);
-  }
-  setRelay(false);
-}
-
-void RelayNode::loop()
-{
-  relayUptime.update();
-  if ((_timeout > 0) && getRelay() && (_timeout < relayUptime.getSeconds()))
-  {
-    setRelay(false);
   }
 }

@@ -166,4 +166,4 @@ A relay that can be set on (true|false) via MQTT message. An optional GPIO pin (
 Advertises the state as:
 
 - `homie/<device-id>/<node-name>/on` (true|false)
-- `homie/<device-id>/<node-name>/timeout/` (positive integer) - the second (uptime of the relay node) when the relay will turn off again.
+- `homie/<device-id>/<node-name>/timeout/` (positive integer) - the number of seconds until the relay will turn off again.
