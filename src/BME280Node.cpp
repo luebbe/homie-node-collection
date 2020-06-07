@@ -28,6 +28,8 @@ BME280Node::BME280Node(const char *name,
   _measurementInterval = (measurementInterval > MIN_INTERVAL) ? measurementInterval : MIN_INTERVAL;
   _temperatureOffset = new HomieSetting<double>("temperatureOffset", "The temperature offset in degrees [-10.0 - 10.0] Default = 0");
 
+  snprintf(_i2cAddressString, 3, "%2x", _i2cAddress);
+
   advertise(cStatusTopic)
       .setDatatype("enum")
       .setFormat("error, ok");
@@ -46,7 +48,6 @@ BME280Node::BME280Node(const char *name,
   advertise(cAbsHumidityTopic)
       .setDatatype("float")
       .setUnit(cUnitMgm3);
-  snprintf(_i2cAddressString, 3, "%2x", _i2cAddress);
 }
 
 void BME280Node::printCaption()
@@ -118,10 +119,11 @@ void BME280Node::onReadyToOperate()
 
 void BME280Node::setup()
 {
+  printCaption();
+  
   if (bme.begin(_i2cAddress))
   {
     _sensorFound = true;
-    printCaption();
     Homie.getLogger() << cIndent << "found. Reading interval: " << _measurementInterval << " s" << endl;
     // Parameters taken from the weather station monitoring example (advancedsettings.ino) in
     // the Adafruit BME280 library
@@ -130,7 +132,6 @@ void BME280Node::setup()
   else
   {
     _sensorFound = false;
-    printCaption();
     Homie.getLogger() << cIndent << "not found. Check wiring!" << endl;
   }
 }
