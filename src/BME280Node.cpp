@@ -46,13 +46,12 @@ BME280Node::BME280Node(const char *name,
   advertise(cAbsHumidityTopic)
       .setDatatype("float")
       .setUnit(cUnitMgm3);
+  snprintf(_i2cAddressString, 3, "%2x", _i2cAddress);
 }
 
 void BME280Node::printCaption()
 {
-  char hexbuf[3];
-  snprintf(hexbuf, 3, "%2x", _i2cAddress);
-  Homie.getLogger() << cCaption << " i2c[0x" << hexbuf << "]:" << endl;
+  Homie.getLogger() << cCaption << " i2c[0x" << _i2cAddressString << "]:" << endl;
 }
 
 void BME280Node::send()
