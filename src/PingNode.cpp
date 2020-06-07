@@ -9,36 +9,38 @@
 #include "PingNode.hpp"
 #include <Homie.h>
 
-bool checkBounds(float value, float min, float max) {
-  return !isnan(value) && value >= min &&  value <= max;
+bool checkBounds(float value, float min, float max)
+{
+  return !isnan(value) && value >= min && value <= max;
 }
 
 PingNode::PingNode(const char *name, const int triggerPin, const int echoPin,
-                     const int measurementInterval, const int publishInterval)
+                   const int measurementInterval, const int publishInterval)
     : SensorNode(name, "RCW-0001"),
-      _triggerPin(triggerPin), _echoPin(echoPin),_lastMeasurement(0), _lastPublish(0)
+      _triggerPin(triggerPin), _echoPin(echoPin), _lastMeasurement(0), _lastPublish(0)
 {
   _measurementInterval = (measurementInterval > MIN_INTERVAL) ? measurementInterval : MIN_INTERVAL;
   _publishInterval = (publishInterval > int(_measurementInterval)) ? publishInterval : _measurementInterval;
   setMicrosecondsToMetersFactor(20);
 
-  if (_triggerPin > DEFAULTPIN && _echoPin > DEFAULTPIN) {
-    sonar = new NewPing(_triggerPin,_echoPin,cMaxDistance*100.0);
+  if (_triggerPin > DEFAULTPIN && _echoPin > DEFAULTPIN)
+  {
+    sonar = new NewPing(_triggerPin, _echoPin, cMaxDistance * 100.0);
   }
 
   advertise(cDistanceTopic)
-    .setDatatype("float")
-    .setFormat("0:3")
-    .setUnit(cUnitMeter);
+      .setDatatype("float")
+      .setFormat("0:3")
+      .setUnit(cUnitMeter);
   advertise(cPingTopic)
-    .setDatatype("float")
-    .setUnit(cUnitMicrosecond);
+      .setDatatype("float")
+      .setUnit(cUnitMicrosecond);
   advertise(cValidTopic)
       .setDatatype("enum")
       .setFormat("error, ok");
   advertise(cChangedTopic)
-    .setName("Obstacle changed")
-    .setDatatype("boolean"); 
+      .setName("Obstacle changed")
+      .setDatatype("boolean");
 }
 
 void PingNode::printCaption()
@@ -58,33 +60,36 @@ void PingNode::send()
   if (Homie.isConnected())
   {
     setProperty(cValidTopic).send(valid ? "ok" : "error");
-    if (valid) {
+    if (valid)
+    {
       setProperty(cDistanceTopic).send(String(_distance));
       setProperty(cPingTopic).send(String(_ping_us));
-      setProperty(cChangedTopic).send(changed ? "true": "false");
+      setProperty(cChangedTopic).send(changed ? "true" : "false");
     }
   }
   if (changed)
   {
     _changeHandler();
   }
-  if (valid) {
+  if (valid)
+  {
     _lastDistance = _distance;
     _distance = -1;
   }
-    
 }
 
 void PingNode::loop()
 {
-  if (sonar) {
+  if (sonar)
+  {
     if (millis() - _lastMeasurement >= _measurementInterval * 1000UL || _lastMeasurement == 0)
     {
       float ping_us = sonar->ping_median();
-      // Calculating the distance @ 10 °C from d = t_ping /2 * c => t_ping /2 * 337 [m/s] => t_ping_us / 1e-6 * 1/2 * 337 
-      float newDistance = ping_us*_microseconds2meter;
+      // Calculating the distance @ 10 °C from d = t_ping /2 * c => t_ping /2 * 337 [m/s] => t_ping_us / 1e-6 * 1/2 * 337
+      float newDistance = ping_us * _microseconds2meter;
       fixRange(&newDistance, cMinDistance, cMaxDistance);
-      if (newDistance > 0) {
+      if (newDistance > 0)
+      {
         _ping_us = ping_us;
         _distance = newDistance;
       }
@@ -92,8 +97,9 @@ void PingNode::loop()
     }
 
     if (millis() - _lastPublish >= _publishInterval * 1000UL || _lastPublish == 0)
-      if (_distance > 0) {
-        	send();
+      if (_distance > 0)
+      {
+        send();
         _lastPublish = millis();
         _distance = 0;
       }
@@ -118,17 +124,18 @@ void PingNode::setup()
 void PingNode::setMicrosecondsToMetersFactor(float temperatureCelcius)
 {
   //float soundSpeed = 337.0; // @ 10°C
-  float soundSpeed = 331.4 + 0.6*temperatureCelcius;
+  float soundSpeed = 331.4 + 0.6 * temperatureCelcius;
   printCaption();
-  Homie.getLogger() << cIndent 
-    << "SpeedOfSound: " << soundSpeed << " " << cUnitMetersPerSecond 
-    << " at " << temperatureCelcius << " " << cUnitDegrees << endl;
+  Homie.getLogger() << cIndent
+                    << "SpeedOfSound: " << soundSpeed << " " << cUnitMetersPerSecond
+                    << " at " << temperatureCelcius << " " << cUnitDegrees << endl;
   // Calculating the distance from d = t_ping /2 * c => t_ping /2 * 337 [m/s] => t_ping_us / 1e-6 * 1/2 * 337
-  _microseconds2meter = 0.5e-6 * soundSpeed;  
+  _microseconds2meter = 0.5e-6 * soundSpeed;
 }
 
-float PingNode::getRawEchoTime() {
-    // Clears the trigPin
+float PingNode::getRawEchoTime()
+{
+  // Clears the trigPin
   digitalWrite(_triggerPin, LOW);
   delayMicroseconds(2);
 
@@ -141,11 +148,13 @@ float PingNode::getRawEchoTime() {
   return pulseIn(_echoPin, HIGH);
 }
 
-bool PingNode::signalChange(float distance, float lastDistance) {
+bool PingNode::signalChange(float distance, float lastDistance)
+{
   return fabs(distance - lastDistance) > cMinimumChange;
 }
 
-PingNode& PingNode::setChangeHandler(const ChangeHandler& changeHandler) {
+PingNode &PingNode::setChangeHandler(const ChangeHandler &changeHandler)
+{
   _changeHandler = changeHandler;
   return *this;
 }
