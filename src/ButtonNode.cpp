@@ -12,11 +12,11 @@ ButtonNode::ButtonNode(const char *name,
                        const int buttonPin,
                        TButtonPressCallback buttonPressCallback,
                        TButtonChangeCallback buttonChangeCallback)
-    : HomieNode(name, "ButtonNode", "sensor")
+    : HomieNode(name, "ButtonNode", "sensor"),
+      _buttonPin(buttonPin),
+      _buttonPressCallback(buttonPressCallback),
+      _buttonChangeCallback(buttonChangeCallback)
 {
-  _buttonPin = buttonPin;
-  _buttonPressCallback = buttonPressCallback;
-  _buttonChangeCallback = buttonChangeCallback;
 }
 
 void ButtonNode::handleButtonPress(unsigned long dt)
@@ -35,12 +35,13 @@ void ButtonNode::handleButtonPress(unsigned long dt)
   }
 }
 
-void ButtonNode::handleButtonChange(bool down) {
+void ButtonNode::handleButtonChange(bool down)
+{
   if (Homie.isConnected())
   {
     setProperty("down").send(down ? "true" : "false");
   }
-  
+
   printCaption();
   Homie.getLogger() << cIndent << (down ? "down" : "up") << endl;
 
@@ -86,12 +87,14 @@ void ButtonNode::loop()
   {
     byte reading = digitalRead(_buttonPin);
 
-    if (reading != _lastReading) {
-       // reset the debouncing timer
-       _lastDebounceTime = millis();
+    if (reading != _lastReading)
+    {
+      // reset the debouncing timer
+      _lastDebounceTime = millis();
     }
 
-    if ((millis() - _lastDebounceTime) > _minButtonDownTime) {
+    if ((millis() - _lastDebounceTime) > _minButtonDownTime)
+    {
       // whatever the reading is at, it's been there for longer than the debounce
       // delay, so take it as the actual current state:
       if (reading != _buttonState)
@@ -109,9 +112,9 @@ void ButtonNode::loop()
         {
           handleButtonChange(false);
           _buttonChangeHandled = true;
-          
+
           unsigned long dt = millis() - _buttonDownTime;
-          if (dt >= _minButtonDownTime &&  dt <= _maxButtonDownTime && !_buttonPressHandled)
+          if (dt >= _minButtonDownTime && dt <= _maxButtonDownTime && !_buttonPressHandled)
           {
             handleButtonPress(dt);
             _buttonPressHandled = true;
@@ -136,4 +139,3 @@ void ButtonNode::setup()
     pinMode(_buttonPin, INPUT_PULLUP);
   }
 }
-

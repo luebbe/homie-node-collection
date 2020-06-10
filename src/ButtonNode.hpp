@@ -23,9 +23,9 @@ private:
   const char *cCaption = "• Button:";
   const char *cIndent = "  ◦ ";
 
+  int _buttonPin;
   TButtonPressCallback _buttonPressCallback;
   TButtonChangeCallback _buttonChangeCallback;
-  int _buttonPin;
   byte _lastReading = HIGH;
   byte _buttonState = HIGH;
   bool _buttonPressHandled = 0;

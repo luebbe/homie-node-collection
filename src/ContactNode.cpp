@@ -11,10 +11,10 @@
 ContactNode::ContactNode(const char *name,
                          const int contactPin,
                          TContactCallback contactCallback)
-    : HomieNode(name, "ContactNode", "sensor")
+    : HomieNode(name, "ContactNode", "sensor"),
+      _contactPin(contactPin),
+      _contactCallback(contactCallback)
 {
-  _contactPin = contactPin;
-  _contactCallback = contactCallback;
 }
 
 int ContactNode::getContactPin()

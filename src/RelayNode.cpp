@@ -9,22 +9,26 @@
 #include "RelayNode.hpp"
 
 RelayNode::RelayNode(const char *name, const int8_t relayPin, const int8_t ledPin, const bool reverseSignal)
-    : HomieNode(name, "RelayNode", "actor")
+    : HomieNode(name, "RelayNode", "actor"),
+      _name(name),
+      _id(0),
+      _relayPin(relayPin),
+      _ledPin(ledPin),
+      _onGetRelayState(NULL),
+      _onSetRelayState(NULL)
 {
-  _name = name;
-  _id = 0;
-  _relayPin = relayPin;
-  _ledPin = ledPin;
   commonInit(reverseSignal);
 }
 
 RelayNode::RelayNode(const char *name, const uint8_t id, TGetRelayState OnGetRelayState, TSetRelayState OnSetRelayState, const bool reverseSignal)
-    : HomieNode(name, "RelayNode", "actor")
+    : HomieNode(name, "RelayNode", "actor"),
+      _name(name),
+      _id(id),
+      _relayPin(DEFAULTPIN),
+      _ledPin(DEFAULTPIN),
+      _onGetRelayState(OnGetRelayState),
+      _onSetRelayState(OnSetRelayState)
 {
-  _name = name;
-  _id = id;
-  _onGetRelayState = OnGetRelayState;
-  _onSetRelayState = OnSetRelayState;
   commonInit(reverseSignal);
 }
 
