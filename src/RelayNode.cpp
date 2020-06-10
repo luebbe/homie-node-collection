@@ -140,7 +140,7 @@ bool RelayNode::getRelay()
 {
   if (_onGetRelayState != NULL)
   {
-    return _onGetRelayState(_id);
+    return _onGetRelayState(_id) == _relayOnValue;
   }
   else if (_relayPin > DEFAULTPIN)
   {
@@ -156,7 +156,7 @@ void RelayNode::setRelay(bool on, long timeoutSecs)
 {
   if (_onSetRelayState != NULL)
   {
-    _onSetRelayState(_id, on);
+    _onSetRelayState(_id, on ? _relayOnValue : _relayOffValue);
     setTimeout(on, timeoutSecs);
     sendState();
   }
