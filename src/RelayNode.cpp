@@ -15,6 +15,21 @@ RelayNode::RelayNode(const char *name, const int8_t relayPin, const int8_t ledPi
   _id = 0;
   _relayPin = relayPin;
   _ledPin = ledPin;
+  commonInit(reverseSignal);
+}
+
+RelayNode::RelayNode(const char *name, const uint8_t id, TGetRelayState OnGetRelayState, TSetRelayState OnSetRelayState, const bool reverseSignal)
+    : HomieNode(name, "RelayNode", "actor")
+{
+  _name = name;
+  _id = id;
+  _onGetRelayState = OnGetRelayState;
+  _onSetRelayState = OnSetRelayState;
+  commonInit(reverseSignal);
+}
+
+void RelayNode::commonInit(bool reverseSignal)
+{
   if (reverseSignal)
   {
     _relayOnValue = LOW;
@@ -25,21 +40,6 @@ RelayNode::RelayNode(const char *name, const int8_t relayPin, const int8_t ledPi
     _relayOnValue = HIGH;
     _relayOffValue = LOW;
   }
-  advertiseProps();
-}
-
-RelayNode::RelayNode(const char *name, const uint8_t id, TGetRelayState OnGetRelayState, TSetRelayState OnSetRelayState)
-    : HomieNode(name, "RelayNode", "actor")
-{
-  _name = name;
-  _id = id;
-  _onGetRelayState = OnGetRelayState;
-  _onSetRelayState = OnSetRelayState;
-  advertiseProps();
-}
-
-void RelayNode::advertiseProps()
-{
   advertise("on")
       .setDatatype("boolean")
       .settable();

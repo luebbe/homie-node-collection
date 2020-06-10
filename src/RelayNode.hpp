@@ -40,7 +40,7 @@ private:
   bool handleOnOff(const String &value);
   bool handleTimeout(const String &value);
 
-  void advertiseProps();
+  void commonInit(bool reverseSignal);
   void printCaption();
   void sendState();
   void tick();
@@ -57,9 +57,16 @@ protected:
 
 public:
   // Use this constructor, if your relay is connected directly to the ESP
-  explicit RelayNode(const char *name, const int8_t relayPin = DEFAULTPIN, const int8_t ledPin = DEFAULTPIN, const bool reverseSignal = false);
-  // Use this constructor, if your is not connected directly, e.g. via a port expander
-  explicit RelayNode(const char *name, const uint8_t id, TGetRelayState OnGetRelayState, TSetRelayState OnSetRelayState);
+  explicit RelayNode(const char *name,
+                     const int8_t relayPin = DEFAULTPIN,
+                     const int8_t ledPin = DEFAULTPIN,
+                     const bool reverseSignal = false);
+  // Use this constructor, if your relay is not connected directly, e.g. via a port expander
+  explicit RelayNode(const char *name,
+                     const uint8_t id,
+                     TGetRelayState OnGetRelayState,
+                     TSetRelayState OnSetRelayState,
+                     const bool reverseSignal = false);
   void setRelay(bool on, long timeoutSecs = 0);
   void toggleRelay();
 };
