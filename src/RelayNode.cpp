@@ -209,7 +209,7 @@ void RelayNode::setup()
 
   if ((_onSetRelayState != NULL) && (_onGetRelayState != NULL))
   {
-    Homie.getLogger() << cIndent << "Callback" << endl;
+    Homie.getLogger() << cIndent << "Callback id: " << _id << endl;
   }
   else if (_relayPin > DEFAULTPIN)
   {
