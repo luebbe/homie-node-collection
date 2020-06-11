@@ -10,25 +10,25 @@
 
 RelayNode::RelayNode(const char *name, const int8_t relayPin, const int8_t ledPin, const bool reverseSignal)
     : HomieNode(name, "RelayNode", "actor"),
-      _name(name),
       _id(0),
       _relayPin(relayPin),
       _ledPin(ledPin),
       _onGetRelayState(NULL),
       _onSetRelayState(NULL)
 {
+  asprintf(&_caption, "• %s Pin[%d]:", name, relayPin);
   commonInit(reverseSignal);
 }
 
 RelayNode::RelayNode(const char *name, const uint8_t id, TGetRelayState OnGetRelayState, TSetRelayState OnSetRelayState, const bool reverseSignal)
     : HomieNode(name, "RelayNode", "actor"),
-      _name(name),
       _id(id),
       _relayPin(DEFAULTPIN),
       _ledPin(DEFAULTPIN),
       _onGetRelayState(OnGetRelayState),
       _onSetRelayState(OnSetRelayState)
 {
+  asprintf(&_caption, "• %s Id[%d]:", name, id);
   commonInit(reverseSignal);
 }
 
@@ -113,7 +113,7 @@ void RelayNode::onReadyToOperate()
 
 void RelayNode::printCaption()
 {
-  Homie.getLogger() << cCaption << _name.c_str() << ":" << endl;
+  Homie.getLogger() << _caption << endl;
 }
 
 void RelayNode::sendState()
@@ -209,20 +209,9 @@ void RelayNode::setup()
 {
   printCaption();
 
-  std::string info;
-
-  if ((_onSetRelayState != NULL) && (_onGetRelayState != NULL))
+  if ((_onSetRelayState == NULL) && (_onGetRelayState == NULL) && (_relayPin == DEFAULTPIN))
   {
-    Homie.getLogger() << cIndent << "Callback id: " << _id << endl;
-  }
-  else if (_relayPin > DEFAULTPIN)
-  {
-    Homie.getLogger() << cIndent << "Relay Pin: " << _relayPin << endl
-                      << cIndent << "Led Pin  : " << _ledPin << endl;
-  }
-  else
-  {
-    Homie.getLogger() << cIndent << "No Relay Pin or callback!" << endl;
+    Homie.getLogger() << cIndent << "No Relay Pin or callback defined!" << endl;
   }
 
   if (_ledPin > DEFAULTPIN)

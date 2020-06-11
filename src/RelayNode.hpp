@@ -19,10 +19,8 @@ public:
   typedef std::function<void(int8_t, bool)> TSetRelayState;
 
 private:
-  const char *cCaption = "• Relay ";
   const char *cIndent = "  ◦ ";
 
-  std::string _name;
   int8_t _id;
 
   int8_t _relayPin;
@@ -33,6 +31,8 @@ private:
 
   uint8_t _relayOnValue;
   uint8_t _relayOffValue;
+
+  char * _caption;
 
   uint64_t _timeout;
   Ticker _ticker;

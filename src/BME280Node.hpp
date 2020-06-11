@@ -26,7 +26,7 @@ private:
   const float cMaxPress = 1100.0;
   // suggested rate is 1/60Hz (1m)
   static const int MIN_INTERVAL = 60; // in seconds
-  const char *cCaption = "• BME280 sensor";
+  const char *cCaption = "• BME280 sensor i2c[0x%2x]:";
   const char *cIndent = "  ◦ ";
 
   bool _sensorFound = false;
@@ -34,12 +34,13 @@ private:
   unsigned int _i2cAddress;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
-  char _i2cAddressString[3];
 
   Adafruit_BME280::sensor_sampling _tempSampling;
   Adafruit_BME280::sensor_sampling _pressSampling;
   Adafruit_BME280::sensor_sampling _humSampling;
   Adafruit_BME280::sensor_filter _filter;
+
+  char *_caption;
 
   float temperature = NAN;
   float humidity = NAN;

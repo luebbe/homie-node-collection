@@ -21,6 +21,8 @@ DHT22Node::DHT22Node(const char *name, const int sensorPin, const int measuremen
     dht = new DHT(_sensorPin, DHTTYPE);
   }
 
+  asprintf(&_caption, cCaption, sensorPin);
+
   advertise(cStatusTopic)
       .setDatatype("enum")
       .setFormat("error, ok");
@@ -39,7 +41,7 @@ DHT22Node::DHT22Node(const char *name, const int sensorPin, const int measuremen
 
 void DHT22Node::printCaption()
 {
-  Homie.getLogger() << cCaption << " pin[" << _sensorPin << "]:" << endl;
+  Homie.getLogger() << _caption << endl;
 }
 
 void DHT22Node::send()

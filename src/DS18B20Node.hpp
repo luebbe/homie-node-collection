@@ -22,13 +22,15 @@ class DS18B20Node : public SensorNode
 private:
   const float cMinTemp = -55.0;
   const float cMaxTemp = 125.0;
-  const char *cCaption = "• DS18B20 sensor";
+  const char *cCaption = "• DS18B20 sensor pin[%d]:";
   const char *cIndent = "  ◦ ";
 
   int _sensorPin = DEFAULTPIN;
   bool _sensorFound = false;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
+
+  char *_caption;
 
   float temperature = NAN;
 

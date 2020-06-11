@@ -28,7 +28,7 @@ BME280Node::BME280Node(const char *name,
   _measurementInterval = (measurementInterval > MIN_INTERVAL) ? measurementInterval : MIN_INTERVAL;
   _temperatureOffset = new HomieSetting<double>("temperatureOffset", "The temperature offset in degrees [-10.0 - 10.0] Default = 0");
 
-  snprintf(_i2cAddressString, 3, "%2x", _i2cAddress);
+  asprintf(&_caption, cCaption, i2cAddress);
 
   advertise(cStatusTopic)
       .setDatatype("enum")
@@ -52,7 +52,7 @@ BME280Node::BME280Node(const char *name,
 
 void BME280Node::printCaption()
 {
-  Homie.getLogger() << cCaption << " i2c[0x" << _i2cAddressString << "]:" << endl;
+  Homie.getLogger() << _caption << endl;
 }
 
 void BME280Node::send()
@@ -120,7 +120,7 @@ void BME280Node::onReadyToOperate()
 void BME280Node::setup()
 {
   printCaption();
-  
+
   if (bme.begin(_i2cAddress))
   {
     _sensorFound = true;
