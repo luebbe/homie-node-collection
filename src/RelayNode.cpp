@@ -198,6 +198,7 @@ void RelayNode::setTimeout(bool on, long timeoutSecs)
   else
   {
     _ticker.detach();
+    _timeout = 0;
   }
 }
 
