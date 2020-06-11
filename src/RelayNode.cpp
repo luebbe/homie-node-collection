@@ -94,8 +94,9 @@ bool RelayNode::handleTimeout(const String &value)
 
 bool RelayNode::handleInput(const HomieRange &range, const String &property, const String &value)
 {
+#ifdef DEBUG
   Homie.getLogger() << "Message: " << property << " " << value << endl;
-
+#endif
   if (property.equals("on"))
   {
     return handleOnOff(value);
