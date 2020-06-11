@@ -32,15 +32,16 @@ private:
   uint8_t _relayOnValue;
   uint8_t _relayOffValue;
 
-  char * _caption;
+  char *_caption;
+  char *_maxTimeoutName;
 
-  uint64_t _timeout;
+  long _timeout;
   Ticker _ticker;
 
   bool handleOnOff(const String &value);
   bool handleTimeout(const String &value);
 
-  void commonInit(bool reverseSignal);
+  void commonInit(const char *name, bool reverseSignal);
   void printCaption();
   void sendState();
   void tick();
@@ -51,6 +52,8 @@ private:
   bool getRelay();
 
 protected:
+  HomieSetting<long> *_maxTimeout;
+
   virtual bool handleInput(const HomieRange &range, const String &property, const String &value) override;
   virtual void onReadyToOperate() override;
   virtual void setup() override;
@@ -67,6 +70,7 @@ public:
                      TGetRelayState OnGetRelayState,
                      TSetRelayState OnSetRelayState,
                      const bool reverseSignal = false);
-  void setRelay(bool on, long timeoutSecs = 0);
+  void setRelay(bool on, long timeoutSecs);
   void toggleRelay();
+  void beforeHomieSetup();
 };

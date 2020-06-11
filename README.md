@@ -61,7 +61,7 @@ It has one setting:
 
 **Attention**: This offset is just added to the temperature read from the sensor. The relative humidity is not recalculated.
 
-**Attention**: Please be aware that the Homie framework doesn't know per-node settings. If you have more than one instance of a BME280Node, all instances will use the same _temperatureOffset_.
+**Attention**: This setting is shared across all instances. If you have more than one instance of a BME280Node, they will use the same _temperatureOffset_.
 
 Advertises the values as:
 
@@ -158,12 +158,42 @@ void setup()
 
 ### RelayNode
 
-A relay that can be set on (true|false) via MQTT message. An optional GPIO pin (e.g. to light up a LED) can be passed in the constructor. This pin will be set high/low synchronous to the relay. Additonally the relay can be turned on for a number of seconds by sending this number to the timeout subtopic.
+A relay that can be set on (true|false) via MQTT message. An optional GPIO pin (e.g. to light up a LED) can be passed in the constructor. This pin will be set high/low synchronous to the relay. Additonally the relay can be turned on for a number of seconds by sending this number to the timeout subtopic. The Relay supports reverse logic.
+
+The relay has two different constructors:
+
+Use the following constructor, if your relay is connected directly to the ESP.
+
+```cpp
+RelayNode(const char *name,
+          const int8_t relayPin = DEFAULTPIN,
+          const int8_t ledPin = DEFAULTPIN,
+          const bool reverseSignal = false);
+```
+
+Use the following constructor, if your relay is not connected directly, e.g. via a port expander. Turning the relay on and off as well as getting the relay state is handled in the callbacks. Timeout and positive/negative logic are handled in the RelayNode.
+
+```cpp
+RelayNode(const char *name,
+          const uint8_t id,
+          TGetRelayState OnGetRelayState,
+          TSetRelayState OnSetRelayState,
+          const bool reverseSignal = false);
+```
+
+It has one setting:
+
+- _\<node-name\>.maxTimeout_: The maximum time that the relay is turned on.  
+  Range = \[0s .. max(long)s]. Default = 600 seconds. 0 = no max timeout.
+
+This is a per node setting. The name of the setting is constructed from the node name + '.maxTimeout'.
+
+The relay can be controlled by posting to the follwing MQTT topics:
 
 - `homie/<device-id>/<node-name>/on/set` (true|false|toggle)
-- `homie/<device-id>/<node-name>/timeout/set` (positive integer) - turns the relay on for the corresponding number of seconds.
+- `homie/<device-id>/<node-name>/timeout/set` (positive integer) - turns the relay on for the corresponding number of seconds, limited by _maxTimeout_.
 
 Advertises the state as:
 
 - `homie/<device-id>/<node-name>/on` (true|false)
-- `homie/<device-id>/<node-name>/timeout/` (positive integer) - the number of seconds until the relay will turn off again.
+- `homie/<device-id>/<node-name>/timeout/` (positive integer) - counts down the number of seconds until the relay will turn off again.

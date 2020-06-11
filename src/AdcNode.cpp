@@ -18,9 +18,9 @@ ADC_MODE(ADC_VCC);
 AdcNode::AdcNode(const char *name, const int sendInterval)
     : HomieNode(name, "AD Converter", "sensor")
 {
-  _adcCorrection = new HomieSetting<double>("adcCorrect", "Correction factor for AD converter.  [0.5 - 1.5] Default = 1");
-  _adcBattMin = new HomieSetting<double>("battMin", "Measured voltage that corresponds to 0% battery level.  [2.5V - 4.0V] Default = 2.6V. Must be less than battMax");
-  _adcBattMax = new HomieSetting<double>("battMax", "Measured voltage that corresponds to 100% battery level.  [2.5V - 4.0V] Default = 3.3V. Must be greater than battMin");
+  _adcCorrection = new HomieSetting<double>("adcCorrect", "Correction factor for AD converter.  [0.5 .. 1.5] Default = 1");
+  _adcBattMin = new HomieSetting<double>("battMin", "Measured voltage that corresponds to 0% battery level.  [2.5V .. 4.0V] Default = 2.6V. Must be less than battMax");
+  _adcBattMax = new HomieSetting<double>("battMax", "Measured voltage that corresponds to 100% battery level.  [2.5V .. 4.0V] Default = 3.3V. Must be greater than battMin");
 
   _lastReadTime = millis() - READ_INTERVAL_MILLISECONDS - 1;
   _lastSendTime = millis() - sendInterval - 1;

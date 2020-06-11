@@ -17,7 +17,7 @@ RelayNode::RelayNode(const char *name, const int8_t relayPin, const int8_t ledPi
       _onSetRelayState(NULL)
 {
   asprintf(&_caption, "• %s Pin[%d]:", name, relayPin);
-  commonInit(reverseSignal);
+  commonInit(name, reverseSignal);
 }
 
 RelayNode::RelayNode(const char *name, const uint8_t id, TGetRelayState OnGetRelayState, TSetRelayState OnSetRelayState, const bool reverseSignal)
@@ -29,10 +29,10 @@ RelayNode::RelayNode(const char *name, const uint8_t id, TGetRelayState OnGetRel
       _onSetRelayState(OnSetRelayState)
 {
   asprintf(&_caption, "• %s Id[%d]:", name, id);
-  commonInit(reverseSignal);
+  commonInit(name, reverseSignal);
 }
 
-void RelayNode::commonInit(bool reverseSignal)
+void RelayNode::commonInit(const char *name, bool reverseSignal)
 {
   if (reverseSignal)
   {
@@ -44,6 +44,10 @@ void RelayNode::commonInit(bool reverseSignal)
     _relayOnValue = HIGH;
     _relayOffValue = LOW;
   }
+
+  asprintf(&_maxTimeoutName, "%s.maxTimeout", name);
+  _maxTimeout = new HomieSetting<long>(_maxTimeoutName, "The maximum timeout for the relay in seconds [0 .. Max(long)] Default = 600 (10 minutes)");
+
   advertise("on")
       .setDatatype("boolean")
       .settable();
@@ -60,10 +64,10 @@ bool RelayNode::handleOnOff(const String &value)
     if (value == "toggle")
     {
       bool current = getRelay();
-      setRelay(!current);
+      setRelay(!current, _maxTimeout->get());
     }
     else
-      setRelay(value == "true");
+      setRelay(value == "true", _maxTimeout->get());
     return true;
   }
   else
@@ -106,9 +110,16 @@ bool RelayNode::handleInput(const HomieRange &range, const String &property, con
   }
 }
 
+void RelayNode::beforeHomieSetup()
+{
+  _maxTimeout->setDefaultValue(600).setValidator([](long candidate) {
+    return (candidate >= 0);
+  });
+}
+
 void RelayNode::onReadyToOperate()
 {
-  setRelay(false);
+  setRelay(false, 0);
 };
 
 void RelayNode::printCaption()
@@ -172,6 +183,13 @@ void RelayNode::setRelay(bool on, long timeoutSecs)
 
 void RelayNode::setTimeout(bool on, long timeoutSecs)
 {
+  long maxTimeout = _maxTimeout->get();
+
+  if ((maxTimeout > 0) && maxTimeout < timeoutSecs)
+  {
+    timeoutSecs = maxTimeout;
+  }
+
   if (on && timeoutSecs > 0)
   {
     _ticker.attach(1.0f, std::bind(&RelayNode::tick, this));
@@ -191,7 +209,7 @@ void RelayNode::tick()
   }
   else
   {
-    setRelay(false);
+    setRelay(false, 0);
     _ticker.detach();
   }
   if (Homie.isConnected())
@@ -202,7 +220,7 @@ void RelayNode::tick()
 
 void RelayNode::toggleRelay()
 {
-  setRelay(!getRelay());
+  setRelay(!getRelay(), _maxTimeout->get());
 }
 
 void RelayNode::setup()
