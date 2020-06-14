@@ -30,7 +30,7 @@ BME280Node::BME280Node(const char *name,
   asprintf(&_temperatureOffsetName, "%s.temperatureOffset", name);
   _temperatureOffset = new HomieSetting<double>(_temperatureOffsetName, "The temperature offset in degrees [-10.0 .. 10.0] Default = 0");
 
-  asprintf(&_caption, cCaption, i2cAddress);
+  asprintf(&_caption, cCaption, name, i2cAddress);
 
   advertise(cStatusTopic)
       .setDatatype("enum")

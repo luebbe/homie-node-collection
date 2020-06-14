@@ -26,7 +26,7 @@ private:
   const float cMaxPress = 1100.0;
   // suggested rate is 1/60Hz (1m)
   static const int MIN_INTERVAL = 60; // in seconds
-  const char *cCaption = "• BME280 sensor i2c[0x%2x]:";
+  const char *cCaption = "• BME280 %s i2c[0x%2x]:";
   const char *cIndent = "  ◦ ";
 
   bool _sensorFound = false;
