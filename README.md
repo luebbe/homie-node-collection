@@ -56,12 +56,11 @@ A node for Bosch BME280 I2C temperature/humidity/pressure sensors. Reports the t
 
 It has one setting:
 
-- _temperatureOffset_: The temperature offset in degrees.  
-  Range = \[-10.0°C .. 10.0°C]. Default = 0°C.
+- _\<node-name>.temperatureOffset_: The temperature offset in degrees.  
+  Range = \[-10.0°C .. 10.0°C]. Default = 0°C.  
+  This is a per node setting, so pay attention that the node names are different.
 
 **Attention**: This offset is just added to the temperature read from the sensor. The relative humidity is not recalculated.
-
-**Attention**: This setting is shared across all instances. If you have more than one instance of a BME280Node, they will use the same _temperatureOffset_.
 
 Advertises the values as:
 
@@ -184,7 +183,8 @@ RelayNode(const char *name,
 It has one setting:
 
 - _\<node-name\>.maxTimeout_: The maximum time that the relay is turned on.  
-  Range = \[0s .. max(long)s]. Default = 600 seconds. 0 = no max timeout.
+  Range = \[0s .. max(long)s]. Default = 600 seconds. 0 = no max timeout.  
+  This is a per node setting, so pay attention that the node names are different.
 
 This is a per node setting. The name of the setting is constructed from the node name + '.maxTimeout'.
 

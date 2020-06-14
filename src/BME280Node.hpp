@@ -41,6 +41,7 @@ private:
   Adafruit_BME280::sensor_filter _filter;
 
   char *_caption;
+  char *_temperatureOffsetName;
 
   float temperature = NAN;
   float humidity = NAN;

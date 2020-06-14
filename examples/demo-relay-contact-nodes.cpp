@@ -54,8 +54,13 @@ void setup()
 
   // Set callback for contact node here, just to show alternative
   contactNode.onChange([](bool open) {
-    relayPin.setRelay(open);
+    // Pass 0 in timeout for infinite "on"
+    relayPin.setRelay(open, 0);
   });
+
+  // Set default configuration values before Homie.setup()
+  relayPin.beforeHomieSetup();
+  relayCallback.beforeHomieSetup();
 
   Homie.disableLedFeedback();
   Homie.disableResetTrigger();
