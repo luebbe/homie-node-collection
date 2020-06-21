@@ -85,8 +85,10 @@ void PingNode::loop()
         changed = signalChange(_distance, _lastDistance);
         if (changed)
         {
+          if (onChange(_distance, _lastDistance)) {
+            _changeHandler();
+          }
           _lastDistance = _distance;
-          _changeHandler(*this);
         }
       }
       _lastMeasurement = millis();
@@ -127,11 +129,11 @@ PingNode &PingNode::setTemperature(float temperatureCelcius)
                     << "SpeedOfSound: " << soundSpeed << " " << cUnitMetersPerSecond
                     << " at " << temperatureCelcius << " " << cUnitDegrees << endl;
   // Calculating the distance from d = t_ping /2 * c => t_ping /2 * 337 [m/s] => t_ping_us / 1e-6 * 1/2 * 337
-  setMicrosecondsToMetersFactor(0.5e-6 * soundSpeed);
+  setMicrosecondsToMeters(0.5e-6 * soundSpeed);
   return *this;
 }
 
-PingNode &PingNode::setMicrosecondsToMetersFactor(float microseconds2meter)
+PingNode &PingNode::setMicrosecondsToMeters(float microseconds2meter)
 {
   _microseconds2meter = microseconds2meter;
   return *this;

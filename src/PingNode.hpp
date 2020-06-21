@@ -41,7 +41,7 @@ private:
   float _distance = NAN;
   int _ping_us = 0;
   float _lastDistance = 0;
-  ChangeHandler _changeHandler = [](PingNode&) {};
+  ChangeHandler _changeHandler = []() {};
 
   float getRawEchoTime();
   bool signalChange(float distance, float lastDistance);
@@ -52,6 +52,7 @@ protected:
   virtual void setup() override;
   virtual void loop() override;
   virtual void onReadyToOperate() override;
+  virtual bool onChange(float newDistance, float prevDistance) { return true; };
   static const int DEFAULT_MEASUREMENT_INTERVAL = 1;
   static const int DEFAULT_PUBLISH_INTERVAL = 5;
 
@@ -64,9 +65,10 @@ public:
 
   float getDistance() const { return _distance; }
   PingNode &setTemperature(float temperatureCelcius);
+  PingNode &setMicrosecondsToMetersFactor(float temperatureCelcius) { return setTemperature(temperatureCelcius); };
   PingNode &setMinimumChange(float minimumChange);
   PingNode &setMinimumDistance(float minimumDistance);
   PingNode &setMaximumDistance(float maximumDistance);
-  PingNode &setMicrosecondsToMetersFactor(float microseconds2meter);
+  PingNode &setMicrosecondsToMeters(float microseconds2meter);
   PingNode &setChangeHandler(const ChangeHandler &changeHandler);
 };
