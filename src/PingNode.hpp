@@ -47,7 +47,6 @@ private:
   float getRawEchoTime();
   bool signalChange(float distance, float lastDistance);
   void printCaption();
-  void send(bool changed);
 
 protected:
   virtual void setup() override;
@@ -72,4 +71,5 @@ public:
   PingNode &setMaximumDistance(float maximumDistance);
   PingNode &setMicrosecondsToMeters(float microseconds2meter);
   PingNode &setChangeHandler(const ChangeHandler &changeHandler);
+  virtual void send(bool changed);
 };
