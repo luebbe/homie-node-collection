@@ -135,7 +135,7 @@ PingNode &PingNode::setTemperature(float temperatureCelcius)
                     << "SpeedOfSound: " << soundSpeed << " " << cUnitMetersPerSecond
                     << " at " << temperatureCelcius << " " << cUnitDegrees << endl;
   // Calculating the distance from d = t_ping /2 * c => t_ping /2 * 337 [m/s] => t_ping_us / 1e-6 * 1/2 * 337
-  setMicrosecondsToMeters(0.5e-6 * soundSpeed);
+  setMicrosecondsToMeter(0.5e-6 * soundSpeed);
   return *this;
 }
 
