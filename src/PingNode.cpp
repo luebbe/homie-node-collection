@@ -85,7 +85,8 @@ void PingNode::loop()
         changed = signalChange(_distance, _lastDistance);
         if (changed)
         {
-          if (onChange(_distance, _lastDistance)) {
+          if (onChange(_distance, _lastDistance))
+          {
             _changeHandler();
           }
           _lastDistance = _distance;
@@ -98,7 +99,12 @@ void PingNode::loop()
     {
       if (_distance > 0)
       {
+        changed = signalChange(_distance, _lastPublishedDistance);
         send(changed);
+        if (changed)
+        {
+          _lastPublishedDistance = _distance;
+        }
         _lastPublish = millis();
       }
     }
@@ -182,4 +188,3 @@ PingNode &PingNode::setMaximumDistance(float maximumDistance)
   _maxDistance = maximumDistance;
   return *this;
 }
-

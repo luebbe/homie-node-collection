@@ -41,6 +41,7 @@ private:
   float _distance = NAN;
   int _ping_us = 0;
   float _lastDistance = 0;
+  float _lastPublishedDistance = 0;
   ChangeHandler _changeHandler = []() {};
 
   float getRawEchoTime();
