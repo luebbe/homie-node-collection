@@ -50,12 +50,12 @@ void PingNode::printCaption()
 
 void PingNode::send(bool changed)
 {
+  bool valid = _distance > 0;
   printCaption();
   Homie.getLogger() << cIndent << "Ping: " << _ping_us << " " << cUnitMicrosecond << endl;
   Homie.getLogger() << cIndent << "Distance: " << _distance << " " << cUnitMeter << endl;
-  bool valid = _distance > 0;
   Homie.getLogger() << cIndent << "Valid: " << (valid ? "ok" : "error") << endl;
-  // Homie.getLogger() << cIndent << "Changed: " << (changed ? "true" : "false") << " " << endl;
+  Homie.getLogger() << cIndent << "Changed: " << (changed ? "true" : "false") << " " << endl;
   if (Homie.isConnected())
   {
     setProperty(cValidTopic).send(valid ? "ok" : "error");
