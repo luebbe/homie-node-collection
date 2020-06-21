@@ -18,7 +18,7 @@
 class PingNode : public SensorNode
 {
 public:
-  typedef std::function<void(PingNode &)> ChangeHandler;
+  typedef std::function<void()> ChangeHandler;
 
 private:
   static const int MIN_INTERVAL = 1; // in seconds
