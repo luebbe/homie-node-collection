@@ -18,13 +18,9 @@
 class PingNode : public SensorNode
 {
 public:
-  typedef std::function<void()> ChangeHandler;
+  typedef std::function<void(PingNode &)> ChangeHandler;
 
 private:
-  const float cMinDistance = 0.0;
-  const float cMaxDistance = 3.0;
-  const float cMinimumChange = 0.2;
-
   static const int MIN_INTERVAL = 1; // in seconds
   const char *cCaption = "• RCW-0001 sensor";
   const char *cIndent = "  ◦ ";
@@ -33,6 +29,9 @@ private:
   int _echoPin;
   float _microseconds2meter;
 
+  float _minChange = 0.2;
+  float _minDistance = 0.0;
+  float _maxDistance = 4.0;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
   unsigned long _publishInterval;
@@ -42,13 +41,12 @@ private:
   float _distance = NAN;
   int _ping_us = 0;
   float _lastDistance = 0;
-  ChangeHandler _changeHandler = []() {};
+  ChangeHandler _changeHandler = [](PingNode&) {};
 
   float getRawEchoTime();
-  void setMicrosecondsToMetersFactor(float temperatureCelcius);
   bool signalChange(float distance, float lastDistance);
   void printCaption();
-  void send();
+  void send(bool changed);
 
 protected:
   virtual void setup() override;
@@ -65,6 +63,10 @@ public:
                     const int publishInterval = DEFAULT_PUBLISH_INTERVAL);
 
   float getDistance() const { return _distance; }
-  void setTemperature(float temperatureCelcius) { setMicrosecondsToMetersFactor(temperatureCelcius); }
+  PingNode &setTemperature(float temperatureCelcius);
+  PingNode &setMinimumChange(float minimumChange);
+  PingNode &setMinimumDistance(float minimumDistance);
+  PingNode &setMaximumDistance(float maximumDistance);
+  PingNode &setMicrosecondsToMetersFactor(float microseconds2meter);
   PingNode &setChangeHandler(const ChangeHandler &changeHandler);
 };
