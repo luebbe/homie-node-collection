@@ -22,7 +22,7 @@ public:
 
 private:
   static const int MIN_INTERVAL = 1; // in seconds
-  const char *cCaption = "• RCW-0001 sensor";
+  const char *cCaption = "• ";
   const char *cIndent = "  ◦ ";
 
   int _triggerPin;
@@ -52,24 +52,26 @@ protected:
   virtual void setup() override;
   virtual void loop() override;
   virtual void onReadyToOperate() override;
-  virtual bool onChange(float newDistance, float prevDistance) { return true; };
+  virtual bool onChange(float newDistance, float prevDistance) { return true; }
   static const int DEFAULT_MEASUREMENT_INTERVAL = 1;
   static const int DEFAULT_PUBLISH_INTERVAL = 5;
 
 public:
   explicit PingNode(const char *name,
+                    const char *type="RCW-0001",
                     const int triggerPin = DEFAULTPIN,
                     const int echoPin = DEFAULTPIN,
                     const int measurementInterval = DEFAULT_MEASUREMENT_INTERVAL,
                     const int publishInterval = DEFAULT_PUBLISH_INTERVAL);
 
   float getDistance() const { return _distance; }
+  int getPingTime() const { return _ping_us; }
   PingNode &setTemperature(float temperatureCelcius);
-  PingNode &setMicrosecondsToMetersFactor(float temperatureCelcius) { return setTemperature(temperatureCelcius); };
+  PingNode &setMicrosecondsToMetersFactor(float temperatureCelcius) { return setTemperature(temperatureCelcius); }
   PingNode &setMinimumChange(float minimumChange);
   PingNode &setMinimumDistance(float minimumDistance);
   PingNode &setMaximumDistance(float maximumDistance);
-  PingNode &setMicrosecondsToMeters(float microseconds2meter);
+  PingNode &setMicrosecondsToMeter(float microseconds2meter);
   PingNode &setChangeHandler(const ChangeHandler &changeHandler);
   virtual void send(bool changed);
 };

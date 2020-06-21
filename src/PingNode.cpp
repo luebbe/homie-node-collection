@@ -14,9 +14,9 @@ bool checkBounds(float value, float min, float max)
   return !isnan(value) && value >= min && value <= max;
 }
 
-PingNode::PingNode(const char *name, const int triggerPin, const int echoPin,
+PingNode::PingNode(const char *name, const char *type, const int triggerPin, const int echoPin,
                    const int measurementInterval, const int publishInterval)
-    : SensorNode(name, "RCW-0001"),
+    : SensorNode(name, type),
       _triggerPin(triggerPin), _echoPin(echoPin), _lastMeasurement(0), _lastPublish(0)
 {
   _measurementInterval = (measurementInterval > MIN_INTERVAL) ? measurementInterval : MIN_INTERVAL;
@@ -45,7 +45,7 @@ PingNode::PingNode(const char *name, const int triggerPin, const int echoPin,
 
 void PingNode::printCaption()
 {
-  Homie.getLogger() << cCaption << " triggerpin[" << _triggerPin << "], echopin[" << _echoPin << "]:" << endl;
+  Homie.getLogger() << cCaption << getType() << " sensor triggerpin[" << _triggerPin << "], echopin[" << _echoPin << "]:" << endl;
 }
 
 void PingNode::send(bool changed)
@@ -139,7 +139,7 @@ PingNode &PingNode::setTemperature(float temperatureCelcius)
   return *this;
 }
 
-PingNode &PingNode::setMicrosecondsToMeters(float microseconds2meter)
+PingNode &PingNode::setMicrosecondsToMeter(float microseconds2meter)
 {
   _microseconds2meter = microseconds2meter;
   return *this;
