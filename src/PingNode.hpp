@@ -67,7 +67,6 @@ public:
   float getDistance() const { return _distance; }
   int getPingTime() const { return _ping_us; }
   PingNode &setTemperature(float temperatureCelcius);
-  PingNode &setMicrosecondsToMetersFactor(float temperatureCelcius) { return setTemperature(temperatureCelcius); }
   PingNode &setMinimumChange(float minimumChange);
   PingNode &setMinimumDistance(float minimumDistance);
   PingNode &setMaximumDistance(float maximumDistance);
