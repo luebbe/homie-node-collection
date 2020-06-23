@@ -24,11 +24,11 @@ All sensor nodes publish their unit on the `$unit` subtopic.
 Most sensor nodes publish their format/value range on the `$format` subtopic.
 So if a sensor nodes publishes a temperature, you will see the following subtopics:
 
-- `homie/<device-id>/<node-name>/status`
-- `homie/<device-id>/<node-name>/temperature`
-- `homie/<device-id>/<node-name>/temperature/$datatype`
-- `homie/<device-id>/<node-name>/temperature/$unit`
-- `homie/<device-id>/<node-name>/temperature/$format`
+- `homie/<device-id>/<node-id>/status`
+- `homie/<device-id>/<node-id>/temperature`
+- `homie/<device-id>/<node-id>/temperature/$datatype`
+- `homie/<device-id>/<node-id>/temperature/$unit`
+- `homie/<device-id>/<node-id>/temperature/$format`
 
 ### AdcNode.cpp
 
@@ -47,8 +47,8 @@ It has three settings:
 
 Advertises the values as:
 
-- `homie/<device-id>/<node-name>/voltage`
-- `homie/<device-id>/<node-name>/batterylevel`
+- `homie/<device-id>/<node-id>/voltage`
+- `homie/<device-id>/<node-id>/batterylevel`
 
 ### BME280Node
 
@@ -56,7 +56,7 @@ A node for Bosch BME280 I2C temperature/humidity/pressure sensors. Reports the t
 
 It has one setting:
 
-- _\<node-name>.temperatureOffset_: The temperature offset in degrees.  
+- _\<node-id>.temperatureOffset_: The temperature offset in degrees.  
   Range = \[-10.0°C .. 10.0°C]. Default = 0°C.  
   This is a per node setting, so pay attention that the node names are different.
 
@@ -64,9 +64,9 @@ It has one setting:
 
 Advertises the values as:
 
-- `homie/<device-id>/<node-name>/temperature`
-- `homie/<device-id>/<node-name>/humidity`
-- `homie/<device-id>/<node-name>/pressure`
+- `homie/<device-id>/<node-id>/temperature`
+- `homie/<device-id>/<node-id>/humidity`
+- `homie/<device-id>/<node-id>/pressure`
 
 ### DHT22Node
 
@@ -74,8 +74,8 @@ A node for DHT22 temperature/humidity sensors. Reports the two values back via M
 
 Advertises the values as:
 
-- `homie/<device-id>/<node-name>/temperature`
-- `homie/<device-id>/<node-name>/humidity`
+- `homie/<device-id>/<node-id>/temperature`
+- `homie/<device-id>/<node-id>/humidity`
 
 ### DS18B20Node
 
@@ -83,7 +83,7 @@ A Homie Node for Dallas 18B20 one wire temperature sensors. Reports the temperat
 
 Advertises the value as:
 
-- `homie/<device-id>/<node-name>/temperature`
+- `homie/<device-id>/<node-id>/temperature`
 
 ### PingNode
 
@@ -91,10 +91,10 @@ An ultrasonic sensor that reports the distance to an object based on the echo ti
 
 The following topics are advertised:
 
-- `homie/<device-id>/<node-name>/distance` - the distance between the sensor and the object
-- `homie/<device-id>/<node-name>/ping` - the time between pulse and echo in microseconds
-- `homie/<device-id>/<node-name>/valid` (ok|error) - signals if the measurement was valid
-- `homie/<device-id>/<node-name>/changed` (true|false) - signals if the distance to the object changed significantly (i.e. if the object was moved).
+- `homie/<device-id>/<node-id>/distance` - the distance between the sensor and the object
+- `homie/<device-id>/<node-id>/ping` - the time between pulse and echo in microseconds
+- `homie/<device-id>/<node-id>/valid` (ok|error) - signals if the measurement was valid
+- `homie/<device-id>/<node-id>/changed` (true|false) - signals if the distance to the object changed significantly (i.e. if the object was moved).
 
 The reported distance is calculated from the ping time. This distance depends on the [speed of sound](https://en.wikipedia.org/wiki/Speed_of_sound) and therefore on the temperature. The temperature can be adjusted with the
 `setTemperature(float temperatureCelcius)` method, e.g. in conjuction with a temperature sensor such as the DHT22Node:
@@ -113,8 +113,8 @@ void loopHandler() {
 
 A pushbutton that just detects a single (debounced) button press. An optional callback can be triggered by the button press event. The button press is reported via these topics:
 
-- `homie/<device-id>/<node-name>/down` (true|false) - signals when the button is pressed
-- `homie/<device-id>/<node-name>/duraction` - after the button is pressed and released, it signals the total time that the button was pressed. This is useful to detect a short of long button press.
+- `homie/<device-id>/<node-id>/down` (true|false) - signals when the button is pressed
+- `homie/<device-id>/<node-id>/duraction` - after the button is pressed and released, it signals the total time that the button was pressed. This is useful to detect a short of long button press.
 
 The minimum and maximum button press time in milliseconds can be set with:
 
@@ -131,7 +131,7 @@ A contact that reports its open state (true|false) via MQTT. An optional callbac
 
 Advertises the state as:
 
-- `homie/<device-id>/<node-name>/open` (true|false)
+- `homie/<device-id>/<node-id>/open` (true|false)
 
 ### PulseNode
 
@@ -139,7 +139,7 @@ In some way similar to the contact node only that it reacts on pulses on the sel
 
 Advertises the state as:
 
-- `homie/<device-id>/<node-name>/active` (true|false)
+- `homie/<device-id>/<node-id>/active` (true|false)
 
 In order to use the PulseNode you need an interrupt procedure which is attached to the selected pin. e.G.:
 
@@ -164,7 +164,8 @@ The relay has two different constructors:
 Use the following constructor, if your relay is connected directly to the ESP.
 
 ```cpp
-RelayNode(const char *name,
+RelayNode(const char *id,
+          const char *name,
           const int8_t relayPin = DEFAULTPIN,
           const int8_t ledPin = DEFAULTPIN,
           const bool reverseSignal = false);
@@ -173,8 +174,9 @@ RelayNode(const char *name,
 Use the following constructor, if your relay is not connected directly, e.g. via a port expander. Turning the relay on and off as well as getting the relay state is handled in the callbacks. Timeout and positive/negative logic are handled in the RelayNode.
 
 ```cpp
-RelayNode(const char *name,
-          const uint8_t id,
+RelayNode(const char *id,
+          const char *name,
+          const uint8_t callbackId,
           TGetRelayState OnGetRelayState,
           TSetRelayState OnSetRelayState,
           const bool reverseSignal = false);
@@ -182,7 +184,7 @@ RelayNode(const char *name,
 
 It has one setting:
 
-- _\<node-name\>.maxTimeout_: The maximum time that the relay is turned on.  
+- _\<node-id\>.maxTimeout_: The maximum time that the relay is turned on.  
   Range = \[0s .. max(long)s]. Default = 600 seconds. 0 = no max timeout.  
   This is a per node setting, so pay attention that the node names are different.
 
@@ -190,10 +192,10 @@ This is a per node setting. The name of the setting is constructed from the node
 
 The relay can be controlled by posting to the follwing MQTT topics:
 
-- `homie/<device-id>/<node-name>/on/set` (true|false|toggle)
-- `homie/<device-id>/<node-name>/timeout/set` (positive integer) - turns the relay on for the corresponding number of seconds, limited by _maxTimeout_.
+- `homie/<device-id>/<node-id>/on/set` (true|false|toggle)
+- `homie/<device-id>/<node-id>/timeout/set` (positive integer) - turns the relay on for the corresponding number of seconds, limited by _maxTimeout_.
 
 Advertises the state as:
 
-- `homie/<device-id>/<node-name>/on` (true|false)
-- `homie/<device-id>/<node-name>/timeout/` (positive integer) - counts down the number of seconds until the relay will turn off again.
+- `homie/<device-id>/<node-id>/on` (true|false)
+- `homie/<device-id>/<node-id>/timeout/` (positive integer) - counts down the number of seconds until the relay will turn off again.
