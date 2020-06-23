@@ -28,6 +28,8 @@ PingNode::PingNode(const char *name, const char *type, const int triggerPin, con
     sonar = new NewPing(_triggerPin, _echoPin, _maxDistance * 100.0);
   }
 
+  asprintf(&_caption, cCaption, name, _triggerPin, _echoPin);
+
   advertise(cDistanceTopic)
       .setDatatype("float")
       .setFormat("0:3")
@@ -41,11 +43,6 @@ PingNode::PingNode(const char *name, const char *type, const int triggerPin, con
   advertise(cChangedTopic)
       .setName("Obstacle changed")
       .setDatatype("boolean");
-}
-
-void PingNode::printCaption()
-{
-  Homie.getLogger() << cCaption << getType() << " sensor triggerpin[" << _triggerPin << "], echopin[" << _echoPin << "]:" << endl;
 }
 
 void PingNode::send(bool changed)

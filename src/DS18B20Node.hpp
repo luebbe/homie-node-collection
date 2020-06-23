@@ -22,22 +22,18 @@ class DS18B20Node : public SensorNode
 private:
   const float cMinTemp = -55.0;
   const float cMaxTemp = 125.0;
-  const char *cCaption = "• DS18B20 sensor pin[%d]:";
-  const char *cIndent = "  ◦ ";
+  const char *cCaption = "• DS18B20 %s sensor pin[%d]:";
 
   int _sensorPin = DEFAULTPIN;
   bool _sensorFound = false;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
 
-  char *_caption;
-
   float temperature = NAN;
 
   OneWire *oneWire;
   DallasTemperature *dallasTemp;
 
-  void printCaption();
   void send();
   void sendError();
   void sendData();

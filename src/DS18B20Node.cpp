@@ -21,7 +21,7 @@ DS18B20Node::DS18B20Node(const char *name, const int sensorPin, const int measur
     dallasTemp = new DallasTemperature(oneWire);
   }
 
-  asprintf(&_caption, cCaption, sensorPin);
+  asprintf(&_caption, cCaption, name, sensorPin);
 
   advertise(cStatusTopic)
       .setDatatype("enum")
@@ -30,11 +30,6 @@ DS18B20Node::DS18B20Node(const char *name, const int sensorPin, const int measur
       .setDatatype("float")
       .setFormat("-55:125")
       .setUnit(cUnitDegrees);
-}
-
-void DS18B20Node::printCaption()
-{
-  Homie.getLogger() << _caption << endl;
 }
 
 void DS18B20Node::send()

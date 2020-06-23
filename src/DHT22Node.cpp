@@ -21,7 +21,7 @@ DHT22Node::DHT22Node(const char *name, const int sensorPin, const int measuremen
     dht = new DHT(_sensorPin, DHTTYPE);
   }
 
-  asprintf(&_caption, cCaption, sensorPin);
+  asprintf(&_caption, cCaption, name, sensorPin);
 
   advertise(cStatusTopic)
       .setDatatype("enum")
@@ -37,11 +37,6 @@ DHT22Node::DHT22Node(const char *name, const int sensorPin, const int measuremen
   advertise(cAbsHumidityTopic)
       .setDatatype("float")
       .setUnit(cUnitMgm3);
-}
-
-void DHT22Node::printCaption()
-{
-  Homie.getLogger() << _caption << endl;
 }
 
 void DHT22Node::send()

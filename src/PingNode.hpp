@@ -22,8 +22,7 @@ public:
 
 private:
   static const int MIN_INTERVAL = 1; // in seconds
-  const char *cCaption = "• ";
-  const char *cIndent = "  ◦ ";
+  const char *cCaption = "• %s sensor triggerpin[%d], echopin[%d]:";
 
   int _triggerPin;
   int _echoPin;
@@ -46,7 +45,6 @@ private:
 
   float getRawEchoTime();
   bool signalChange(float distance, float lastDistance);
-  void printCaption();
 
 protected:
   virtual void setup() override;
@@ -58,7 +56,7 @@ protected:
 
 public:
   explicit PingNode(const char *name,
-                    const char *type="RCW-0001",
+                    const char *type = "RCW-0001",
                     const int triggerPin = DEFAULTPIN,
                     const int echoPin = DEFAULTPIN,
                     const int measurementInterval = DEFAULT_MEASUREMENT_INTERVAL,

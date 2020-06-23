@@ -9,8 +9,8 @@
 
 #include "SensorNode.hpp"
 
-SensorNode::SensorNode(const char *name, const char *type)
-    : HomieNode(name, type, "sensor")
+SensorNode::SensorNode(const char *id, const char *name)
+    : HomieNode(id, name, "sensor")
 {
 }
 
@@ -46,3 +46,10 @@ void SensorNode::fixRange(float *value, float min, float max)
     *value = max;
   };
 }
+
+void SensorNode::printCaption()
+{
+  Homie.getLogger() << _caption << endl;
+}
+
+

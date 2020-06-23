@@ -21,21 +21,17 @@ class DHT22Node : public SensorNode
 private:
   const float cMinTemp = -40.0;
   const float cMaxTemp = 125.0;
-  const char *cCaption = "• DHT22 sensor pin[%d]:";
-  const char *cIndent = "  ◦ ";
+  const char *cCaption = "• DHT22 %s sensor pin[%d]:";
 
   int _sensorPin;
   unsigned long _measurementInterval;
   unsigned long _lastMeasurement;
-
-  char *_caption;
 
   float temperature = NAN;
   float humidity = NAN;
 
   DHT *dht = NULL;
 
-  void printCaption();
   void send();
 
 protected:

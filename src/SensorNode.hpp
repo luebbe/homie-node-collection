@@ -14,13 +14,17 @@
 class SensorNode : public HomieNode
 {
 protected:
+  const char *cIndent = "  ◦ ";
   const float cMinHumid = 0.0;
   const float cMaxHumid = 100.0;
   static const int MEASUREMENT_INTERVAL = 300;
 
+  char *_caption;
+
   float computeAbsoluteHumidity(float temperature, float percentHumidity);
   void fixRange(float *value, float min, float max);
+  virtual void printCaption();
 
 public:
-  explicit SensorNode(const char *name, const char *type);
+  explicit SensorNode(const char *id, const char *name);
 };

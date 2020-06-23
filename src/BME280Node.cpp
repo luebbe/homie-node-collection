@@ -52,11 +52,6 @@ BME280Node::BME280Node(const char *name,
       .setUnit(cUnitMgm3);
 }
 
-void BME280Node::printCaption()
-{
-  Homie.getLogger() << _caption << endl;
-}
-
 void BME280Node::send()
 {
   printCaption();
