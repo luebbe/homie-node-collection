@@ -8,15 +8,15 @@
 
 #include "ContactNode.hpp"
 
-ContactNode::ContactNode(const char *name,
+ContactNode::ContactNode(const char *id,
+                         const char *name,
                          const int contactPin,
                          TContactCallback contactCallback)
-    : SensorNode(name, "ContactNode"),
+    : SensorNode(id, name, "Contact"),
       _contactPin(contactPin),
       _contactCallback(contactCallback)
 {
-    asprintf(&_caption, cCaption, name, contactPin);
-
+  asprintf(&_caption, cCaption, name, contactPin);
 }
 
 int ContactNode::getContactPin()
@@ -99,7 +99,6 @@ void ContactNode::setup()
   advertise("open");
 
   printCaption();
-  Homie.getLogger() << cIndent << "Pin: " << _contactPin << endl;
 
   if (_contactPin > DEFAULTPIN)
   {

@@ -10,14 +10,15 @@
 #include "BME280Node.hpp"
 #include <Homie.h>
 
-BME280Node::BME280Node(const char *name,
+BME280Node::BME280Node(const char *id,
+                       const char *name,
                        const int i2cAddress,
                        const int measurementInterval,
                        const Adafruit_BME280::sensor_sampling tempSampling,
                        const Adafruit_BME280::sensor_sampling pressSampling,
                        const Adafruit_BME280::sensor_sampling humSampling,
                        const Adafruit_BME280::sensor_filter filter)
-    : SensorNode(name, "BME280"),
+    : SensorNode(id, name, "BME280"),
       _i2cAddress(i2cAddress),
       _lastMeasurement(0),
       _tempSampling(tempSampling),

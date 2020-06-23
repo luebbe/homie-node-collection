@@ -8,7 +8,7 @@
 void ICACHE_RAM_ATTR onOptoCouplerPulse();
 
 #define PIN_OPTOCOUPLER 5
-PulseNode pulseNode("pulse", PIN_OPTOCOUPLER);
+PulseNode pulseNode("pulse", "Door bell", PIN_OPTOCOUPLER);
 
 void ICACHE_RAM_ATTR onOptoCouplerPulse()
 {

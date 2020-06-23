@@ -8,11 +8,12 @@
 
 #include "PulseNode.hpp"
 
-PulseNode::PulseNode(const char *name,
+PulseNode::PulseNode(const char *id,
+                     const char *name,
                      const uint8_t pulsePin,
                      //  void (*)(void) interruptCallback,
                      TStateChangeCallback stateChangeCallback)
-    : SensorNode(name, "PulseNode")
+    : SensorNode(id, name, "Pulse")
 {
   _pulsePin = pulsePin;
   _stateChangeCallback = stateChangeCallback;

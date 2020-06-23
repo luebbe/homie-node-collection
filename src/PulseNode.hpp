@@ -21,7 +21,7 @@ public:
   // typedef std::function<void (*)(void)> TInterruptCallback;
 
 private:
-  const char *cCaption = "• Pulse %s pin[%s]:";
+  const char *cCaption = "• %s pulse pin[%d]:";
 
   TStateChangeCallback _stateChangeCallback;
   uint8_t _pulsePin;
@@ -40,7 +40,9 @@ protected:
   virtual void setup() override;
 
 public:
-  explicit PulseNode(const char *name, const uint8_t pulsePin = DEFAULTPIN,
+  explicit PulseNode(const char *id,
+                     const char *name,
+                     const uint8_t pulsePin = DEFAULTPIN,
                      // void (*)(void) interruptCallback,
                      TStateChangeCallback stateChangeCallback = NULL);
   void onChange(TStateChangeCallback stateChangeCallback);

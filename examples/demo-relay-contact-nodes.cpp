@@ -20,28 +20,28 @@ bool OnGetRelayState(int8_t id);
 void OnSetRelayState(int8_t id, bool on);
 
 // Normal relay, hardwired to a GPIO pin
-RelayNode relayPin("relay", PIN_RELAY, PIN_LED);
+RelayNode relay1("relay1", "RelayDirect",  PIN_RELAY, PIN_LED);
 
 // Relay with callback. It could be connected to a port expander and its state is not known inside the relay node.
-RelayNode relayCallback("relayCallback", 1, OnGetRelayState, OnSetRelayState);
+RelayNode relay2("relay2", "RelayCallback", 1, OnGetRelayState, OnSetRelayState);
 
 // Initialize contact node without callback
-ContactNode contactNode("contact", PIN_CONTACT);
+ContactNode contactNode("window", "Window", PIN_CONTACT);
 
 // Initialize button node with callback to button press
-ButtonNode buttonNode("button", PIN_BUTTON, []() {
-  relayPin.toggleRelay();
+ButtonNode buttonNode("doorbell", "Doorbell", PIN_BUTTON, []() {
+  relay1.toggleRelay();
 });
 
 bool OnGetRelayState(int8_t id)
 {
-  Homie.getLogger() << "OnGetRelayState: " << id << "=" << relayState << endl;
+  Homie.getLogger() << "OnGetRelayState Id[" << id << "]=" << relayState << endl;
   return relayState;
 }
 void OnSetRelayState(int8_t id, bool on)
 {
   relayState = on;
-  Homie.getLogger() << "OnSetRelayState: " << id << "=" << relayState << endl;
+  Homie.getLogger() << "OnSetRelayState Id[" << id << "]=" << relayState << endl;
 }
 
 void setup()
@@ -55,12 +55,12 @@ void setup()
   // Set callback for contact node here, just to show alternative
   contactNode.onChange([](bool open) {
     // Pass 0 in timeout for infinite "on"
-    relayPin.setRelay(open, 0);
+    relay1.setRelay(open, 0);
   });
 
   // Set default configuration values before Homie.setup()
-  relayPin.beforeHomieSetup();
-  relayCallback.beforeHomieSetup();
+  relay1.beforeHomieSetup();
+  relay2.beforeHomieSetup();
 
   Homie.disableLedFeedback();
   Homie.disableResetTrigger();

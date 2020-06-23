@@ -19,7 +19,7 @@ public:
   typedef std::function<void(bool)> TContactCallback;
 
 private:
-  const char *cCaption = "• Contact %s pin[%d]:";
+  const char *cCaption = "• %s contact pin[%d]:";
 
   int _contactPin;
   TContactCallback _contactCallback;
@@ -41,6 +41,6 @@ protected:
   virtual byte readPin();
 
 public:
-  explicit ContactNode(const char *name, const int contactPin = DEFAULTPIN, TContactCallback contactCallback = NULL);
+  explicit ContactNode(const char *id, const char *name, const int contactPin = DEFAULTPIN, TContactCallback contactCallback = NULL);
   void onChange(TContactCallback contactCallback);
 };

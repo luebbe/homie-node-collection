@@ -8,27 +8,27 @@
 
 #include "RelayNode.hpp"
 
-RelayNode::RelayNode(const char *name, const int8_t relayPin, const int8_t ledPin, const bool reverseSignal)
-    : HomieNode(name, "RelayNode", "actor"),
-      _id(0),
+RelayNode::RelayNode(const char *id, const char *name, const int8_t relayPin, const int8_t ledPin, const bool reverseSignal)
+    : HomieNode(id, name, "Relay"),
+      _callbackId(0),
       _relayPin(relayPin),
       _ledPin(ledPin),
       _onGetRelayState(NULL),
       _onSetRelayState(NULL)
 {
-  asprintf(&_caption, "• %s Pin[%d]:", name, relayPin);
+  asprintf(&_caption, "• %s relay pin[%d]:", name, relayPin);
   commonInit(name, reverseSignal);
 }
 
-RelayNode::RelayNode(const char *name, const uint8_t id, TGetRelayState OnGetRelayState, TSetRelayState OnSetRelayState, const bool reverseSignal)
-    : HomieNode(name, "RelayNode", "actor"),
-      _id(id),
+RelayNode::RelayNode(const char *id, const char *name, const uint8_t callbackId, TGetRelayState OnGetRelayState, TSetRelayState OnSetRelayState, const bool reverseSignal)
+    : HomieNode(id, name, "Relay"),
+      _callbackId(callbackId),
       _relayPin(DEFAULTPIN),
       _ledPin(DEFAULTPIN),
       _onGetRelayState(OnGetRelayState),
       _onSetRelayState(OnSetRelayState)
 {
-  asprintf(&_caption, "• %s Id[%d]:", name, id);
+  asprintf(&_caption, "• %s relay id[%d]:", name, callbackId);
   commonInit(name, reverseSignal);
 }
 
@@ -152,7 +152,7 @@ bool RelayNode::getRelay()
 {
   if (_onGetRelayState != NULL)
   {
-    return _onGetRelayState(_id) == _relayOnValue;
+    return _onGetRelayState(_callbackId) == _relayOnValue;
   }
   else if (_relayPin > DEFAULTPIN)
   {
@@ -168,7 +168,7 @@ void RelayNode::setRelay(bool on, long timeoutSecs)
 {
   if (_onSetRelayState != NULL)
   {
-    _onSetRelayState(_id, on ? _relayOnValue : _relayOffValue);
+    _onSetRelayState(_callbackId, on ? _relayOnValue : _relayOffValue);
     setTimeout(on, timeoutSecs);
     sendState();
   }

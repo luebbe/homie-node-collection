@@ -22,7 +22,7 @@ class DS18B20Node : public SensorNode
 private:
   const float cMinTemp = -55.0;
   const float cMaxTemp = 125.0;
-  const char *cCaption = "• DS18B20 %s sensor pin[%d]:";
+  const char *cCaption = "• %s DS18B20 pin[%d]:";
 
   int _sensorPin = DEFAULTPIN;
   bool _sensorFound = false;
@@ -44,7 +44,8 @@ protected:
   virtual void onReadyToOperate() override;
 
 public:
-  explicit DS18B20Node(const char *name,
+  explicit DS18B20Node(const char *id,
+                       const char *name,
                        const int sensorPin = DEFAULTPIN,
                        const int measurementInterval = MEASUREMENT_INTERVAL);
 

@@ -26,7 +26,7 @@ private:
   const float cMaxPress = 1100.0;
   // suggested rate is 1/60Hz (1m)
   static const int MIN_INTERVAL = 60; // in seconds
-  const char *cCaption = "• BME280 %s sensor i2c[0x%2x]:";
+  const char *cCaption = "• %s BME280 i2c[0x%2x]:";
 
   bool _sensorFound = false;
 
@@ -57,7 +57,8 @@ protected:
   virtual void onReadyToOperate() override;
 
 public:
-  explicit BME280Node(const char *name,
+  explicit BME280Node(const char *id,
+                      const char *name,
                       const int i2cAddress = 0x77,
                       const int measurementInterval = MEASUREMENT_INTERVAL,
                       Adafruit_BME280::sensor_sampling tempSampling = Adafruit_BME280::SAMPLING_X1,

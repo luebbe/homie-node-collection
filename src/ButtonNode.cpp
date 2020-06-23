@@ -8,11 +8,12 @@
 
 #include "ButtonNode.hpp"
 
-ButtonNode::ButtonNode(const char *name,
+ButtonNode::ButtonNode(const char *id,
+const char *name,
                        const int buttonPin,
                        TButtonPressCallback buttonPressCallback,
                        TButtonChangeCallback buttonChangeCallback)
-    : SensorNode(name, "ButtonNode"),
+    : SensorNode(id, name, "Button"),
       _buttonPin(buttonPin),
       _buttonPressCallback(buttonPressCallback),
       _buttonChangeCallback(buttonChangeCallback)
@@ -128,7 +129,6 @@ void ButtonNode::setup()
   advertise("duration").setDatatype("integer").setUnit("ms");
 
   printCaption();
-  Homie.getLogger() << cIndent << "Pin: " << _buttonPin << endl;
 
   if (_buttonPin > DEFAULTPIN)
   {

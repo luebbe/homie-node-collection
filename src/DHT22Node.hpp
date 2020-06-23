@@ -21,7 +21,7 @@ class DHT22Node : public SensorNode
 private:
   const float cMinTemp = -40.0;
   const float cMaxTemp = 125.0;
-  const char *cCaption = "• DHT22 %s sensor pin[%d]:";
+  const char *cCaption = "• %s DHT22 pin[%d]:";
 
   int _sensorPin;
   unsigned long _measurementInterval;
@@ -39,7 +39,8 @@ protected:
   virtual void loop() override;
 
 public:
-  explicit DHT22Node(const char *name,
+  explicit DHT22Node(const char *id,
+                     const char *name,
                      const int sensorPin = DEFAULTPIN,
                      const int measurementInterval = MEASUREMENT_INTERVAL);
 

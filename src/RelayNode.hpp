@@ -21,8 +21,7 @@ public:
 private:
   const char *cIndent = "  ◦ ";
 
-  int8_t _id;
-
+  int8_t _callbackId;
   int8_t _relayPin;
   int8_t _ledPin;
 
@@ -60,13 +59,15 @@ protected:
 
 public:
   // Use this constructor, if your relay is connected directly to the ESP
-  explicit RelayNode(const char *name,
+  explicit RelayNode(const char *id,
+                     const char *name,
                      const int8_t relayPin = DEFAULTPIN,
                      const int8_t ledPin = DEFAULTPIN,
                      const bool reverseSignal = false);
   // Use this constructor, if your relay is not connected directly, e.g. via a port expander
-  explicit RelayNode(const char *name,
-                     const uint8_t id,
+  explicit RelayNode(const char *id,
+                     const char *name,
+                     const uint8_t callbackId,
                      TGetRelayState OnGetRelayState,
                      TSetRelayState OnSetRelayState,
                      const bool reverseSignal = false);

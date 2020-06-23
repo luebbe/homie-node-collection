@@ -20,10 +20,10 @@ const int I2C_BME280_ADDRESS = 0x77; // Default I2C address for BME280. can be c
 ADC_MODE(ADC_VCC); // Set ADC to measure internal VCC
 
 // Create one node of each kind
-BME280Node bme280Node("bme280", I2C_BME280_ADDRESS);
-DHT22Node dht22Node("dht22", PIN_DHT);
-DS18B20Node ds18b20Node("ds18b20", PIN_DS18);
-AdcNode adcNode("internal");
+BME280Node bme280Node("bme280", "Outdoor", I2C_BME280_ADDRESS);
+DHT22Node dht22Node("dht22", "Indoor", PIN_DHT);
+DS18B20Node ds18b20Node("ds18b20", "Fishtank", PIN_DS18);
+AdcNode adcNode("adc", "Internal");
 
 void setup()
 {

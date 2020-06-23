@@ -20,7 +20,7 @@ private:
   // Send ADC every 5 minutes
   static const int SEND_INTERVAL_MILLISECONDS = 300 * 1000;
 
-  const char *cCaption = "• ADC %s measurement:";
+  const char *cCaption = "• %s ADC:";
   const float cVoltMax = 3.3; // = 100% battery
   const float cVoltMin = 2.6; // =   0% battery
 
@@ -46,7 +46,9 @@ protected:
   virtual void onReadyToOperate() override;
 
 public:
-  explicit AdcNode(const char *name, const int sendInterval = SEND_INTERVAL_MILLISECONDS);
+  explicit AdcNode(const char *id,
+                   const char *name,
+                   const int sendInterval = SEND_INTERVAL_MILLISECONDS);
 
   float getBatteryLevel() const { return _batteryLevel; }
   float getVoltage() const { return _voltage; }

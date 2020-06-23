@@ -9,8 +9,8 @@
 
 #include "SensorNode.hpp"
 
-SensorNode::SensorNode(const char *id, const char *name)
-    : HomieNode(id, name, "sensor")
+SensorNode::SensorNode(const char *id, const char *name, const char *type)
+    : HomieNode(id, name, type)
 {
 }
 

@@ -14,9 +14,9 @@ bool checkBounds(float value, float min, float max)
   return !isnan(value) && value >= min && value <= max;
 }
 
-PingNode::PingNode(const char *name, const char *type, const int triggerPin, const int echoPin,
+PingNode::PingNode(const char *id, const char *name, const char *type, const int triggerPin, const int echoPin,
                    const int measurementInterval, const int publishInterval)
-    : SensorNode(name, type),
+    : SensorNode(id, name, type),
       _triggerPin(triggerPin), _echoPin(echoPin), _lastMeasurement(0), _lastPublish(0)
 {
   _measurementInterval = (measurementInterval > MIN_INTERVAL) ? measurementInterval : MIN_INTERVAL;
@@ -28,7 +28,7 @@ PingNode::PingNode(const char *name, const char *type, const int triggerPin, con
     sonar = new NewPing(_triggerPin, _echoPin, _maxDistance * 100.0);
   }
 
-  asprintf(&_caption, cCaption, name, _triggerPin, _echoPin);
+  asprintf(&_caption, cCaption, name, type, _triggerPin, _echoPin);
 
   advertise(cDistanceTopic)
       .setDatatype("float")

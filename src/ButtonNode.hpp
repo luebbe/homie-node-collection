@@ -18,9 +18,8 @@ public:
   typedef std::function<void(void)> TButtonPressCallback;
   typedef std::function<void(bool)> TButtonChangeCallback;
 
-
 private:
-  const char *cCaption = "• Button %s pin[%d]:";
+  const char *cCaption = "• %s button pin[%d]:";
 
   int _buttonPin;
   TButtonPressCallback _buttonPressCallback;
@@ -32,17 +31,21 @@ private:
   unsigned long _buttonDownTime = 0;
   unsigned long _minButtonDownTime = 90;
   unsigned long _maxButtonDownTime = 2000;
-  unsigned long _lastDebounceTime = 0;  // the last time the button pin was toggled
+  unsigned long _lastDebounceTime = 0; // the last time the button pin was toggled
 
   void handleButtonPress(unsigned long dt);
-  void handleButtonChange(bool down);  
+  void handleButtonChange(bool down);
 
 protected:
   virtual void loop() override;
   virtual void setup() override;
 
 public:
-  explicit ButtonNode(const char *name, const int buttonPin = DEFAULTPIN, TButtonPressCallback buttonPressedCallback = NULL,  TButtonChangeCallback buttonChangedCallback = NULL);
+  explicit ButtonNode(const char *id,
+                      const char *name,
+                      const int buttonPin = DEFAULTPIN,
+                      TButtonPressCallback buttonPressedCallback = NULL,
+                      TButtonChangeCallback buttonChangedCallback = NULL);
   void onPress(TButtonPressCallback buttonCallback);
   void onChange(TButtonChangeCallback buttonCallback);
   void setMinButtonDownTime(unsigned short downTime);

@@ -26,5 +26,5 @@ protected:
   virtual void printCaption();
 
 public:
-  explicit SensorNode(const char *id, const char *name);
+  explicit SensorNode(const char *id, const char *name, const char *type);
 };

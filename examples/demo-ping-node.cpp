@@ -18,8 +18,8 @@ unsigned long TEMPERATURE_INTERVAL = 120; // seconds
 unsigned long lastTemperatureUpdate = 0;
 
 // Create one node of each kind
-PingNode obstacleNode("obstacle", "RCW-0001", trigPin, echoPin);
-DHT22Node airNode("air", dhtPin, TEMPERATURE_INTERVAL);
+PingNode obstacleNode("obstacle", "Obstacle", "RCW-0001", trigPin, echoPin);
+DHT22Node airNode("air", "Air", dhtPin, TEMPERATURE_INTERVAL);
 
 void loopHandler()
 {

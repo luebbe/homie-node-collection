@@ -10,8 +10,8 @@
 
 #define DHTTYPE DHT22
 
-DHT22Node::DHT22Node(const char *name, const int sensorPin, const int measurementInterval)
-    : SensorNode(name, "DHT22"),
+DHT22Node::DHT22Node(const char *id, const char *name, const int sensorPin, const int measurementInterval)
+    : SensorNode(id, name, "DHT22"),
       _sensorPin(sensorPin),
       _measurementInterval(measurementInterval),
       _lastMeasurement(0)

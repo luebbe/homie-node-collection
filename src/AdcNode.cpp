@@ -13,8 +13,8 @@
 // Measuring the voltage with a ditital multi meter yields a denominator <> 1024.0f.
 // Correction factor for NodeMCU = 1.0611. Pass this value in the settings.
 
-AdcNode::AdcNode(const char *name, const int sendInterval)
-    : SensorNode(name, "AD Converter")
+AdcNode::AdcNode(const char *id, const char *name, const int sendInterval)
+    : SensorNode(id, name, "ADC")
 {
   _adcCorrection = new HomieSetting<double>("adcCorrect", "Correction factor for AD converter.  [0.5 .. 1.5] Default = 1");
   _adcBattMin = new HomieSetting<double>("battMin", "Measured voltage that corresponds to 0% battery level.  [2.5V .. 4.0V] Default = 2.6V. Must be less than battMax");

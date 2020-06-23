@@ -9,8 +9,8 @@
 
 #include "DS18B20Node.hpp"
 
-DS18B20Node::DS18B20Node(const char *name, const int sensorPin, const int measurementInterval)
-    : SensorNode(name, "DS18N20"),
+DS18B20Node::DS18B20Node(const char *id, const char *name, const int sensorPin, const int measurementInterval)
+    : SensorNode(id, name, "DS18B20"),
       _sensorPin(sensorPin),
       _measurementInterval(measurementInterval),
       _lastMeasurement(0)

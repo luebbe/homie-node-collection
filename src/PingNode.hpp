@@ -22,7 +22,7 @@ public:
 
 private:
   static const int MIN_INTERVAL = 1; // in seconds
-  const char *cCaption = "• %s sensor triggerpin[%d], echopin[%d]:";
+  const char *cCaption = "• %s %s triggerpin[%d], echopin[%d]:";
 
   int _triggerPin;
   int _echoPin;
@@ -55,7 +55,8 @@ protected:
   static const int DEFAULT_PUBLISH_INTERVAL = 5;
 
 public:
-  explicit PingNode(const char *name,
+  explicit PingNode(const char *id,
+                    const char *name,
                     const char *type = "RCW-0001",
                     const int triggerPin = DEFAULTPIN,
                     const int echoPin = DEFAULTPIN,
