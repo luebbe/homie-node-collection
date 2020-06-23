@@ -17,11 +17,13 @@ const int PIN_DS18 = 16; // =D0 on Wemos
 
 const int I2C_BME280_ADDRESS = 0x77; // Default I2C address for BME280. can be changed to 0x76 by changing a solder bridge
 
+ADC_MODE(ADC_VCC); // Set ADC to measure internal VCC
+
 // Create one node of each kind
 BME280Node bme280Node("bme280", I2C_BME280_ADDRESS);
 DHT22Node dht22Node("dht22", PIN_DHT);
 DS18B20Node ds18b20Node("ds18b20", PIN_DS18);
-AdcNode adcNode("adc");
+AdcNode adcNode("internal");
 
 void setup()
 {

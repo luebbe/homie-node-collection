@@ -9,14 +9,12 @@
 #include "AdcNode.hpp"
 #include <Homie.hpp>
 
-ADC_MODE(ADC_VCC);
-
 // The voltage reported on a NodeMcu is relatively small. On an ESP12S the value is ok
 // Measuring the voltage with a ditital multi meter yields a denominator <> 1024.0f.
 // Correction factor for NodeMCU = 1.0611. Pass this value in the settings.
 
 AdcNode::AdcNode(const char *name, const int sendInterval)
-    : HomieNode(name, "AD Converter", "sensor")
+    : SensorNode(name, "AD Converter")
 {
   _adcCorrection = new HomieSetting<double>("adcCorrect", "Correction factor for AD converter.  [0.5 .. 1.5] Default = 1");
   _adcBattMin = new HomieSetting<double>("battMin", "Measured voltage that corresponds to 0% battery level.  [2.5V .. 4.0V] Default = 2.6V. Must be less than battMax");
@@ -25,6 +23,8 @@ AdcNode::AdcNode(const char *name, const int sendInterval)
   _lastReadTime = millis() - READ_INTERVAL_MILLISECONDS - 1;
   _lastSendTime = millis() - sendInterval - 1;
   _sendInterval = sendInterval;
+
+  asprintf(&_caption, cCaption, name);
 
   advertise(cStatusTopic)
       .setDatatype("enum")
@@ -37,11 +37,6 @@ AdcNode::AdcNode(const char *name, const int sendInterval)
       .setDatatype("float")
       .setFormat("0:100")
       .setUnit(cUnitPercent);
-}
-
-void AdcNode::printCaption()
-{
-  Homie.getLogger() << cCaption << endl;
 }
 
 void AdcNode::readVoltage()

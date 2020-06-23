@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <HomieNode.hpp>
+#include "SensorNode.hpp"
 #include "constants.hpp"
 
-class AdcNode : public HomieNode
+class AdcNode : public SensorNode
 {
 private:
   // Read ADC every 10 seconds to have the current value available
@@ -20,7 +20,7 @@ private:
   // Send ADC every 5 minutes
   static const int SEND_INTERVAL_MILLISECONDS = 300 * 1000;
 
-  const char *cCaption = "• ADC measurement:";
+  const char *cCaption = "• ADC %s measurement:";
   const char *cIndent = "  ◦ ";
   const float cVoltMax = 3.3; // = 100% battery
   const float cVoltMin = 2.6; // =   0% battery
@@ -36,7 +36,6 @@ private:
   float _batteryLevel = NAN;
   float _voltage = NAN;
 
-  void printCaption();
   void readVoltage();
   void send();
   void sendError();
