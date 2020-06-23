@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include <Homie.hpp>
+#include "SensorNode.hpp"
 
 #define DEFAULTPIN -1
 
-class ButtonNode : public HomieNode
+class ButtonNode : public SensorNode
 {
 public:
   typedef std::function<void(void)> TButtonPressCallback;
@@ -20,8 +20,7 @@ public:
 
 
 private:
-  const char *cCaption = "• Button:";
-  const char *cIndent = "  ◦ ";
+  const char *cCaption = "• Button %s pin[%d]:";
 
   int _buttonPin;
   TButtonPressCallback _buttonPressCallback;
@@ -37,7 +36,6 @@ private:
 
   void handleButtonPress(unsigned long dt);
   void handleButtonChange(bool down);  
-  void printCaption();
 
 protected:
   virtual void loop() override;

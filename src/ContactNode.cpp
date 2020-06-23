@@ -11,10 +11,12 @@
 ContactNode::ContactNode(const char *name,
                          const int contactPin,
                          TContactCallback contactCallback)
-    : HomieNode(name, "ContactNode", "sensor"),
+    : SensorNode(name, "ContactNode"),
       _contactPin(contactPin),
       _contactCallback(contactCallback)
 {
+    asprintf(&_caption, cCaption, name, contactPin);
+
 }
 
 int ContactNode::getContactPin()
@@ -73,11 +75,6 @@ void ContactNode::handleStateChange(bool open)
 void ContactNode::onChange(TContactCallback contactCallback)
 {
   _contactCallback = contactCallback;
-}
-
-void ContactNode::printCaption()
-{
-  Homie.getLogger() << cCaption << endl;
 }
 
 void ContactNode::loop()

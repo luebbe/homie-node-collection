@@ -12,11 +12,12 @@ ButtonNode::ButtonNode(const char *name,
                        const int buttonPin,
                        TButtonPressCallback buttonPressCallback,
                        TButtonChangeCallback buttonChangeCallback)
-    : HomieNode(name, "ButtonNode", "sensor"),
+    : SensorNode(name, "ButtonNode"),
       _buttonPin(buttonPin),
       _buttonPressCallback(buttonPressCallback),
       _buttonChangeCallback(buttonChangeCallback)
 {
+  asprintf(&_caption, cCaption, name, buttonPin);
 }
 
 void ButtonNode::handleButtonPress(unsigned long dt)
@@ -69,11 +70,6 @@ void ButtonNode::setMinButtonDownTime(unsigned short downTime)
 void ButtonNode::setMaxButtonDownTime(unsigned short downTime)
 {
   _maxButtonDownTime = downTime;
-}
-
-void ButtonNode::printCaption()
-{
-  Homie.getLogger() << cCaption << endl;
 }
 
 void ButtonNode::loop()

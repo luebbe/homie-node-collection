@@ -12,10 +12,13 @@ PulseNode::PulseNode(const char *name,
                      const uint8_t pulsePin,
                      //  void (*)(void) interruptCallback,
                      TStateChangeCallback stateChangeCallback)
-    : HomieNode(name, "PulseNode", "sensor")
+    : SensorNode(name, "PulseNode")
 {
   _pulsePin = pulsePin;
   _stateChangeCallback = stateChangeCallback;
+
+  asprintf(&_caption, cCaption, name, pulsePin);
+
   advertise("active")
       .setDatatype("boolean");
 }
@@ -66,11 +69,6 @@ void PulseNode::handleStateChange(bool active)
 void PulseNode::onChange(TStateChangeCallback stateChangeCallback)
 {
   _stateChangeCallback = stateChangeCallback;
-}
-
-void PulseNode::printCaption()
-{
-  Homie.getLogger() << cCaption << endl;
 }
 
 void PulseNode::pulseDetected()

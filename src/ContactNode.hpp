@@ -8,22 +8,22 @@
 
 #pragma once
 
-#include <Homie.hpp>
+#include "SensorNode.hpp"
 
 #define DEFAULTPIN -1
 #define DEBOUNCE_TIME 200
 
-class ContactNode : public HomieNode
+class ContactNode : public SensorNode
 {
 public:
   typedef std::function<void(bool)> TContactCallback;
 
 private:
-  const char *cCaption = "• Contact:";
-  const char *cIndent = "  ◦ ";
+  const char *cCaption = "• Contact %s pin[%d]:";
 
-  TContactCallback _contactCallback;
   int _contactPin;
+  TContactCallback _contactCallback;
+
   // Use invalid values for last states to force sending initial state...
   int _lastInputState = -1; // Input pin state.
   int _lastSentState = -1;  // Last pin state sent
@@ -32,7 +32,6 @@ private:
 
   bool debouncePin(void);
   void handleStateChange(bool open);
-  void printCaption();
 
 protected:
   int getContactPin();

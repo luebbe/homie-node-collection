@@ -8,21 +8,20 @@
 
 #pragma once
 
-#include <Homie.hpp>
+#include "SensorNode.hpp"
 
 #define DEFAULTPIN -1
 #define DEBOUNCE_TIME 50
 #define RESET_TIME 200
 
-class PulseNode : public HomieNode
+class PulseNode : public SensorNode
 {
 public:
   typedef std::function<void(bool)> TStateChangeCallback;
   // typedef std::function<void (*)(void)> TInterruptCallback;
 
 private:
-  const char *cCaption = "• Pulse:";
-  const char *cIndent = "  ◦ ";
+  const char *cCaption = "• Pulse %s pin[%s]:";
 
   TStateChangeCallback _stateChangeCallback;
   uint8_t _pulsePin;
@@ -35,7 +34,6 @@ private:
 
   bool debouncePulse(void);
   void handleStateChange(bool open);
-  void printCaption();
 
 protected:
   virtual void loop() override;

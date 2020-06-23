@@ -21,7 +21,6 @@ private:
   static const int SEND_INTERVAL_MILLISECONDS = 300 * 1000;
 
   const char *cCaption = "• ADC %s measurement:";
-  const char *cIndent = "  ◦ ";
   const float cVoltMax = 3.3; // = 100% battery
   const float cVoltMin = 2.6; // =   0% battery
 
