@@ -19,7 +19,7 @@ protected:
   const float cMaxHumid = 100.0;
   static const int MEASUREMENT_INTERVAL = 300;
 
-  char *_caption;
+  char *_caption{};
 
   float computeAbsoluteHumidity(float temperature, float percentHumidity);
   void fixRange(float *value, float min, float max);
