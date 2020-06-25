@@ -28,7 +28,7 @@ BME280Node::BME280Node(const char *id,
 {
   _measurementInterval = (measurementInterval > MIN_INTERVAL) ? measurementInterval : MIN_INTERVAL;
 
-  asprintf(&_temperatureOffsetName, "%s.temperatureOffset", name);
+  asprintf(&_temperatureOffsetName, "%s.temperatureOffset", id);
   _temperatureOffset = new HomieSetting<double>(_temperatureOffsetName, "The temperature offset in degrees [-10.0 .. 10.0] Default = 0");
 
   asprintf(&_caption, cCaption, name, i2cAddress);
