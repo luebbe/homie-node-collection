@@ -17,7 +17,7 @@ RelayNode::RelayNode(const char *id, const char *name, const int8_t relayPin, co
       _onSetRelayState(NULL)
 {
   asprintf(&_caption, "• %s relay pin[%d]:", name, relayPin);
-  commonInit(name, reverseSignal);
+  commonInit(id, reverseSignal);
 }
 
 RelayNode::RelayNode(const char *id, const char *name, const uint8_t callbackId, TGetRelayState OnGetRelayState, TSetRelayState OnSetRelayState, const bool reverseSignal)
@@ -29,10 +29,10 @@ RelayNode::RelayNode(const char *id, const char *name, const uint8_t callbackId,
       _onSetRelayState(OnSetRelayState)
 {
   asprintf(&_caption, "• %s relay id[%d]:", name, callbackId);
-  commonInit(name, reverseSignal);
+  commonInit(id, reverseSignal);
 }
 
-void RelayNode::commonInit(const char *name, bool reverseSignal)
+void RelayNode::commonInit(const char *id, bool reverseSignal)
 {
   if (reverseSignal)
   {
@@ -45,7 +45,7 @@ void RelayNode::commonInit(const char *name, bool reverseSignal)
     _relayOffValue = LOW;
   }
 
-  asprintf(&_maxTimeoutName, "%s.maxTimeout", name);
+  asprintf(&_maxTimeoutName, "%s.maxTimeout", id);
   _maxTimeout = new HomieSetting<long>(_maxTimeoutName, "The maximum timeout for the relay in seconds [0 .. Max(long)] Default = 600 (10 minutes)");
 
   advertise("on")

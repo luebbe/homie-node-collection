@@ -40,7 +40,7 @@ private:
   bool handleOnOff(const String &value);
   bool handleTimeout(const String &value);
 
-  void commonInit(const char *name, bool reverseSignal);
+  void commonInit(const char *id, bool reverseSignal);
   void printCaption();
   void sendState();
   void tick();
