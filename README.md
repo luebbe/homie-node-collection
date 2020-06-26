@@ -18,7 +18,7 @@ It has recently been migrated to the [Homie v3 Develop branch](https://github.co
 
 ## Sensor Nodes
 
-All sensor nodes have a common `$status` subtopic wit the enum values: `ok|error`. `$status` is `ok` when a sensor could be detected and a valid measurement could be taken, `error` otherwise.
+All sensor nodes have a common `status` subtopic wit the enum values: `ok|error`. `status` is `ok` when a sensor could be detected and a valid measurement could be taken, `error` otherwise.
 All sensor nodes publish their data type on the `$datatype` subtopic.
 All sensor nodes publish their unit on the `$unit` subtopic.
 Most sensor nodes publish their format/value range on the `$format` subtopic.
@@ -58,7 +58,7 @@ It has one setting:
 
 - _\<node-id>.temperatureOffset_: The temperature offset in degrees.  
   Range = \[-10.0°C .. 10.0°C]. Default = 0°C.  
-  This is a per node setting, so pay attention that the node names are different.
+  This is a _per node_ setting, so pay attention that the node ids are different.
 
 **Attention**: This offset is just added to the temperature read from the sensor. The relative humidity is not recalculated.
 
@@ -186,9 +186,7 @@ It has one setting:
 
 - _\<node-id\>.maxTimeout_: The maximum time that the relay is turned on.  
   Range = \[0s .. max(long)s]. Default = 600 seconds. 0 = no max timeout.  
-  This is a per node setting, so pay attention that the node names are different.
-
-This is a per node setting. The name of the setting is constructed from the node name + '.maxTimeout'.
+  This is a _per node_ setting, so pay attention that the node ids are different.
 
 The relay can be controlled by posting to the follwing MQTT topics:
 
