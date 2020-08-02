@@ -2,17 +2,22 @@
  * PulseNode.hpp
  * Homie Node for a Pulse switch
  *
- * Version: 1.0
+ * Version: 1.1
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
 #pragma once
 
+// #define DEBUG_PULSE
+
+#ifdef DEBUG_PULSE
+// #define DEBUG_INTERRUPT
+#endif
+
 #include "SensorNode.hpp"
 
 #define DEFAULTPIN -1
-#define DEBOUNCE_TIME 50
-#define RESET_TIME 200
+#define DEBOUNCE_MS 100 // ms If pulses are (not) detected for at least this amount of time, the state changes
 
 class PulseNode : public SensorNode
 {
@@ -25,15 +30,17 @@ private:
 
   TStateChangeCallback _stateChangeCallback;
   uint8_t _pulsePin;
-  bool _pulseState = false;
-  bool _lastPulseState = true; // force sending of "false" in first loop
-  bool _lastSentState = true;
+
+  bool _lastSentState = true; // force sending of "false" in first loop
   bool _stateChangeHandled = false;
-  unsigned long _lastPulseTime = 0;
-  unsigned long _stateChangedTime = 0;
+
+  // These two values are changed inside the interrupt routine
+  volatile bool _isPulsing = false;
+  volatile unsigned long _firstPulseTime = 0;
+  volatile unsigned long _lastPulseTime = 0;
 
   bool debouncePulse(void);
-  void handleStateChange(bool open);
+  void handleStateChange(bool active);
 
 protected:
   virtual void loop() override;
@@ -46,5 +53,5 @@ public:
                      // void (*)(void) interruptCallback,
                      TStateChangeCallback stateChangeCallback = NULL);
   void onChange(TStateChangeCallback stateChangeCallback);
-  void pulseDetected();
+  void IRAM_ATTR onInterrupt();
 };

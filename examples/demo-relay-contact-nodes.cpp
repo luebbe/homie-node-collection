@@ -8,10 +8,10 @@
 #include "RelayNode.hpp"
 
 // Insert your pin number(s) here
-const int PIN_LED = 2;      // =D4 on Wemos
-const int PIN_CONTACT = 12; // =D6 on Wemos
-const int PIN_RELAY = 13;   // =D7 on Wemos
-const int PIN_BUTTON = 14;  // =D5 on Wemos
+const int PIN_LED = D4;     // GPIO 2
+const int PIN_CONTACT = D6; // GPIO 12
+const int PIN_RELAY = D7;   // GPIO 13
+const int PIN_BUTTON = D5;  // GPIO 14
 
 // You need one bool state for each relay with callback
 bool relayState;
@@ -20,7 +20,7 @@ bool OnGetRelayState(int8_t id);
 void OnSetRelayState(int8_t id, bool on);
 
 // Normal relay, hardwired to a GPIO pin
-RelayNode relay1("relay1", "RelayDirect",  PIN_RELAY, PIN_LED);
+RelayNode relay1("relay1", "RelayDirect", PIN_RELAY, PIN_LED);
 
 // Relay with callback. It could be connected to a port expander and its state is not known inside the relay node.
 RelayNode relay2("relay2", "RelayCallback", 1, OnGetRelayState, OnSetRelayState);

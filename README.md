@@ -144,9 +144,9 @@ Advertises the state as:
 In order to use the PulseNode you need an interrupt procedure which is attached to the selected pin. e.G.:
 
 ```cpp
-void onOptoCouplerPulse()
+void IRAM_ATTR onOptoCouplerPulse()
 {
-  pulseNode.pulseDetected();
+  pulseNode.onInterrupt();
 }
 
 void setup()

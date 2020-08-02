@@ -4,15 +4,13 @@
 #include <Homie.hpp>
 #include "PulseNode.hpp"
 
-// forward declaration
-void ICACHE_RAM_ATTR onOptoCouplerPulse();
+#define PIN_OPTOCOUPLER D7  // GPIO 13
 
-#define PIN_OPTOCOUPLER 5
 PulseNode pulseNode("pulse", "Door bell", PIN_OPTOCOUPLER);
 
 void ICACHE_RAM_ATTR onOptoCouplerPulse()
 {
-  pulseNode.pulseDetected();
+  pulseNode.onInterrupt();
 }
 
 void onHomieEvent(const HomieEvent &event)
@@ -51,3 +49,4 @@ void loop()
 {
   Homie.loop();
 }
+

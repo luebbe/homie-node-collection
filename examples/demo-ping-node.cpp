@@ -7,10 +7,10 @@
 #include "PingNode.hpp"
 
 // Insert your pin number(s) here
-const int trigPin = D1;
-const int echoPin = D2;
-const int relayPin = D5;
-const int dhtPin = D7;
+const int trigPin = D1;  // GPIO 5
+const int echoPin = D2;  // GPIO 4
+const int relayPin = D5; // GPIO 16
+const int dhtPin = D7;   // GPIO 13
 ;
 const int ledPin = LED_BUILTIN;
 

@@ -2,7 +2,7 @@
  * PulseNode.cpp
  * Homie Node for a Pulse detector
  *
- * Version: 1.0
+ * Version: 1.1
  * Author: Lübbe Onken (http://github.com/luebbe)
  */
 
@@ -27,28 +27,35 @@ PulseNode::PulseNode(const char *id,
 // Debounce input pin.
 bool PulseNode::debouncePulse(void)
 {
-  if (_pulseState != _lastPulseState)
+  if (_isPulsing)
   {
-    _stateChangedTime = millis();
-    _stateChangeHandled = false;
-    _lastPulseState = _pulseState;
-#ifdef DEBUG_PULSE
-    Homie.getLogger() << "State Changed to " << _pulseState << endl;
-#endif
-  }
-  else
-  {
-    unsigned long dt = millis() - _stateChangedTime;
-    if (dt >= DEBOUNCE_TIME && !_stateChangeHandled)
+    unsigned long now = millis();
+
+    // First check if there was no pulse for more than DEBOUNCE_MS
+    // -> reset
+    if (now - DEBOUNCE_MS >= _lastPulseTime)
     {
 #ifdef DEBUG_PULSE
-      Homie.getLogger() << "State Stable for " << dt << "ms" << endl;
+      Homie.getLogger() << millis() << " Is not pulsing anymmore" << endl;
 #endif
-      _stateChangeHandled = true;
+      _isPulsing = false;
+      _firstPulseTime = now;
       return true;
     }
+
+    // Then check if there were pulses for more than DEBOUNCE_MS
+    // -> we're happy
+    else if (_lastPulseTime - DEBOUNCE_MS >= _firstPulseTime)
+    {
+#ifdef DEBUG_PULSE
+      Homie.getLogger() << millis() << " Is pulsing" << endl;
+#endif
+      return true;
+    }
+    return false;
   }
-  return false;
+  // No pulses -> debounced for sure
+  return true;
 }
 
 void PulseNode::handleStateChange(bool active)
@@ -72,25 +79,28 @@ void PulseNode::onChange(TStateChangeCallback stateChangeCallback)
   _stateChangeCallback = stateChangeCallback;
 }
 
-void PulseNode::pulseDetected()
+void IRAM_ATTR PulseNode::onInterrupt()
 {
+#ifdef DEBUG_INTERRUPT
+  // when triggering on falling edge, digitalRead should always return zero
+  Homie.getLogger() << millis() << " " << digitalRead(_pulsePin) << endl;
+#endif
   _lastPulseTime = millis();
-  _pulseState = true;
+  if (!_isPulsing)
+  {
+    _isPulsing = true;
+    _firstPulseTime = _lastPulseTime;
+  }
 }
 
 void PulseNode::loop()
 {
   if (_pulsePin > DEFAULTPIN)
   {
-    if (debouncePulse() && (_lastSentState != _lastPulseState))
+    if (debouncePulse() && (_lastSentState != _isPulsing))
     {
-      handleStateChange(_lastPulseState);
-      _lastSentState = _lastPulseState;
-    }
-
-    if (_pulseState && (millis() - _lastPulseTime >= RESET_TIME))
-    {
-      _pulseState = false;
+      handleStateChange(_isPulsing);
+      _lastSentState = _isPulsing;
     }
   }
 }
@@ -98,7 +108,6 @@ void PulseNode::loop()
 void PulseNode::setup()
 {
   printCaption();
-  Homie.getLogger() << cIndent << "Pin: " << _pulsePin << endl;
 
   if (_pulsePin > DEFAULTPIN)
   {
