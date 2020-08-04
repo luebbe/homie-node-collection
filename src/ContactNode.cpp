@@ -96,7 +96,7 @@ void ContactNode::setupPin()
 
 void ContactNode::setup()
 {
-  advertise("open");
+  advertise("open").setDatatype("boolean");
 
   printCaption();
 
