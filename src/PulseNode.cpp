@@ -27,33 +27,17 @@ PulseNode::PulseNode(const char *id,
 // Debounce input pin.
 bool PulseNode::debouncePulse(void)
 {
-  if (_isPulsing)
-  {
-    unsigned long now = millis();
+  noInterrupts();
+  float copyPulse = _pulse;
+  _pulse = 0;
+  interrupts();
 
-    // First check if there was no pulse for more than DEBOUNCE_MS
-    // -> reset
-    if (now - DEBOUNCE_MS >= _lastPulseTime)
-    {
-#ifdef DEBUG_PULSE
-      Homie.getLogger() << millis() << " Is not pulsing anymmore" << endl;
-#endif
-      _isPulsing = false;
-      _firstPulseTime = now;
-      return true;
-    }
+  _isPulsing = (copyPulse > PULSES_PER_SECOND);
 
-    // Then check if there were pulses for more than DEBOUNCE_MS
-    // -> we're happy
-    else if (_lastPulseTime - DEBOUNCE_MS >= _firstPulseTime)
-    {
 #ifdef DEBUG_PULSE
-      Homie.getLogger() << millis() << " Is pulsing" << endl;
+  Homie.getLogger() << "Active: " << _isPulsing << " pulses: " << copyPulse << endl;
 #endif
-      return true;
-    }
-    return false;
-  }
+
   // No pulses -> debounced for sure
   return true;
 }
@@ -81,26 +65,22 @@ void PulseNode::onChange(TStateChangeCallback stateChangeCallback)
 
 void IRAM_ATTR PulseNode::onInterrupt()
 {
-#ifdef DEBUG_INTERRUPT
-  // when triggering on falling edge, digitalRead should always return zero
-  Homie.getLogger() << millis() << " " << digitalRead(_pulsePin) << endl;
-#endif
-  _lastPulseTime = millis();
-  if (!_isPulsing)
-  {
-    _isPulsing = true;
-    _firstPulseTime = _lastPulseTime;
-  }
+  _pulse++;
 }
 
 void PulseNode::loop()
 {
   if (_pulsePin > DEFAULTPIN)
   {
-    if (debouncePulse() && (_lastSentState != _isPulsing))
+    if ((millis() - _lastCheck >= CHECK_INTERVAL * 1000UL) || (_lastCheck == 0))
     {
-      handleStateChange(_isPulsing);
-      _lastSentState = _isPulsing;
+      debouncePulse();
+      if (_lastSentState != _isPulsing)
+      {
+        handleStateChange(_isPulsing);
+        _lastSentState = _isPulsing;
+      }
+      _lastCheck = millis();
     }
   }
 }

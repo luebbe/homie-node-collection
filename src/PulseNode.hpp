@@ -10,14 +10,11 @@
 
 // #define DEBUG_PULSE
 
-#ifdef DEBUG_PULSE
-// #define DEBUG_INTERRUPT
-#endif
-
 #include "SensorNode.hpp"
 
 #define DEFAULTPIN -1
-#define DEBOUNCE_MS 100 // ms If pulses are (not) detected for at least this amount of time, the state changes
+#define CHECK_INTERVAL 1     // Check every second
+#define PULSES_PER_SECOND 10 // Minimum number of pulses required per check to be deemed "active" (50Hz should be 20, we go for half)
 
 class PulseNode : public SensorNode
 {
@@ -31,13 +28,12 @@ private:
   TStateChangeCallback _stateChangeCallback;
   uint8_t _pulsePin;
 
+  bool _isPulsing = false;
   bool _lastSentState = true; // force sending of "false" in first loop
-  bool _stateChangeHandled = false;
+  unsigned long _lastCheck = 0;
 
   // These two values are changed inside the interrupt routine
-  volatile bool _isPulsing = false;
-  volatile unsigned long _firstPulseTime = 0;
-  volatile unsigned long _lastPulseTime = 0;
+  volatile unsigned long _pulse = 0;
 
   bool debouncePulse(void);
   void handleStateChange(bool active);
