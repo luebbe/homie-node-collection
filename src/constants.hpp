@@ -7,6 +7,7 @@
 #define cUnitMeter "m"
 #define cUnitMetersPerSecond "m/s"
 #define cUnitMicrosecond "μs"
+#define cUnitHz "Hz"
 
 // Topics
 #define cStatusTopic "status"
@@ -22,5 +23,3 @@
 #define cPingTopic "ping"
 #define cChangedTopic "changed"
 #define cValidTopic "valid"
-
-

@@ -11,10 +11,11 @@
 // #define DEBUG_PULSE
 
 #include "SensorNode.hpp"
+#include "constants.hpp"
 
 #define DEFAULTPIN -1
-#define CHECK_INTERVAL 1     // Check every second
-#define PULSES_PER_SECOND 10 // Minimum number of pulses required per check to be deemed "active" (50Hz should be 20, we go for half)
+#define CHECK_INTERVAL 1000  // Check every second.  ToDo: make this configurable
+#define PULSES_PER_SECOND 10 // Minimum number of pulses required per check to be deemed "active" (50Hz should be 20, we go for half). ToDo: make this configurable
 
 class PulseNode : public SensorNode
 {
@@ -32,10 +33,10 @@ private:
   bool _lastSentState = true; // force sending of "false" in first loop
   unsigned long _lastCheck = 0;
 
-  // These two values are changed inside the interrupt routine
+  // This value is changed inside the interrupt routine
   volatile unsigned long _pulse = 0;
 
-  bool debouncePulse(void);
+  void checkState(void);
   void handleStateChange(bool active);
 
 protected:

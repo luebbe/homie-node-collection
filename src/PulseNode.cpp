@@ -22,24 +22,27 @@ PulseNode::PulseNode(const char *id,
 
   advertise("active")
       .setDatatype("boolean");
+  advertise("pulses")
+      .setDatatype("float")
+      .setUnit(cUnitHz);
 }
 
 // Debounce input pin.
-bool PulseNode::debouncePulse(void)
+void PulseNode::checkState(void)
 {
   noInterrupts();
-  float copyPulse = _pulse;
+  unsigned long _copyPulse = _pulse;
   _pulse = 0;
   interrupts();
 
-  _isPulsing = (copyPulse > PULSES_PER_SECOND);
+  _isPulsing = (_copyPulse > PULSES_PER_SECOND);
+
+  float _frequency = _copyPulse * 1000 / CHECK_INTERVAL;
+  setProperty("pulses").send(String(_frequency));
 
 #ifdef DEBUG_PULSE
-  Homie.getLogger() << "Active: " << _isPulsing << " pulses: " << copyPulse << endl;
+  Homie.getLogger() << "Active: " << _isPulsing << " pulses: " << _copyPulse << " frequency:" << _frequency << endl;
 #endif
-
-  // No pulses -> debounced for sure
-  return true;
 }
 
 void PulseNode::handleStateChange(bool active)
@@ -72,9 +75,9 @@ void PulseNode::loop()
 {
   if (_pulsePin > DEFAULTPIN)
   {
-    if ((millis() - _lastCheck >= CHECK_INTERVAL * 1000UL) || (_lastCheck == 0))
+    if ((millis() - _lastCheck >= CHECK_INTERVAL) || (_lastCheck == 0))
     {
-      debouncePulse();
+      checkState();
       if (_lastSentState != _isPulsing)
       {
         handleStateChange(_isPulsing);
