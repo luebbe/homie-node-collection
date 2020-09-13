@@ -140,6 +140,7 @@ In some way similar to the contact node only that it reacts on pulses on the sel
 Advertises the state as:
 
 - `homie/<device-id>/<node-id>/active` (true|false)
+- `homie/<device-id>/<node-id>/pulses`
 
 In order to use the PulseNode you need an interrupt procedure which is attached to the selected pin. e.G.:
 
@@ -154,6 +155,16 @@ void setup()
   attachInterrupt(PIN_OPTOCOUPLER, onOptoCouplerPulse, FALLING);
 }
 ```
+
+It has two settings:
+
+- _interval_: The interval in which to check for pulses.  
+  Range = \[1 .. Max(long)ms], Default = 5000ms.  
+  This is a _per node_ setting, so pay attention that the node ids are different.
+
+- _activePulses_: The number of pulses per interval to be considered active.  
+  Range =\[1 .. Max(long)]. Default = 10.  
+  This is a _per node_ setting, so pay attention that the node ids are different.
 
 ### RelayNode
 

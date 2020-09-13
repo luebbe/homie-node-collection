@@ -20,9 +20,9 @@ PulseNode::PulseNode(const char *id,
 
   asprintf(&_caption, cCaption, name, pulsePin);
 
-  asprintf(&_checkIntervalName, "%s.Interval", id);
-  _checkInterval = new HomieSetting<long>(_checkIntervalName, "The interval in which to check for pulses [1 .. Max(long)] ms. Default = 5000 (5 seconds)");
-  asprintf(&_checkActivePulsesName, "%s.ActivePulses", id);
+  asprintf(&_checkIntervalName, "%s.interval", id);
+  _checkInterval = new HomieSetting<long>(_checkIntervalName, "The interval in which to check for pulses [1 .. Max(long)ms]. Default = 5000ms");
+  asprintf(&_checkActivePulsesName, "%s.activePulses", id);
   _checkActivePulses = new HomieSetting<long>(_checkActivePulsesName, "The number of pulses per interval to be considered active [1 .. Max(long)]. Default = 10");
 
   advertise("active")
