@@ -20,6 +20,11 @@ PulseNode::PulseNode(const char *id,
 
   asprintf(&_caption, cCaption, name, pulsePin);
 
+  asprintf(&_checkIntervalName, "%s.Interval", id);
+  _checkInterval = new HomieSetting<long>(_checkIntervalName, "The interval in which to check for pulses [1 .. Max(long)] ms. Default = 5000 (5 seconds)");
+  asprintf(&_checkActivePulsesName, "%s.ActivePulses", id);
+  _checkActivePulses = new HomieSetting<long>(_checkActivePulsesName, "The number of pulses per interval to be considered active [1 .. Max(long)]. Default = 10");
+
   advertise("active")
       .setDatatype("boolean");
   advertise("pulses")
@@ -35,9 +40,9 @@ void PulseNode::checkState(void)
   _pulse = 0;
   interrupts();
 
-  _isPulsing = (_copyPulse > PULSES_PER_SECOND);
+  _isPulsing = (_copyPulse > _checkActivePulses->get());
 
-  float _frequency = _copyPulse * 1000 / CHECK_INTERVAL;
+  float _frequency = _copyPulse * 1000 / _checkInterval->get();
   setProperty("pulses").send(String(_frequency));
 
 #ifdef DEBUG_PULSE
@@ -71,11 +76,22 @@ void IRAM_ATTR PulseNode::onInterrupt()
   _pulse++;
 }
 
+void PulseNode::beforeHomieSetup()
+{
+  _checkInterval->setDefaultValue(DEFAULT_INTERVAL).setValidator([](long candidate) {
+    return (candidate > 0);
+  });
+  _checkActivePulses->setDefaultValue(PULSES_PER_INTERVAL).setValidator([](long candidate) {
+    return (candidate > 0);
+  });
+}
+
+
 void PulseNode::loop()
 {
   if (_pulsePin > DEFAULTPIN)
   {
-    if ((millis() - _lastCheck >= CHECK_INTERVAL) || (_lastCheck == 0))
+    if ((millis() - _lastCheck >= _checkInterval->get()) || (_lastCheck == 0))
     {
       checkState();
       if (_lastSentState != _isPulsing)

@@ -14,8 +14,8 @@
 #include "constants.hpp"
 
 #define DEFAULTPIN -1
-#define CHECK_INTERVAL 1000  // Check every second.  ToDo: make this configurable
-#define PULSES_PER_SECOND 10 // Minimum number of pulses required per check to be deemed "active" (50Hz should be 20, we go for half). ToDo: make this configurable
+#define DEFAULT_INTERVAL 1000 * 5  // Check every five seconds. 
+#define PULSES_PER_INTERVAL 10 * 5 // Minimum number of pulses required per check to be deemed "active" (50Hz should be 20/second, we go for half).
 
 class PulseNode : public SensorNode
 {
@@ -29,6 +29,9 @@ private:
   TStateChangeCallback _stateChangeCallback;
   uint8_t _pulsePin;
 
+  char *_checkIntervalName;
+  char *_checkActivePulsesName;
+
   bool _isPulsing = false;
   bool _lastSentState = true; // force sending of "false" in first loop
   unsigned long _lastCheck = 0;
@@ -40,6 +43,9 @@ private:
   void handleStateChange(bool active);
 
 protected:
+  HomieSetting<long> *_checkInterval;
+  HomieSetting<long> *_checkActivePulses;
+
   virtual void loop() override;
   virtual void setup() override;
 
@@ -51,4 +57,5 @@ public:
                      TStateChangeCallback stateChangeCallback = NULL);
   void onChange(TStateChangeCallback stateChangeCallback);
   void IRAM_ATTR onInterrupt();
+  void beforeHomieSetup();
 };
