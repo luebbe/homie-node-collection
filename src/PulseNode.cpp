@@ -40,7 +40,7 @@ void PulseNode::checkState(void)
   _pulse = 0;
   interrupts();
 
-  _isPulsing = (_copyPulse > _checkActivePulses->get());
+  _isPulsing = (_copyPulse > (unsigned long)_checkActivePulses->get());
 
   float _frequency = _copyPulse * 1000 / _checkInterval->get();
   setProperty("pulses").send(String(_frequency));
@@ -91,7 +91,7 @@ void PulseNode::loop()
 {
   if (_pulsePin > DEFAULTPIN)
   {
-    if ((millis() - _lastCheck >= _checkInterval->get()) || (_lastCheck == 0))
+    if ((millis() - _lastCheck >= (unsigned long)_checkInterval->get()) || (_lastCheck == 0))
     {
       checkState();
       if (_lastSentState != _isPulsing)
