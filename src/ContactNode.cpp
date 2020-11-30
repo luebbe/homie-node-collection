@@ -39,7 +39,7 @@ bool ContactNode::debouncePin(void)
     _stateChangeHandled = false;
     _lastInputState = inputState;
 #ifdef DEBUG
-    Homie.getLogger() << "State Changed to " << inputState << endl;
+    Homie.getLogger() << F("State Changed to ") << inputState << endl;
 #endif
   }
   else
@@ -48,7 +48,7 @@ bool ContactNode::debouncePin(void)
     if (dt >= DEBOUNCE_TIME && !_stateChangeHandled)
     {
 #ifdef DEBUG
-      Homie.getLogger() << "State Stable for " << dt << "ms" << endl;
+      Homie.getLogger() << F("State Stable for ") << dt << "ms" << endl;
 #endif
       _stateChangeHandled = true;
       return true;
@@ -61,7 +61,7 @@ void ContactNode::handleStateChange(bool open)
 {
   if (Homie.isConnected())
   {
-    setProperty("open").send(open ? "true" : "false");
+    setProperty("open").send(open ? F("true") : F("false"));
   }
   if (_contactCallback)
   {
@@ -69,7 +69,7 @@ void ContactNode::handleStateChange(bool open)
   }
 
   printCaption();
-  Homie.getLogger() << cIndent << "is " << (open ? "open" : "closed") << endl;
+  Homie.getLogger() << cIndent << F("is ") << (open ? F("open") : F("closed")) << endl;
 }
 
 void ContactNode::onChange(TContactCallback contactCallback)

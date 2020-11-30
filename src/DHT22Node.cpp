@@ -45,7 +45,7 @@ void DHT22Node::send()
 
   if (isnan(temperature) || isnan(humidity))
   {
-    Homie.getLogger() << cIndent << "Error reading from Sensor" << endl;
+    Homie.getLogger() << cIndent << F("Error reading from Sensor") << endl;
 
     if (Homie.isConnected())
     {
@@ -56,9 +56,9 @@ void DHT22Node::send()
   {
     float absHumidity = computeAbsoluteHumidity(temperature, humidity);
 
-    Homie.getLogger() << cIndent << "Temperature: " << temperature << " °C" << endl;
-    Homie.getLogger() << cIndent << "Humidity: " << humidity << " %" << endl;
-    Homie.getLogger() << cIndent << "Abs humidity: " << absHumidity << " g/m³" << endl;
+    Homie.getLogger() << cIndent << F("Temperature: ") << temperature << " °C" << endl;
+    Homie.getLogger() << cIndent << F("Humidity: ") << humidity << " %" << endl;
+    Homie.getLogger() << cIndent << F("Abs humidity: ") << absHumidity << " g/m³" << endl;
 
     if (Homie.isConnected())
     {
@@ -93,7 +93,7 @@ void DHT22Node::loop()
 void DHT22Node::setup()
 {
   printCaption();
-  Homie.getLogger() << cIndent << "Reading interval: " << _measurementInterval << " s" << endl;
+  Homie.getLogger() << cIndent << F("Reading interval: ") << _measurementInterval << " s" << endl;
 
   if (dht)
   {

@@ -38,7 +38,7 @@ void setup()
   bme280Node.beforeHomieSetup();
 
   // Initializes I2C for BME280 sensor and display
-  Homie.getLogger() << "• Wire begin SDA=" << PIN_SDA << " SCL=" << PIN_SCL << endl;
+  Homie.getLogger() << F("• Wire begin SDA=") << PIN_SDA << F(" SCL=") << PIN_SCL << endl;
   Wire.begin(PIN_SDA, PIN_SCL);
 
   Homie.disableLedFeedback();

@@ -59,12 +59,12 @@ void BME280Node::send()
 
   float absHumidity = computeAbsoluteHumidity(temperature, humidity);
 
-  Homie.getLogger() << cIndent << "Temperature: " << temperature << " °C" << endl;
+  Homie.getLogger() << cIndent << F("Temperature: ") << temperature << " °C" << endl;
   temperature += _temperatureOffset->get();
-  Homie.getLogger() << cIndent << "Temperature (after offset): " << temperature << " °C" << endl;
-  Homie.getLogger() << cIndent << "Humidity: " << humidity << " %" << endl;
-  Homie.getLogger() << cIndent << "Pressure: " << pressure << " hPa" << endl;
-  Homie.getLogger() << cIndent << "Abs humidity: " << absHumidity << " g/m³" << endl;
+  Homie.getLogger() << cIndent << F("Temperature (after offset): ") << temperature << " °C" << endl;
+  Homie.getLogger() << cIndent << F("Humidity: ") << humidity << " %" << endl;
+  Homie.getLogger() << cIndent << F("Pressure: ") << pressure << " hPa" << endl;
+  Homie.getLogger() << cIndent << F("Abs humidity: ") << absHumidity << " g/m³" << endl;
 
   if (Homie.isConnected())
   {
@@ -122,7 +122,7 @@ void BME280Node::setup()
   if (bme.begin(_i2cAddress))
   {
     _sensorFound = true;
-    Homie.getLogger() << cIndent << "found. Reading interval: " << _measurementInterval << " s" << endl;
+    Homie.getLogger() << cIndent << F("found. Reading interval: ") << _measurementInterval << " s" << endl;
     // Parameters taken from the weather station monitoring example (advancedsettings.ino) in
     // the Adafruit BME280 library
     bme.setSampling(Adafruit_BME280::MODE_FORCED, _tempSampling, _pressSampling, _humSampling, _filter);
@@ -130,6 +130,6 @@ void BME280Node::setup()
   else
   {
     _sensorFound = false;
-    Homie.getLogger() << cIndent << "not found. Check wiring!" << endl;
+    Homie.getLogger() << cIndent << F("not found. Check wiring!") << endl;
   }
 }

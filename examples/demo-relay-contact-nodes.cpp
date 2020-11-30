@@ -35,13 +35,13 @@ ButtonNode buttonNode("doorbell", "Doorbell", PIN_BUTTON, []() {
 
 bool OnGetRelayState(int8_t id)
 {
-  Homie.getLogger() << "OnGetRelayState Id[" << id << "]=" << relayState << endl;
+  Homie.getLogger() << F("OnGetRelayState Id[") << id << "]=" << relayState << endl;
   return relayState;
 }
 void OnSetRelayState(int8_t id, bool on)
 {
   relayState = on;
-  Homie.getLogger() << "OnSetRelayState Id[" << id << "]=" << relayState << endl;
+  Homie.getLogger() << F("OnSetRelayState Id[") << id << "]=" << relayState << endl;
 }
 
 void setup()

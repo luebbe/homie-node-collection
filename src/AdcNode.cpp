@@ -74,13 +74,13 @@ void AdcNode::send()
 
   if (isnan(_voltage))
   {
-    Homie.getLogger() << cIndent << "Error reading from ADC" << endl;
+    Homie.getLogger() << cIndent << F("Error reading from ADC") << endl;
     sendError();
   }
   else
   {
-    Homie.getLogger() << cIndent << "Voltage: " << _voltage << "V" << endl;
-    Homie.getLogger() << cIndent << "Battery level: " << _batteryLevel << "%" << endl;
+    Homie.getLogger() << cIndent << F("Voltage: ") << _voltage << "V" << endl;
+    Homie.getLogger() << cIndent << F("Battery level: ") << _batteryLevel << "%" << endl;
     sendData();
   }
 }
@@ -143,5 +143,5 @@ void AdcNode::beforeHomieSetup()
 void AdcNode::setup()
 {
   printCaption();
-  Homie.getLogger() << cIndent << "Send interval: " << _sendInterval / 1000 << " s" << endl;
+  Homie.getLogger() << cIndent << F("Send interval: ") << _sendInterval / 1000 << " s" << endl;
 }

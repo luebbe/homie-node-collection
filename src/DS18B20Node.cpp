@@ -38,12 +38,12 @@ void DS18B20Node::send()
 
   if (DEVICE_DISCONNECTED_C == temperature)
   {
-    Homie.getLogger() << cIndent << "Error reading from Sensor" << endl;
+    Homie.getLogger() << cIndent << F("Error reading from Sensor") << endl;
     sendError();
   }
   else
   {
-    Homie.getLogger() << cIndent << "Temperature: " << temperature << " °C" << endl;
+    Homie.getLogger() << cIndent << F("Temperature: ") << temperature << " °C" << endl;
     sendData();
   }
 }
@@ -98,7 +98,7 @@ void DS18B20Node::setup()
   {
     dallasTemp->begin();
     _sensorFound = (dallasTemp->getDS18Count() > 0);
-    Homie.getLogger() << cIndent << "Found " << dallasTemp->getDS18Count() << " sensors." << endl
-                      << cIndent << "Reading interval: " << _measurementInterval << " s" << endl;
+    Homie.getLogger() << cIndent << F("Found ") << dallasTemp->getDS18Count() << " sensors." << endl
+                      << cIndent << F("Reading interval: ") << _measurementInterval << " s" << endl;
   }
 }

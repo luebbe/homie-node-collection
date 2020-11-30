@@ -29,7 +29,7 @@ void ButtonNode::handleButtonPress(unsigned long dt)
   }
 
   printCaption();
-  Homie.getLogger() << cIndent << "pressed: " << dt << " ms" << endl;
+  Homie.getLogger() << cIndent << F("pressed: ") << dt << " ms" << endl;
 
   if (_buttonPressCallback)
   {
@@ -41,11 +41,11 @@ void ButtonNode::handleButtonChange(bool down)
 {
   if (Homie.isConnected())
   {
-    setProperty("down").send(down ? "true" : "false");
+    setProperty("down").send(down ? F("true") : F("false"));
   }
 
   printCaption();
-  Homie.getLogger() << cIndent << (down ? "down" : "up") << endl;
+  Homie.getLogger() << cIndent << (down ? F("down") : F("up")) << endl;
 
   if (_buttonChangeCallback)
   {

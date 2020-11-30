@@ -49,10 +49,10 @@ void PingNode::send(bool changed)
 {
   bool valid = _distance > 0;
   printCaption();
-  Homie.getLogger() << cIndent << "Ping: " << _ping_us << " " << cUnitMicrosecond << endl;
-  Homie.getLogger() << cIndent << "Distance: " << _distance << " " << cUnitMeter << endl;
-  Homie.getLogger() << cIndent << "Valid: " << (valid ? "ok" : "error") << endl;
-  Homie.getLogger() << cIndent << "Changed: " << (changed ? "true" : "false") << " " << endl;
+  Homie.getLogger() << cIndent << F("Ping: ") << _ping_us << " " << cUnitMicrosecond << endl;
+  Homie.getLogger() << cIndent << F("Distance: ") << _distance << " " << cUnitMeter << endl;
+  Homie.getLogger() << cIndent << F("Valid: ") << (valid ? "ok" : "error") << endl;
+  Homie.getLogger() << cIndent << F("Changed: ") << (changed ? F("true") : F("false")) << " " << endl;
   if (Homie.isConnected())
   {
     setProperty(cValidTopic).send(valid ? "ok" : "error");
@@ -60,7 +60,7 @@ void PingNode::send(bool changed)
     {
       setProperty(cDistanceTopic).send(String(_distance));
       setProperty(cPingTopic).send(String(_ping_us));
-      setProperty(cChangedTopic).send(changed ? "true" : "false");
+      setProperty(cChangedTopic).send(changed ? F("true") : F("false"));
     }
   }
 }
@@ -119,8 +119,8 @@ void PingNode::onReadyToOperate()
 void PingNode::setup()
 {
   printCaption();
-  Homie.getLogger() << cIndent << "Reading interval: " << _measurementInterval << " s" << endl;
-  Homie.getLogger() << cIndent << "Publish interval: " << _publishInterval << " s" << endl;
+  Homie.getLogger() << cIndent << F("Reading interval: ") << _measurementInterval << " s" << endl;
+  Homie.getLogger() << cIndent << F("Publish interval: ") << _publishInterval << " s" << endl;
 }
 
 PingNode &PingNode::setTemperature(float temperatureCelcius)
@@ -129,8 +129,8 @@ PingNode &PingNode::setTemperature(float temperatureCelcius)
   float soundSpeed = 331.4 + 0.6 * temperatureCelcius;
   printCaption();
   Homie.getLogger() << cIndent
-                    << "SpeedOfSound: " << soundSpeed << " " << cUnitMetersPerSecond
-                    << " at " << temperatureCelcius << " " << cUnitDegrees << endl;
+                    << F("SpeedOfSound: ") << soundSpeed << " " << cUnitMetersPerSecond
+                    << F(" at ") << temperatureCelcius << " " << cUnitDegrees << endl;
   // Calculating the distance from d = t_ping /2 * c => t_ping /2 * 337 [m/s] => t_ping_us / 1e-6 * 1/2 * 337
   setMicrosecondsToMeter(0.5e-6 * soundSpeed);
   return *this;

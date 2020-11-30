@@ -132,10 +132,10 @@ void RelayNode::sendState()
 {
   printCaption();
   bool on = getRelay();
-  Homie.getLogger() << cIndent << "is " << (on ? "on" : "off") << endl;
+  Homie.getLogger() << cIndent << F("is ") << (on ? F("on") : F("off")) << endl;
   if (Homie.isConnected())
   {
-    setProperty("on").send(on ? "true" : "false");
+    setProperty("on").send(on ? F("true") : F("false"));
     setProperty("timeout").send(String(long(_timeout)));
   }
 }
@@ -231,7 +231,7 @@ void RelayNode::setup()
 
   if ((_onSetRelayState == NULL) && (_onGetRelayState == NULL) && (_relayPin == DEFAULTPIN))
   {
-    Homie.getLogger() << cIndent << "No Relay Pin or callback defined!" << endl;
+    Homie.getLogger() << cIndent << F("No Relay Pin or callback defined!") << endl;
   }
 
   if (_ledPin > DEFAULTPIN)

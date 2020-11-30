@@ -46,7 +46,7 @@ void PulseNode::checkState(void)
   setProperty("pulses").send(String(_frequency));
 
 #ifdef DEBUG_PULSE
-  Homie.getLogger() << "Active: " << _isPulsing << " pulses: " << _copyPulse << " frequency:" << _frequency << endl;
+  Homie.getLogger() << F("Active: ") << _isPulsing << F(" pulses: ") << _copyPulse << F(" frequency:") << _frequency << endl;
 #endif
 }
 
@@ -54,7 +54,7 @@ void PulseNode::handleStateChange(bool active)
 {
   if (Homie.isConnected())
   {
-    setProperty("active").send(active ? "true" : "false");
+    setProperty("active").send(active ? F("true") : F("false"));
   }
 
   if (_stateChangeCallback)
@@ -63,7 +63,7 @@ void PulseNode::handleStateChange(bool active)
   }
 
   printCaption();
-  Homie.getLogger() << cIndent << "is " << (active ? "active" : "not active") << endl;
+  Homie.getLogger() << cIndent << F("is ") << (active ? "" : "not ") << F("active") << endl;
 }
 
 void PulseNode::onChange(TStateChangeCallback stateChangeCallback)
@@ -85,7 +85,6 @@ void PulseNode::beforeHomieSetup()
     return (candidate > 0);
   });
 }
-
 
 void PulseNode::loop()
 {
