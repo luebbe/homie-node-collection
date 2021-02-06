@@ -59,12 +59,10 @@ void BME280Node::send()
 
   float absHumidity = computeAbsoluteHumidity(temperature, humidity);
 
-  Homie.getLogger() << cIndent << F("Temperature: ") << temperature << " °C" << endl;
-  temperature += _temperatureOffset->get();
-  Homie.getLogger() << cIndent << F("Temperature (after offset): ") << temperature << " °C" << endl;
-  Homie.getLogger() << cIndent << F("Humidity: ") << humidity << " %" << endl;
-  Homie.getLogger() << cIndent << F("Pressure: ") << pressure << " hPa" << endl;
-  Homie.getLogger() << cIndent << F("Abs humidity: ") << absHumidity << " g/m³" << endl;
+  Homie.getLogger() << cIndent << F("Temperature:  ") << temperature << " " << cUnitDegrees << endl
+                    << cIndent << F("Humidity:     ") << humidity << " " << cUnitPercent << endl
+                    << cIndent << F("Pressure:     ") << pressure << " " << cUnitHpa << endl
+                    << cIndent << F("Abs humidity: ") << absHumidity << " " << cUnitMgm3 << endl;
 
   if (Homie.isConnected())
   {
@@ -126,6 +124,7 @@ void BME280Node::setup()
     // Parameters taken from the weather station monitoring example (advancedsettings.ino) in
     // the Adafruit BME280 library
     bme.setSampling(Adafruit_BME280::MODE_FORCED, _tempSampling, _pressSampling, _humSampling, _filter);
+    bme.setTemperatureCompensation(_temperatureOffset->get());
   }
   else
   {
