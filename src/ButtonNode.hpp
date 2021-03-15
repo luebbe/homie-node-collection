@@ -12,7 +12,7 @@
 
 #define DEFAULTPIN -1
 
-class ButtonNode : public SensorNode
+class ButtonNode : public BaseNode
 {
 public:
   typedef std::function<void(void)> TButtonPressCallback;

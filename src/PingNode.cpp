@@ -9,14 +9,9 @@
 #include "PingNode.hpp"
 #include <Homie.h>
 
-bool checkBounds(float value, float min, float max)
-{
-  return !isnan(value) && value >= min && value <= max;
-}
-
 PingNode::PingNode(const char *id, const char *name, const char *type, const int triggerPin, const int echoPin,
                    const int measurementInterval, const int publishInterval)
-    : SensorNode(id, name, type),
+    : BaseNode(id, name, type),
       _triggerPin(triggerPin), _echoPin(echoPin), _lastMeasurement(0), _lastPublish(0)
 {
   _measurementInterval = (measurementInterval > MIN_INTERVAL) ? measurementInterval : MIN_INTERVAL;

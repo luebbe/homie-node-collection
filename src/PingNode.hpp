@@ -10,12 +10,12 @@
 
 #include "NewPing.h"
 
-#include "SensorNode.hpp"
+#include "BaseNode.hpp"
 #include "constants.hpp"
 
 #define DEFAULTPIN -1
 
-class PingNode : public SensorNode
+class PingNode : public BaseNode
 {
 public:
   typedef std::function<void()> ChangeHandler;

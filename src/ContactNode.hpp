@@ -8,12 +8,12 @@
 
 #pragma once
 
-#include "SensorNode.hpp"
+#include "BaseNode.hpp"
 
 #define DEFAULTPIN -1
 #define DEBOUNCE_TIME 200
 
-class ContactNode : public SensorNode
+class ContactNode : public BaseNode
 {
 public:
   typedef std::function<void(bool)> TContactCallback;

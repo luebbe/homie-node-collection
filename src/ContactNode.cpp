@@ -12,7 +12,7 @@ ContactNode::ContactNode(const char *id,
                          const char *name,
                          const int contactPin,
                          TContactCallback contactCallback)
-    : SensorNode(id, name, "Contact"),
+    : BaseNode(id, name, "Contact"),
       _contactPin(contactPin),
       _contactCallback(contactCallback)
 {

@@ -10,14 +10,14 @@
 
 // #define DEBUG_PULSE
 
-#include "SensorNode.hpp"
+#include "BaseNode.hpp"
 #include "constants.hpp"
 
 #define DEFAULTPIN -1
 #define DEFAULT_INTERVAL 1000 * 5  // Check every five seconds. 
 #define PULSES_PER_INTERVAL 10 * 5 // Minimum number of pulses required per check to be deemed "active" (50Hz should be 20/second, we go for half).
 
-class PulseNode : public SensorNode
+class PulseNode : public BaseNode
 {
 public:
   typedef std::function<void(bool)> TStateChangeCallback;

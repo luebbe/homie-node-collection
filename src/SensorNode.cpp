@@ -1,6 +1,6 @@
 /*
  * SensorNode.hpp
- * Homie Node for genric sensors.
+ * Homie Node for generic sensors.
  * Provides a limit method for measurement values
  *
  * Version: 1.0
@@ -12,8 +12,7 @@
 SensorNode::SensorNode(const char *id, const char *name, const char *type,
                        const int readInterval,
                        const int sendInterval)
-    : HomieNode(id, name, type),
-      _caption(0),
+    : BaseNode(id, name, type),
       _readInterval(readInterval),
       _sendInterval(sendInterval),
       _lastReadTime(0),
@@ -37,22 +36,6 @@ float SensorNode::computeAbsoluteHumidity(float temperature, float percentHumidi
   absHumidity /= absTemperature;
 
   return absHumidity;
-}
-
-void SensorNode::fixRange(float *value, float min, float max)
-{
-  if (isnan(*value))
-  {
-    return;
-  }
-  else if (*value < min)
-  {
-    *value = min;
-  }
-  else if (*value > max)
-  {
-    *value = max;
-  };
 }
 
 unsigned long SensorNode::readInterval()
@@ -88,9 +71,4 @@ void SensorNode::loop()
       _lastSendTime = now;
     }
   }
-}
-
-void SensorNode::printCaption()
-{
-  Homie.getLogger() << _caption << endl;
 }

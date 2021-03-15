@@ -13,7 +13,7 @@ const char *name,
                        const int buttonPin,
                        TButtonPressCallback buttonPressCallback,
                        TButtonChangeCallback buttonChangeCallback)
-    : SensorNode(id, name, "Button"),
+    : BaseNode(id, name, "Button"),
       _buttonPin(buttonPin),
       _buttonPressCallback(buttonPressCallback),
       _buttonChangeCallback(buttonChangeCallback)
