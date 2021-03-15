@@ -28,11 +28,7 @@ private:
   static const int MIN_INTERVAL = 60; // in seconds
   const char *cCaption = "• %s BME280 i2c[0x%2x]:";
 
-  bool _sensorFound = false;
-
   unsigned int _i2cAddress;
-  unsigned long _measurementInterval;
-  unsigned long _lastMeasurement;
 
   Adafruit_BME280::sensor_sampling _tempSampling;
   Adafruit_BME280::sensor_sampling _pressSampling;
@@ -47,20 +43,19 @@ private:
 
   Adafruit_BME280 bme;
 
-  void send();
-
 protected:
   HomieSetting<double> *_temperatureOffset;
 
   virtual void setup() override;
-  virtual void loop() override;
   virtual void onReadyToOperate() override;
+  virtual void send() override;
+  virtual void takeMeasurement() override;
 
 public:
   explicit BME280Node(const char *id,
                       const char *name,
                       const int i2cAddress = 0x77,
-                      const int measurementInterval = MEASUREMENT_INTERVAL,
+                      const int readInterval = READ_INTERVAL,
                       Adafruit_BME280::sensor_sampling tempSampling = Adafruit_BME280::SAMPLING_X1,
                       Adafruit_BME280::sensor_sampling pressSampling = Adafruit_BME280::SAMPLING_X1,
                       Adafruit_BME280::sensor_sampling humSampling = Adafruit_BME280::SAMPLING_X1,

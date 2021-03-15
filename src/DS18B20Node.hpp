@@ -25,29 +25,26 @@ private:
   const char *cCaption = "• %s DS18B20 pin[%d]:";
 
   int _sensorPin = DEFAULTPIN;
-  bool _sensorFound = false;
-  unsigned long _measurementInterval;
-  unsigned long _lastMeasurement;
 
   float temperature = NAN;
 
   OneWire *oneWire;
   DallasTemperature *dallasTemp;
 
-  void send();
-  void sendError();
   void sendData();
+  void sendError();
 
 protected:
   virtual void setup() override;
-  virtual void loop() override;
   virtual void onReadyToOperate() override;
+  virtual void send() override;
+  virtual void takeMeasurement() override;
 
 public:
   explicit DS18B20Node(const char *id,
                        const char *name,
                        const int sensorPin = DEFAULTPIN,
-                       const int measurementInterval = MEASUREMENT_INTERVAL);
+                       const int readInterval = READ_INTERVAL);
 
   float getTemperature() const { return temperature; }
 };

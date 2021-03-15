@@ -16,9 +16,7 @@ class AdcNode : public SensorNode
 private:
   // Read ADC every 10 seconds to have the current value available
   // when another part of the application needs it
-  static const int READ_INTERVAL_MILLISECONDS = 10 * 1000;
-  // Send ADC every 5 minutes
-  static const int SEND_INTERVAL_MILLISECONDS = 300 * 1000;
+  static const int READ_INTERVAL = 10 * 1000;
 
   const char *cCaption = "• %s ADC:";
   const float cVoltMax = 3.3; // = 100% battery
@@ -28,27 +26,23 @@ private:
   HomieSetting<double> *_adcBattMax;
   HomieSetting<double> *_adcBattMin;
 
-  unsigned long _lastReadTime;
-  unsigned long _lastSendTime;
-  unsigned long _sendInterval;
-
   float _batteryLevel = NAN;
   float _voltage = NAN;
 
   void readVoltage();
-  void send();
-  void sendError();
   void sendData();
+  void sendError();
 
 protected:
   virtual void setup() override;
-  virtual void loop() override;
   virtual void onReadyToOperate() override;
+  virtual void send() override;
+  virtual void takeMeasurement() override;
 
 public:
-  explicit AdcNode(const char *id,
-                   const char *name,
-                   const int sendInterval = SEND_INTERVAL_MILLISECONDS);
+  explicit AdcNode(const char *id, const char *name,
+                   const int readInterval = READ_INTERVAL,
+                   const int sendInterval = SEND_INTERVAL);
 
   float getBatteryLevel() const { return _batteryLevel; }
   float getVoltage() const { return _voltage; }

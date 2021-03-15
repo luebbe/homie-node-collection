@@ -24,25 +24,22 @@ private:
   const char *cCaption = "• %s DHT22 pin[%d]:";
 
   int _sensorPin;
-  unsigned long _measurementInterval;
-  unsigned long _lastMeasurement;
 
   float temperature = NAN;
   float humidity = NAN;
 
   DHT *dht = NULL;
 
-  void send();
-
 protected:
   virtual void setup() override;
-  virtual void loop() override;
+  virtual void send() override;
+  virtual void takeMeasurement() override;
 
 public:
   explicit DHT22Node(const char *id,
                      const char *name,
                      const int sensorPin = DEFAULTPIN,
-                     const int measurementInterval = MEASUREMENT_INTERVAL);
+                     const int readInterval = READ_INTERVAL);
 
   float getHumidity() const { return humidity; }
   float getTemperature() const { return temperature; }

@@ -9,11 +9,9 @@
 
 #include "DS18B20Node.hpp"
 
-DS18B20Node::DS18B20Node(const char *id, const char *name, const int sensorPin, const int measurementInterval)
-    : SensorNode(id, name, "DS18B20"),
-      _sensorPin(sensorPin),
-      _measurementInterval(measurementInterval),
-      _lastMeasurement(0)
+DS18B20Node::DS18B20Node(const char *id, const char *name, const int sensorPin, const int readInterval)
+    : SensorNode(id, name, "DS18B20", readInterval),
+      _sensorPin(sensorPin)
 {
   if (_sensorPin > DEFAULTPIN)
   {
@@ -65,21 +63,11 @@ void DS18B20Node::sendData()
   }
 }
 
-void DS18B20Node::loop()
+void DS18B20Node::takeMeasurement()
 {
-  if (_sensorFound)
-  {
-    if ((millis() - _lastMeasurement >= _measurementInterval * 1000UL) || (_lastMeasurement == 0))
-    {
-      dallasTemp->requestTemperatures();
-      temperature = dallasTemp->getTempCByIndex(0);
-      fixRange(&temperature, cMinTemp, cMaxTemp);
-
-      send();
-
-      _lastMeasurement = millis();
-    }
-  }
+  dallasTemp->requestTemperatures();
+  temperature = dallasTemp->getTempCByIndex(0);
+  fixRange(&temperature, cMinTemp, cMaxTemp);
 }
 
 void DS18B20Node::onReadyToOperate()
@@ -99,6 +87,6 @@ void DS18B20Node::setup()
     dallasTemp->begin();
     _sensorFound = (dallasTemp->getDS18Count() > 0);
     Homie.getLogger() << cIndent << F("Found ") << dallasTemp->getDS18Count() << " sensors." << endl
-                      << cIndent << F("Reading interval: ") << _measurementInterval << " s" << endl;
+                      << cIndent << F("Reading interval: ") << readInterval() << " s" << endl;
   }
 }

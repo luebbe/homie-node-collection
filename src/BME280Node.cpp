@@ -13,20 +13,20 @@
 BME280Node::BME280Node(const char *id,
                        const char *name,
                        const int i2cAddress,
-                       const int measurementInterval,
+                       const int readInterval,
                        const Adafruit_BME280::sensor_sampling tempSampling,
                        const Adafruit_BME280::sensor_sampling pressSampling,
                        const Adafruit_BME280::sensor_sampling humSampling,
                        const Adafruit_BME280::sensor_filter filter)
     : SensorNode(id, name, "BME280"),
       _i2cAddress(i2cAddress),
-      _lastMeasurement(0),
       _tempSampling(tempSampling),
       _pressSampling(pressSampling),
       _humSampling(humSampling),
       _filter(filter)
 {
-  _measurementInterval = (measurementInterval > MIN_INTERVAL) ? measurementInterval : MIN_INTERVAL;
+
+  _readInterval = (readInterval > MIN_INTERVAL) ? readInterval : MIN_INTERVAL;
 
   asprintf(&_temperatureOffsetName, "%s.temperatureOffset", id);
   _temperatureOffset = new HomieSetting<double>(_temperatureOffsetName, "The temperature offset in degrees [-10.0 .. 10.0] Default = 0");
@@ -74,28 +74,17 @@ void BME280Node::send()
   }
 }
 
-void BME280Node::loop()
+void BME280Node::takeMeasurement()
 {
-  if (_sensorFound)
-  {
-    if (millis() - _lastMeasurement >= _measurementInterval * 1000UL ||
-        _lastMeasurement == 0)
-    {
-      bme.takeForcedMeasurement(); // has no effect in normal mode
+  bme.takeForcedMeasurement(); // has no effect in normal mode
 
-      temperature = bme.readTemperature();
-      humidity = bme.readHumidity();
-      pressure = bme.readPressure() / 100;
+  temperature = bme.readTemperature();
+  humidity = bme.readHumidity();
+  pressure = bme.readPressure() / 100;
 
-      fixRange(&temperature, cMinTemp, cMaxTemp);
-      fixRange(&humidity, cMinHumid, cMaxHumid);
-      fixRange(&pressure, cMinPress, cMaxPress);
-
-      send();
-
-      _lastMeasurement = millis();
-    }
-  }
+  fixRange(&temperature, cMinTemp, cMaxTemp);
+  fixRange(&humidity, cMinHumid, cMaxHumid);
+  fixRange(&pressure, cMinPress, cMaxPress);
 }
 
 void BME280Node::beforeHomieSetup()
@@ -107,7 +96,7 @@ void BME280Node::beforeHomieSetup()
 
 void BME280Node::onReadyToOperate()
 {
-  if (!_sensorFound && Homie.isConnected())
+  if (!sensorFound() && Homie.isConnected())
   {
     setProperty(cStatusTopic).send("error");
   }
@@ -120,7 +109,7 @@ void BME280Node::setup()
   if (bme.begin(_i2cAddress))
   {
     _sensorFound = true;
-    Homie.getLogger() << cIndent << F("found. Reading interval: ") << _measurementInterval << " s" << endl;
+    Homie.getLogger() << cIndent << F("found. Reading interval: ") << readInterval() << " s" << endl;
     // Parameters taken from the weather station monitoring example (advancedsettings.ino) in
     // the Adafruit BME280 library
     bme.setSampling(Adafruit_BME280::MODE_FORCED, _tempSampling, _pressSampling, _humSampling, _filter);
@@ -128,7 +117,6 @@ void BME280Node::setup()
   }
   else
   {
-    _sensorFound = false;
     Homie.getLogger() << cIndent << F("not found. Check wiring!") << endl;
   }
 }

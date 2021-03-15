@@ -13,16 +13,12 @@
 // Measuring the voltage with a ditital multi meter yields a denominator <> 1024.0f.
 // Correction factor for NodeMCU = 1.0611. Pass this value in the settings.
 
-AdcNode::AdcNode(const char *id, const char *name, const int sendInterval)
-    : SensorNode(id, name, "ADC")
+AdcNode::AdcNode(const char *id, const char *name, const int readInterval, const int sendInterval)
+    : SensorNode(id, name, "ADC", readInterval, sendInterval)
 {
   _adcCorrection = new HomieSetting<double>("adcCorrect", "Correction factor for AD converter.  [0.5 .. 1.5] Default = 1");
   _adcBattMin = new HomieSetting<double>("battMin", "Measured voltage that corresponds to 0% battery level.  [2.5V .. 4.0V] Default = 2.6V. Must be less than battMax");
   _adcBattMax = new HomieSetting<double>("battMax", "Measured voltage that corresponds to 100% battery level.  [2.5V .. 4.0V] Default = 3.3V. Must be greater than battMin");
-
-  _lastReadTime = millis() - READ_INTERVAL_MILLISECONDS - 1;
-  _lastSendTime = millis() - sendInterval - 1;
-  _sendInterval = sendInterval;
 
   asprintf(&_caption, cCaption, name);
 
@@ -108,21 +104,9 @@ void AdcNode::onReadyToOperate()
   send();
 };
 
-void AdcNode::loop()
+void AdcNode::takeMeasurement()
 {
-  unsigned long now = millis();
-
-  if (now - _lastReadTime >= READ_INTERVAL_MILLISECONDS)
-  {
-    readVoltage();
-    _lastReadTime = now;
-  }
-
-  if (now - _lastSendTime >= _sendInterval)
-  {
-    send();
-    _lastSendTime = now;
-  }
+  readVoltage();
 }
 
 void AdcNode::beforeHomieSetup()
@@ -144,4 +128,5 @@ void AdcNode::setup()
 {
   printCaption();
   Homie.getLogger() << cIndent << F("Send interval: ") << _sendInterval / 1000 << " s" << endl;
+  _sensorFound = true;
 }

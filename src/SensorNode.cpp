@@ -9,13 +9,20 @@
 
 #include "SensorNode.hpp"
 
-SensorNode::SensorNode(const char *id, const char *name, const char *type)
+SensorNode::SensorNode(const char *id, const char *name, const char *type,
+                       const int readInterval,
+                       const int sendInterval)
     : HomieNode(id, name, type),
-    _caption(0)
+      _caption(0),
+      _readInterval(readInterval),
+      _sendInterval(sendInterval),
+      _lastReadTime(0),
+      _lastSendTime(0)
 {
 }
 
-float SensorNode::computeAbsoluteHumidity(float temperature, float percentHumidity) {
+float SensorNode::computeAbsoluteHumidity(float temperature, float percentHumidity)
+{
   // Calculate the absolute humidity in g/m³
   // https://carnotcycle.wordpress.com/2012/08/04/how-to-convert-relative-humidity-to-absolute-humidity/
 
@@ -48,9 +55,42 @@ void SensorNode::fixRange(float *value, float min, float max)
   };
 }
 
+unsigned long SensorNode::readInterval()
+{
+  return _readInterval;
+}
+
+unsigned long SensorNode::sendInterval()
+{
+  return _sendInterval;
+}
+
+bool SensorNode::sensorFound()
+{
+  return _sensorFound;
+}
+
+void SensorNode::loop()
+{
+  if (sensorFound())
+  {
+    unsigned long now = millis();
+
+    if (now - _lastReadTime >= readInterval() || _lastReadTime == 0)
+    {
+      takeMeasurement();
+      _lastReadTime = now;
+    }
+
+    if (now - _lastSendTime >= _sendInterval || _lastSendTime == 0)
+    {
+      send();
+      _lastSendTime = now;
+    }
+  }
+}
+
 void SensorNode::printCaption()
 {
   Homie.getLogger() << _caption << endl;
 }
-
-

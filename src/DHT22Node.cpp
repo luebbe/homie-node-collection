@@ -10,11 +10,9 @@
 
 #define DHTTYPE DHT22
 
-DHT22Node::DHT22Node(const char *id, const char *name, const int sensorPin, const int measurementInterval)
-    : SensorNode(id, name, "DHT22"),
-      _sensorPin(sensorPin),
-      _measurementInterval(measurementInterval),
-      _lastMeasurement(0)
+DHT22Node::DHT22Node(const char *id, const char *name, const int sensorPin, const int readInterval)
+    : SensorNode(id, name, "DHT22", readInterval),
+      _sensorPin(sensorPin)
 {
   if (_sensorPin > DEFAULTPIN)
   {
@@ -70,33 +68,23 @@ void DHT22Node::send()
   }
 }
 
-void DHT22Node::loop()
+void DHT22Node::takeMeasurement()
 {
-  if (dht)
-  {
-    if ((millis() - _lastMeasurement >= _measurementInterval * 1000UL) ||
-        (_lastMeasurement == 0))
-    {
-      temperature = dht->readTemperature();
-      humidity = dht->readHumidity();
+  temperature = dht->readTemperature();
+  humidity = dht->readHumidity();
 
-      fixRange(&temperature, cMinTemp, cMaxTemp);
-      fixRange(&humidity, cMinHumid, cMaxHumid);
-
-      send();
-
-      _lastMeasurement = millis();
-    }
-  }
+  fixRange(&temperature, cMinTemp, cMaxTemp);
+  fixRange(&humidity, cMinHumid, cMaxHumid);
 }
 
 void DHT22Node::setup()
 {
   printCaption();
-  Homie.getLogger() << cIndent << F("Reading interval: ") << _measurementInterval << " s" << endl;
+  Homie.getLogger() << cIndent << F("Reading interval: ") << readInterval() << " s" << endl;
 
   if (dht)
   {
     dht->begin();
+    _sensorFound = true;
   }
 }
