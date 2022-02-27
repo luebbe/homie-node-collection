@@ -62,7 +62,7 @@ void setup()
   relay1.beforeHomieSetup();
   relay2.beforeHomieSetup();
 
-  Homie.disableLedFeedback();
+  // Homie.disableLedFeedback();
   Homie.disableResetTrigger();
 
   Homie.setup();

@@ -38,8 +38,8 @@ void setup()
   Serial << endl
          << endl;
 
+  // Homie.disableLedFeedback();
   Homie.disableResetTrigger();
-  Homie.disableLedFeedback();
 
   Homie.onEvent(onHomieEvent);
   Homie.setup();

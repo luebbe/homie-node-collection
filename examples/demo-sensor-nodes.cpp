@@ -41,7 +41,7 @@ void setup()
   Homie.getLogger() << F("• Wire begin SDA=") << PIN_SDA << F(" SCL=") << PIN_SCL << endl;
   Wire.begin(PIN_SDA, PIN_SCL);
 
-  Homie.disableLedFeedback();
+  // Homie.disableLedFeedback();
   Homie.disableResetTrigger();
 
   Homie.setup();
