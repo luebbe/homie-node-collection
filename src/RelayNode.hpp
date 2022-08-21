@@ -71,6 +71,7 @@ public:
                      TGetRelayState OnGetRelayState,
                      TSetRelayState OnSetRelayState,
                      const bool reverseSignal = false);
+  void setRelay(bool on);
   void setRelay(bool on, long timeoutSecs);
   void toggleRelay();
   void beforeHomieSetup();

@@ -62,12 +62,9 @@ bool RelayNode::handleOnOff(const String &value)
   if (value == "true" || value == "false" || value == "toggle")
   {
     if (value == "toggle")
-    {
-      bool current = getRelay();
-      setRelay(!current, _maxTimeout->get());
-    }
+      setRelay(!getRelay());
     else
-      setRelay(value == "true", _maxTimeout->get());
+      setRelay(value == "true");
     return true;
   }
   else
@@ -113,9 +110,9 @@ bool RelayNode::handleInput(const HomieRange &range, const String &property, con
 
 void RelayNode::beforeHomieSetup()
 {
-  _maxTimeout->setDefaultValue(600).setValidator([](long candidate) {
-    return (candidate >= 0);
-  });
+  _maxTimeout->setDefaultValue(600)
+      .setValidator([](long candidate)
+                    { return (candidate >= 0); });
 }
 
 void RelayNode::onReadyToOperate()
@@ -162,6 +159,11 @@ bool RelayNode::getRelay()
   {
     return false;
   }
+}
+
+void RelayNode::setRelay(bool on)
+{
+  setRelay(on, _maxTimeout->get());
 }
 
 void RelayNode::setRelay(bool on, long timeoutSecs)
@@ -222,7 +224,7 @@ void RelayNode::tick()
 
 void RelayNode::toggleRelay()
 {
-  setRelay(!getRelay(), _maxTimeout->get());
+  setRelay(!getRelay());
 }
 
 void RelayNode::setup()
