@@ -34,7 +34,7 @@ jobs:
         run: pio platform install espressif32
 
       - name: Install current code as a PlatformIO library with all dependencies
-        run: pio lib -g install file://.
+        run: pio pkg -global install file://.
       
       - name: Run PlatformIO CI
 #        run: pio ci --board=esp01_1m --board=d1_mini
