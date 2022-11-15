@@ -114,7 +114,7 @@ void BME280Node::setup()
   if (bme.begin(_i2cAddress))
   {
     _sensorFound = true;
-    Homie.getLogger() << cIndent << F("found. Reading interval: ") << readInterval() << " s" << endl;
+    Homie.getLogger() << cIndent << F("found. Reading interval: ") << readInterval() << " ms" << endl;
     // Parameters taken from the weather station monitoring example (advancedsettings.ino) in
     // the Adafruit BME280 library
     bme.setSampling(Adafruit_BME280::MODE_FORCED, _tempSampling, _pressSampling, _humSampling, _filter);

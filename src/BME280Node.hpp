@@ -25,7 +25,7 @@ private:
   const float cMinPress = 300.0;
   const float cMaxPress = 1100.0;
   // suggested rate is 1/60Hz (1m)
-  static const int MIN_INTERVAL = 60; // in seconds
+  static const int MIN_INTERVAL = 60 * 1000UL; // in milliseconds
   const char *cCaption = "• %s BME280 i2c[0x%2x]:";
 
   unsigned int _i2cAddress;

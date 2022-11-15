@@ -14,7 +14,7 @@
 class SensorNode : public BaseNode
 {
 protected:
-  static const int READ_INTERVAL = 300 * 1000UL;
+  static const int READ_INTERVAL = 300 * 1000UL; // 300 seconds
   static const int SEND_INTERVAL = 300 * 1000UL;
 
   unsigned long _readInterval;
