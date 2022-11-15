@@ -125,7 +125,7 @@ PingNode &PingNode::setTemperature(float temperatureCelcius)
   printCaption();
   Homie.getLogger() << cIndent
                     << F("SpeedOfSound: ") << soundSpeed << " " << cUnitMetersPerSecond
-                    << F(" at ") << temperatureCelcius << " " << cUnitDegrees << endl;
+                    << F(" at ") << temperatureCelcius << " " << cUnitDegCels << endl;
   // Calculating the distance from d = t_ping /2 * c => t_ping /2 * 337 [m/s] => t_ping_us / 1e-6 * 1/2 * 337
   setMicrosecondsToMeter(0.5e-6 * soundSpeed);
   return *this;

@@ -27,7 +27,7 @@ DS18B20Node::DS18B20Node(const char *id, const char *name, const int sensorPin, 
   advertise(cTemperatureTopic)
       .setDatatype("float")
       .setFormat("-55:125")
-      .setUnit(cUnitDegrees);
+      .setUnit(cUnitDegCels);
 }
 
 void DS18B20Node::send()

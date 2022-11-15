@@ -39,7 +39,7 @@ BME280Node::BME280Node(const char *id,
   advertise(cTemperatureTopic)
       .setDatatype("float")
       .setFormat("-40:85")
-      .setUnit(cUnitDegrees);
+      .setUnit(cUnitDegCels);
   advertise(cHumidityTopic)
       .setDatatype("float")
       .setFormat("0:100")
@@ -51,6 +51,9 @@ BME280Node::BME280Node(const char *id,
   advertise(cAbsHumidityTopic)
       .setDatatype("float")
       .setUnit(cUnitMgm3);
+  advertise(cDewpointTopic)
+      .setDatatype("float")
+      .setUnit(cUnitDegCels);
 }
 
 void BME280Node::send()
@@ -58,11 +61,13 @@ void BME280Node::send()
   printCaption();
 
   float absHumidity = computeAbsoluteHumidity(temperature, humidity);
+  float dewpoint = computeDewpoint(temperature, humidity);
 
-  Homie.getLogger() << cIndent << F("Temperature:  ") << temperature << " " << cUnitDegrees << endl
+  Homie.getLogger() << cIndent << F("Temperature:  ") << temperature << " " << cUnitDegCels << endl
                     << cIndent << F("Humidity:     ") << humidity << " " << cUnitPercent << endl
                     << cIndent << F("Pressure:     ") << pressure << " " << cUnitHpa << endl
-                    << cIndent << F("Abs humidity: ") << absHumidity << " " << cUnitMgm3 << endl;
+                    << cIndent << F("Abs humidity: ") << absHumidity << " " << cUnitMgm3 << endl
+                    << cIndent << F("Dew point:    ") << dewpoint << " " << cUnitDegCels << endl;
 
   if (Homie.isConnected())
   {
@@ -71,6 +76,7 @@ void BME280Node::send()
     setProperty(cHumidityTopic).send(String(humidity));
     setProperty(cPressureTopic).send(String(pressure));
     setProperty(cAbsHumidityTopic).send(String(absHumidity));
+    setProperty(cDewpointTopic).send(String(dewpoint));
   }
 }
 
@@ -89,9 +95,8 @@ void BME280Node::takeMeasurement()
 
 void BME280Node::beforeHomieSetup()
 {
-  _temperatureOffset->setDefaultValue(0.0f).setValidator([](float candidate) {
-    return (candidate >= -10.0f) && (candidate <= 10.0f);
-  });
+  _temperatureOffset->setDefaultValue(0.0f).setValidator([](float candidate)
+                                                         { return (candidate >= -10.0f) && (candidate <= 10.0f); });
 }
 
 void BME280Node::onReadyToOperate()

@@ -26,7 +26,8 @@ protected:
   const float cMinHumid = 0.0;
   const float cMaxHumid = 100.0;
 
-  float computeAbsoluteHumidity(float temperature, float percentHumidity);
+  float computeAbsoluteHumidity(float tempCelsius, float percentHumidity);
+  float computeDewpoint(float tempCelsius, float percentHumidity);
 
   virtual unsigned long readInterval();
   virtual unsigned long sendInterval();

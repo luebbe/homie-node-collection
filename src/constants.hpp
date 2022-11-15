@@ -1,5 +1,5 @@
 // Units
-#define cUnitDegrees "°C"
+#define cUnitDegCels "°C"
 #define cUnitHpa "hPa"
 #define cUnitMgm3 "g/m³"
 #define cUnitPercent "%"
@@ -17,6 +17,7 @@
 #define cHumidityTopic "humidity"
 #define cPressureTopic "pressure"
 #define cAbsHumidityTopic "abshumidity"
+#define cDewpointTopic "dewpoint"
 #define cVoltageTopic "voltage"
 #define cBatteryLevelTopic "batterylevel"
 #define cDistanceTopic "distance"

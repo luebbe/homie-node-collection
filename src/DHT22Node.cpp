@@ -27,7 +27,7 @@ DHT22Node::DHT22Node(const char *id, const char *name, const int sensorPin, cons
   advertise(cTemperatureTopic)
       .setDatatype("float")
       .setFormat("-40:125")
-      .setUnit(cUnitDegrees);
+      .setUnit(cUnitDegCels);
   advertise(cHumidityTopic)
       .setDatatype("float")
       .setFormat("0:100")
@@ -35,6 +35,9 @@ DHT22Node::DHT22Node(const char *id, const char *name, const int sensorPin, cons
   advertise(cAbsHumidityTopic)
       .setDatatype("float")
       .setUnit(cUnitMgm3);
+  advertise(cDewpointTopic)
+      .setDatatype("float")
+      .setUnit(cUnitDegCels);
 }
 
 void DHT22Node::send()
@@ -53,10 +56,12 @@ void DHT22Node::send()
   else
   {
     float absHumidity = computeAbsoluteHumidity(temperature, humidity);
+    float dewpoint = computeDewpoint(temperature, humidity);
 
-    Homie.getLogger() << cIndent << F("Temperature: ") << temperature << " °C" << endl;
-    Homie.getLogger() << cIndent << F("Humidity: ") << humidity << " %" << endl;
-    Homie.getLogger() << cIndent << F("Abs humidity: ") << absHumidity << " g/m³" << endl;
+    Homie.getLogger() << cIndent << F("Temperature:  ") << temperature << " " << cUnitDegCels << endl
+                      << cIndent << F("Humidity:     ") << humidity << " " << cUnitPercent << endl
+                      << cIndent << F("Abs humidity: ") << absHumidity << " " << cUnitMgm3 << endl
+                      << cIndent << F("Dew point:    ") << dewpoint << " " << cUnitDegCels << endl;
 
     if (Homie.isConnected())
     {
@@ -64,6 +69,7 @@ void DHT22Node::send()
       setProperty(cTemperatureTopic).send(String(temperature));
       setProperty(cHumidityTopic).send(String(humidity));
       setProperty(cAbsHumidityTopic).send(String(absHumidity));
+      setProperty(cDewpointTopic).send(String(dewpoint));
     }
   }
 }
