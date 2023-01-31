@@ -2,7 +2,7 @@
 
 [![Languages](https://img.shields.io/github/languages/top/luebbe/homie-node-collection.svg?style=flat-square)](https://img.shields.io/github/languages/top/luebbe/homie-node-collection)
 [![GitHub release](https://img.shields.io/github/release/luebbe/homie-node-collection.svg?style=flat-square)](https://github.com/luebbe/homie-node-collection/releases)
-[![Build status](https://img.shields.io/github/workflow/status/luebbe/homie-node-collection/PlatformIO%20CI.svg?branch=master&style=flat-square)](https://github.com/luebbe/homie-node-collection/actions)
+[![Build status](https://img.shields.io/github/actions/workflow/status/luebbe/homie-node-collection/main.yml?branch=master&style=flat-square)](https://github.com/luebbe/homie-node-collection/actions)
 [![Codacy](https://img.shields.io/codacy/grade/e6d5e648b83b4667b399b81e2986dea6?style=flat-square)](https://www.codacy.com/app/luebbe/homie-node-collection/dashboard)
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![PlatformIO](https://img.shields.io/static/v1?label=Powered&message=PlatformIO&color=blue&style=flat-square)](https://platformio.org/lib/show/6163/Homie%20node%20collection)
