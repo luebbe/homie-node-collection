@@ -13,6 +13,9 @@
 
 class SensorNode : public BaseNode
 {
+public:
+  typedef std::function<void(void)> TOnDataSent;
+
 protected:
   static const int READ_INTERVAL = 300 * 1000UL; // 300 seconds
   static const int SEND_INTERVAL = 300 * 1000UL;
@@ -25,6 +28,8 @@ protected:
 
   const float cMinHumid = 0.0;
   const float cMaxHumid = 100.0;
+
+  TOnDataSent _onDataSent;
 
   float computeAbsoluteHumidity(float tempCelsius, float percentHumidity);
   float computeDewpoint(float tempCelsius, float percentHumidity);
@@ -42,4 +47,9 @@ public:
   explicit SensorNode(const char *id, const char *name, const char *type,
                       const int readInterval = READ_INTERVAL,
                       const int sendInterval = SEND_INTERVAL);
+
+  void SetOnDataSent(TOnDataSent OnDataSent)
+  {
+    _onDataSent = OnDataSent;
+  }
 };

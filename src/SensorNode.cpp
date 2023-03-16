@@ -80,6 +80,10 @@ void SensorNode::loop()
     {
       send();
       _lastSendTime = now;
+      if (_onDataSent != NULL)
+      {
+        _onDataSent();
+      }
     }
   }
 }
