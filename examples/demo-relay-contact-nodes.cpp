@@ -84,10 +84,12 @@ void setup()
          << endl;
 
   // Set callback for contact node here, just to show alternative
-  contactNode.onChange([](bool open)
-                       {
-    // Pass 0 in timeout for infinite "on"
-    relay1.setRelay(open, 0); });
+  contactNode.onChange(
+      [](bool open)
+      {
+        // Pass 0 in timeout for infinite "on"
+        relay1.setRelay(open, 0);
+      });
 
   // Set default configuration values before Homie.setup()
   relay1.beforeHomieSetup();
