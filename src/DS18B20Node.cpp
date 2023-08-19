@@ -87,6 +87,6 @@ void DS18B20Node::setup()
     dallasTemp->begin();
     _sensorFound = (dallasTemp->getDS18Count() > 0);
     Homie.getLogger() << cIndent << F("Found ") << dallasTemp->getDS18Count() << " sensors." << endl
-                      << cIndent << F("Reading interval: ") << readInterval() << " ms" << endl;
+                      << cIndent << F("Reading interval: ") << readInterval() / 1000UL << F(" s") << endl;
   }
 }
