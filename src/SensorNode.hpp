@@ -22,8 +22,8 @@ protected:
 
   unsigned long _readInterval;
   unsigned long _sendInterval;
-  unsigned long _lastReadTime;
-  unsigned long _lastSendTime;
+  unsigned long _nextReadTime;
+  unsigned long _nextSendTime;
   bool _sensorFound = false;
 
   const float cMinHumid = 0.0;
@@ -34,19 +34,20 @@ protected:
   float computeAbsoluteHumidity(float tempCelsius, float percentHumidity);
   float computeDewpoint(float tempCelsius, float percentHumidity);
 
-  virtual unsigned long readInterval();
-  virtual unsigned long sendInterval();
-
   virtual void send() = 0;
   virtual bool sensorFound();
   virtual void takeMeasurement() = 0;
 
   virtual void loop() override;
+  virtual void setup() override;
 
 public:
   explicit SensorNode(const char *id, const char *name, const char *type,
                       const int readInterval = READ_INTERVAL,
                       const int sendInterval = SEND_INTERVAL);
+
+  virtual unsigned long readInterval();
+  virtual unsigned long sendInterval();
 
   void SetOnDataSent(TOnDataSent OnDataSent)
   {

@@ -15,8 +15,8 @@ SensorNode::SensorNode(const char *id, const char *name, const char *type,
     : BaseNode(id, name, type),
       _readInterval(readInterval),
       _sendInterval(sendInterval),
-      _lastReadTime(0),
-      _lastSendTime(0)
+      _nextReadTime(0),
+      _nextSendTime(0)
 {
 }
 
@@ -64,22 +64,32 @@ bool SensorNode::sensorFound()
   return _sensorFound;
 }
 
+void SensorNode::setup()
+{
+  printCaption();
+  // Give all sensors a random start delay from one to five seconds, 
+  // so they are not all read at the same time.
+  long randomDelay = random(1000, 5000);
+  _nextReadTime = randomDelay;
+  _nextSendTime = randomDelay;
+}
+
 void SensorNode::loop()
 {
   if (sensorFound())
   {
     unsigned long now = millis();
 
-    if (now - _lastReadTime >= readInterval() || _lastReadTime == 0)
+    if (now >= _nextReadTime)
     {
       takeMeasurement();
-      _lastReadTime = now;
+      _nextReadTime = now + readInterval();
     }
 
-    if (now - _lastSendTime >= _sendInterval || _lastSendTime == 0)
+    if (now >= _nextSendTime)
     {
       send();
-      _lastSendTime = now;
+      _nextSendTime = now + sendInterval();
       if (_onDataSent != NULL)
       {
         _onDataSent();
