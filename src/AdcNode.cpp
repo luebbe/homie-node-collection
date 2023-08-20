@@ -126,7 +126,8 @@ void AdcNode::beforeHomieSetup()
 
 void AdcNode::setup()
 {
-  printCaption();
-  Homie.getLogger() << cIndent << F("Send interval: ") << _sendInterval / 1000 << " s" << endl;
+  SensorNode::setup();
+
+  Homie.getLogger() << cIndent << F("Reading interval: ") << readInterval() / 1000UL << F("s") << endl;
   _sensorFound = true;
 }
