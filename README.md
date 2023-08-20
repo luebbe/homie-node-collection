@@ -60,13 +60,15 @@ It has one setting:
   Range = \[-10.0°C .. 10.0°C]. Default = 0°C.  
   This is a _per node_ setting, so pay attention that the node ids are different.
 
-**Attention**: This offset is just added to the temperature read from the sensor. The relative humidity is not recalculated.
+This offset is passed into the Adafruit BME280 library and used for depending calculations.
 
 Advertises the values as:
 
 - `homie/<device-id>/<node-id>/temperature`
 - `homie/<device-id>/<node-id>/humidity`
 - `homie/<device-id>/<node-id>/pressure`
+- `homie/<device-id>/<node-id>/dewpoint`
+- `homie/<device-id>/<node-id>/abshumidity`
 
 ### DHT22Node
 
@@ -76,6 +78,8 @@ Advertises the values as:
 
 - `homie/<device-id>/<node-id>/temperature`
 - `homie/<device-id>/<node-id>/humidity`
+- `homie/<device-id>/<node-id>/dewpoint`
+- `homie/<device-id>/<node-id>/abshumidity`
 
 ### DS18B20Node
 
