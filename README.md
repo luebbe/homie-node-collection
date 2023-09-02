@@ -16,6 +16,16 @@ It has recently been migrated to the [Homie v3 Develop branch](https://github.co
 - Releases up to 1.0.x are using the [Homie convention 2.0.1](https://github.com/homieiot/convention/releases/tag/v2.0.1)
 - Releases from 1.1.x onwards are using the [Homie convention 3.0.1](https://github.com/homieiot/convention/releases/tag/v3.0.1)
 
+## Attention
+
+July 2023: newer expressif platform versions cause a linker error. This is why I recommend to explicitely use the 4.1.0 version. So you should add the following line to your platformio.ini.
+
+```markdown
+[env]
+platform = espressif8266@4.1.0 ; July 2023: newer expressif platform versions cause a linker error.
+framework = arduino
+```
+
 ## Sensor Nodes
 
 All sensor nodes have a common `status` subtopic wit the enum values: `ok|error`. `status` is `ok` when a sensor could be detected and a valid measurement could be taken, `error` otherwise.

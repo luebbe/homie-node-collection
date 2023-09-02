@@ -1,6 +1,6 @@
 {
   "name": "Homie node collection",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "keywords": "iot, home, automation, Arduino, esp8266, homie, sensor, relay, switch",
   "description": "Collection of Node implementations for the Homie-ESP8266 library. Versions 1.0.x implement the Homie 2.0 convention. Versions 1.1.x and newer implement the Homie 3.0 convention.",
   "homepage": "https://github.com/luebbe/homie-node-collection",
@@ -23,6 +23,9 @@
     {
       "name": "Homie",
       "version": "https://github.com/homieiot/homie-esp8266.git"
+    },
+    {
+      "name": "Adafruit BusIO"
     },
     {
       "name": "Adafruit Unified Sensor"
