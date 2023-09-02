@@ -18,7 +18,7 @@ It has recently been migrated to the [Homie v3 Develop branch](https://github.co
 
 ## Attention
 
-July 2023: newer expressif platform versions cause a linker error. This is why I recommend to explicitely use the 4.1.0 version. So you should add the following line to your platformio.ini.
+July 2023: newer expressif platform versions cause a linker "... relocation ..." error. This is why I recommend to explicitely use the 4.1.0 version. So you should add the following line to your platformio.ini.
 
 ```markdown
 [env]
