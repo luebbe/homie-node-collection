@@ -90,7 +90,6 @@ void DHT22Node::setup()
   if (dht)
   {
     dht->begin();
-    _sensorFound = true;
-    Homie.getLogger() << cIndent << F("Reading interval: ") << readInterval() / 1000UL << F("s") << endl;
+    SensorNode::setupDone(1);
   }
 }

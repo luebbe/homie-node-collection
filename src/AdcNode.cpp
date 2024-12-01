@@ -38,6 +38,8 @@ AdcNode::AdcNode(const char *id, const char *name, const int readInterval, const
 void AdcNode::readVoltage()
 {
   uint16_t v_raw = ESP.getVcc();
+  // uint16_t v_filter = filter(v_raw);
+  
   _voltage = (((float)v_raw / 1024.0f) * _adcCorrection->get());
   if (isnan(_voltage))
   {
@@ -127,7 +129,5 @@ void AdcNode::beforeHomieSetup()
 void AdcNode::setup()
 {
   SensorNode::setup();
-
-  Homie.getLogger() << cIndent << F("Reading interval: ") << readInterval() / 1000UL << F("s") << endl;
-  _sensorFound = true;
+  SensorNode::setupDone(1);
 }

@@ -120,13 +120,12 @@ void BME280Node::setup()
 
   if (bme.begin(_i2cAddress))
   {
-    _sensorFound = true;
     bme.setSampling(Adafruit_BME280::MODE_FORCED, _tempSampling, _pressSampling, _humSampling, _filter);
     bme.setTemperatureCompensation(_temperatureOffset->get());
-    Homie.getLogger() << cIndent << F("found. Reading interval: ") << readInterval() / 1000UL << F("s") << endl;
+    SensorNode::setupDone(1);
   }
   else
   {
-    Homie.getLogger() << cIndent << F("not found. Check wiring!") << endl;
+    SensorNode::setupDone(0);
   }
 }

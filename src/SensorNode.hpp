@@ -37,6 +37,7 @@ protected:
   virtual void send() = 0;
   virtual bool sensorFound();
   virtual void takeMeasurement() = 0;
+  virtual void setupDone(int sensorCount);
 
   virtual void loop() override;
   virtual void setup() override;

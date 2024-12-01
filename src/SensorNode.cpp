@@ -64,12 +64,28 @@ bool SensorNode::sensorFound()
   return _sensorFound;
 }
 
+void SensorNode::setupDone(int sensorCount)
+{
+  if (sensorCount > 0)
+  {
+    _sensorFound = true;
+    Homie.getLogger() << cIndent << F("Found      : ") << sensorCount << " sensors." << endl
+                      << cIndent << F("Interval   : ") << _readInterval / 1000UL << F("s") << endl
+                      << cIndent << F("Start delay: ") << _nextReadTime / 1000UL << F("s") << endl;
+  }
+  else
+  {
+    _sensorFound = false;
+    Homie.getLogger() << cIndent << F("not found. Check wiring!") << endl;
+  }
+}
+
 void SensorNode::setup()
 {
   printCaption();
-  // Give all sensors a random start delay from one to five seconds, 
+  // Give all sensors a random start delay from five to ten seconds,
   // so they are not all read at the same time.
-  long randomDelay = random(1000, 5000);
+  long randomDelay = random(5000, 10000);
   _nextReadTime = randomDelay;
   _nextSendTime = randomDelay;
 }
